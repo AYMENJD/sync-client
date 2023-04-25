@@ -58,14 +58,14 @@ def getType(_type):
 
 
 updates_dec = """    def on_{update_name}(
-    self: "pytdbot.Client" = None,
-    filters: "pytdbot.filters.Filter" = None,
+    self: "pytdbot_sync.Client" = None,
+    filters: "pytdbot_sync.filters.Filter" = None,
     position: int = None,
 ) -> Callable:
         \"\"\"{description}
 
         Args:
-            filters (:class:`pytdbot.filters.Filter`, *optional*):
+            filters (:class:`pytdbot_sync.filters.Filter`, *optional*):
                 An update filter
 
             position (``int``, *optional``):
@@ -78,12 +78,9 @@ updates_dec = """    def on_{update_name}(
         def decorator(func: Callable) -> Callable:
             if hasattr(func, "_handler"):
                 return func
-            elif isinstance(self, pytdbot.Client):
-                if iscoroutinefunction(func):
-                    self.add_handler("{update_name}", func, filters, position)
-                else:
-                    raise TypeError("Handler must be async")
-            elif isinstance(self, pytdbot.filters.Filter):
+            elif isinstance(self, pytdbot_sync.Client):
+                self.add_handler("{update_name}", func, filters, position)
+            elif isinstance(self, pytdbot_sync.filters.Filter):
                 func._handler = Handler(func, "{update_name}", self, position)
             else:
                 func._handler = Handler(func, "{update_name}", filters, position)
@@ -97,7 +94,7 @@ updates_dec = """    def on_{update_name}(
 def updates():
     with open("handlers/updates.py", "w") as f:
         f.write(
-            'import pytdbot\n\nfrom .handler import Handler\nfrom typing import Callable\nfrom asyncio import iscoroutinefunction\nfrom logging import getLogger\n\nlogger = getLogger(__name__)\n\n\nclass Updates:\n    """Auto generated TDLib updates"""\n\n'
+            'import pytdbot_sync\n\nfrom .handler import Handler\nfrom typing import Callable\nfrom logging import getLogger\n\nlogger = getLogger(__name__)\n\n\nclass Updates:\n    """Auto generated TDLib updates"""\n\n'
         )
         for k, v in data["updates"].items():
             f.write(
@@ -115,7 +112,7 @@ def functions():
         for k, v in data["functions"].items():
             # if k.startswith("test"):
             #     continue
-            f.write(f"    async def {k}(self")
+            f.write(f"    def {k}(self")
             if p := getP(v["args"]):
                 f.write(f",{p}" + ") -> Result:\n")
             else:
@@ -146,7 +143,7 @@ def functions():
             f.write(f"        data = {{'@type': '{k}',")
             for k in v["args"]:
                 f.write(f" '{k}': {k},")
-            f.write("}\n\n        return await self.invoke(data)\n\n")
+            f.write("}\n\n        return self.invoke(data)\n\n")
 
 
 if __name__ == "__main__":

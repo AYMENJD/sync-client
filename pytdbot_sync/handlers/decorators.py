@@ -1,8 +1,7 @@
 import logging
-import pytdbot
+import pytdbot_sync
 
 from typing import Callable
-from asyncio import iscoroutinefunction
 from .handler import Handler
 from .updates import Updates
 
@@ -13,14 +12,14 @@ class Decorators(Updates):
     """Decorators class."""
 
     def initializer(
-        self: "pytdbot.Client" = None,
-        filters: "pytdbot.filters.Filter" = None,
+        self: "pytdbot_sync.Client" = None,
+        filters: "pytdbot_sync.filters.Filter" = None,
         position: int = None,
     ) -> None:
         """A decorator to initialize an event object before running other handlers
 
         Args:
-            filters (:class:`~pytdbot.filters.Filter`, *optional*):
+            filters (:class:`~pytdbot_sync.filters.Filter`, *optional*):
                 An update filter
 
             position (``int``, *optional*):
@@ -33,12 +32,9 @@ class Decorators(Updates):
         def decorator(func: Callable) -> Callable:
             if hasattr(func, "_handler"):
                 return func
-            elif isinstance(self, pytdbot.Client):
-                if iscoroutinefunction(func):
-                    self.add_handler("initializer", func, filters, position)
-                else:
-                    raise TypeError("Handler must be async")
-            elif isinstance(self, pytdbot.filters.Filter):
+            elif isinstance(self, pytdbot_sync.Client):
+                self.add_handler("initializer", func, filters, position)
+            elif isinstance(self, pytdbot_sync.filters.Filter):
                 func._handler = Handler(func, "initializer", self, position)
             else:
                 func._handler = Handler(func, "initializer", filters, position)
@@ -48,14 +44,14 @@ class Decorators(Updates):
         return decorator
 
     def finalizer(
-        self: "pytdbot.Client" = None,
-        filters: "pytdbot.filters.Filter" = None,
+        self: "pytdbot_sync.Client" = None,
+        filters: "pytdbot_sync.filters.Filter" = None,
         position: int = None,
     ) -> None:
         """A decorator to finalize an event object after running all handlers
 
         Args:
-            filters (:class:`~pytdbot.filters.Filter`, *optional*):
+            filters (:class:`~pytdbot_sync.filters.Filter`, *optional*):
                 An update filter
 
             position (``int``, *optional*):
@@ -68,12 +64,9 @@ class Decorators(Updates):
         def decorator(func: Callable) -> Callable:
             if hasattr(func, "_handler"):
                 return func
-            elif isinstance(self, pytdbot.Client):
-                if iscoroutinefunction(func):
-                    self.add_handler("finalizer", func, filters, position)
-                else:
-                    raise TypeError("Handler must be async")
-            elif isinstance(self, pytdbot.filters.Filter):
+            elif isinstance(self, pytdbot_sync.Client):
+                self.add_handler("finalizer", func, filters, position)
+            elif isinstance(self, pytdbot_sync.filters.Filter):
                 func._handler = Handler(func, "initializer", self, position)
             else:
                 func._handler = Handler(func, "finalizer", filters, position)

@@ -1,11 +1,11 @@
-import pytdbot
+import pytdbot_sync
 
 from base64 import b64decode
 from typing import Union
 from ujson import dumps
 from functools import lru_cache
-from pytdbot.utils import escape_html, escape_markdown
-from pytdbot.types import (
+from pytdbot_sync.utils import escape_html, escape_markdown
+from pytdbot_sync.types import (
     Result,
     InlineKeyboardMarkup,
     ShowKeyboardMarkup,
@@ -21,7 +21,7 @@ class Update:
     """Wrapper for the updates
 
     Args:
-        client (:class:`~pytdbot.Client`):
+        client (:class:`~pytdbot_sync.Client`):
             The client object
 
         update (``dict``):
@@ -72,7 +72,7 @@ class Update:
         "messageChatSetBackground",
     ]
 
-    def __init__(self, client: "pytdbot.Client", update: dict) -> None:
+    def __init__(self, client: "pytdbot_sync.Client", update: dict) -> None:
         self.client = client
         self.update = update
         self.type = update["@type"]
@@ -518,7 +518,7 @@ class Update:
             return self.client.options["my_id"] == self.from_id
         return False
 
-    async def mention(self, parse_mode: str = "markdown", version: int = 2) -> str:
+    def mention(self, parse_mode: str = "markdown", version: int = 2) -> str:
         """Get the text_mention of the message sender
 
         Args:
@@ -533,7 +533,7 @@ class Update:
         """
 
         if self.from_id:
-            chat = await self.client.getChat(self.from_id)
+            chat = self.client.getChat(self.from_id)
             if not chat.is_error:
                 name = chat["title"]
 
@@ -544,18 +544,18 @@ class Update:
                 elif parse_mode == "markdown":
                     return f"[{escape_markdown(name, version=version)}](tg://user?id={self.from_id})"
 
-    async def getRepliedMessage(
+    def getRepliedMessage(
         self,
     ) -> Result:
         """Get the replied message"""
 
         if isinstance(self.message_id, int):
-            return await self.client.getRepliedMessage(
+            return self.client.getRepliedMessage(
                 self.chat_id,
                 self.message_id,
             )
 
-    async def getMessage(
+    def getMessage(
         self,
         message_id: int = None,
     ) -> Result:
@@ -563,23 +563,23 @@ class Update:
 
         Args:
             message_id (``int``, *optional*):
-                The message id, If ``None``, :meth:`~pytdbot.types.Update.message_id` is used
+                The message id, If ``None``, :meth:`~pytdbot_sync.types.Update.message_id` is used
         """
 
         message_id = message_id or self.message_id
 
         if isinstance(message_id, int):
-            return await self.client.getMessage(self.chat_id, message_id)
+            return self.client.getMessage(self.chat_id, message_id)
 
-    async def getChat(
+    def getChat(
         self,
     ) -> Result:
         """Get chat info"""
 
         if isinstance(self.chat_id, int):
-            return await self.client.getChat(self.chat_id)
+            return self.client.getChat(self.chat_id)
 
-    async def getChatMember(self) -> Result:
+    def getChatMember(self) -> Result:
         """Get member info in the current chat"""
 
         if isinstance(self.chat_id, int) and isinstance(self.from_id, int):
@@ -587,29 +587,29 @@ class Update:
                 member_id = {"@type": "messageSenderUser", "user_id": self.from_id}
             else:
                 member_id = {"@type": "messageSenderChat", "chat_id": self.from_id}
-            return await self.client.getChatMember(self.chat_id, member_id=member_id)
+            return self.client.getChatMember(self.chat_id, member_id=member_id)
 
-    async def getUser(
+    def getUser(
         self,
     ) -> Result:
         """Get user info"""
 
         if self.is_user:
-            return await self.client.getUser(self.from_id)
+            return self.client.getUser(self.from_id)
 
-    async def getSupergroupId(self) -> int:
+    def getSupergroupId(self) -> int:
         """Get the current chat ``supergroup_id``"""
 
         if "supergroup_id" in self._store:
             return self._store["supergroup_id"]
         else:
-            chat = await self.getChat()
+            chat = self.getChat()
             if not chat.is_error:
                 if chat["type"]["@type"] == "chatTypeSupergroup":
                     self._store["supergroup_id"] = chat["type"]["supergroup_id"]
                     return self._store["supergroup_id"]
 
-    async def pin(
+    def pin(
         self,
         disable_notification: bool = False,
         only_for_self: bool = False,
@@ -624,18 +624,18 @@ class Update:
                 True, if the message needs to be pinned for one side only; private chats only
 
         Returns:
-            :class:`~pytdbot.types.Result`
+            :class:`~pytdbot_sync.types.Result`
         """
 
         if isinstance(self.message_id, int):
-            return await self.client.pinChatMessage(
+            return self.client.pinChatMessage(
                 self.chat_id,
                 self.message_id,
                 disable_notification,
                 only_for_self,
             )
 
-    async def delete(
+    def delete(
         self,
         revoke: bool = True,
     ) -> Result:
@@ -646,15 +646,13 @@ class Update:
                 Pass true to delete messages for all chat members. Always true for supergroups, channels and secret chats
 
         Returns:
-            :class:`~pytdbot.types.Result`
+            :class:`~pytdbot_sync.types.Result`
         """
 
         if isinstance(self.message_id, int):
-            return await self.client.deleteMessages(
-                self.chat_id, [self.message_id], revoke
-            )
+            return self.client.deleteMessages(self.chat_id, [self.message_id], revoke)
 
-    async def leaveChat(self, chat_id: int = None) -> Result:
+    def leaveChat(self, chat_id: int = None) -> Result:
         """Leave the current chat
 
         Args:
@@ -662,15 +660,17 @@ class Update:
                 The chat to leave. Defaults to the current chat
 
         Returns:
-            :class:`~pytdbot.types.Result`
+            :class:`~pytdbot_sync.types.Result`
         """
 
         chat_id = chat_id if isinstance(chat_id, int) else self.chat_id
 
         if chat_id:
-            return await self.client.leaveChat(chat_id)
+            return self.client.leaveChat(chat_id)
 
-    def action(self, action: str, message_thread_id: int = None) -> ChatActions:
+    def action(
+        self, action: str, thread_pool, message_thread_id: int = None
+    ) -> ChatActions:
         """Sends a chat action to a specific chat. Supporting context manager (``with`` statment)
 
         Example:
@@ -678,29 +678,32 @@ class Update:
 
             .. code-block:: python
 
-                async with update.action("typing")
+                with update.action("typing", thread_pool=thread_pool)
                     # Anything that takes more than 4 seconds to produce
-                    await asyncio.sleep(10)
+                    time.sleep(10)
 
         Or
 
 
             .. code-block:: python
 
-                await update.action("typing")
+                update.action("typing")
                 # anything that takes less than 4 seconds to produce
-                await asyncio.sleep(2)
-                await update.reply_text("Hello?")
+                time.sleep(2)
+                update.reply_text("Hello?")
 
         Args:
             action (``str``):
                 Type of action to broadcast. Choose one, depending on what the user is about to receive: ``typing`` for text messages, ``upload_photo`` for photos, ``record_video`` or ``upload_video`` for videos, ``record_voice`` or ``upload_voice`` for voice notes, ``upload_document`` for general files, ``choose_sticker`` for stickers, ``find_location` for location data, ``record_video_note`` or ``upload_video_note`` for video notes
 
+            thread_pool (``ThreadPoolExecutor``):
+                The thread pool
+
             message_thread_id (``int``, *optional*):
                 If not 0, a message thread identifier in which the action was performed. Defaults to ``None``
 
         Returns:
-            :class:`~pytdbot.types.ChatActions`
+            :class:`~pytdbot_sync.types.ChatActions`
         """
 
         if isinstance(self.chat_id, int):
@@ -708,24 +711,24 @@ class Update:
         else:
             raise ValueError("Unknown chat_id")
 
-    async def download(self, file_id: int = None) -> Result:
+    def download(self, file_id: int = None) -> Result:
         """Download the current received media
 
         Args:
             file_id (``int``, *optional*):
-                File identifier to download. Defaults to None (:meth:`~pytdbot.types.Update.local_file_id`)
+                File identifier to download. Defaults to None (:meth:`~pytdbot_sync.types.Update.local_file_id`)
 
         Returns:
-            :class:`~pytdbot.types.Result`
+            :class:`~pytdbot_sync.types.Result`
         """
 
         file_id = file_id or self.local_file_id
         if isinstance(file_id, int):
-            return await self.client.downloadFile(
+            return self.client.downloadFile(
                 file_id, priority=1, offset=None, limit=None, synchronous=True
             )
 
-    async def answerCallbackQuery(
+    def answerCallbackQuery(
         self,
         text: str,
         show_alert: bool = False,
@@ -748,17 +751,17 @@ class Update:
                 Time during which the result of the query can be cached, in seconds
 
         Returns:
-            :class:`~pytdbot.types.Result`
+            :class:`~pytdbot_sync.types.Result`
         """
 
         if self.type != "updateNewCallbackQuery":
             return
 
-        return await self.client.answerCallbackQuery(
+        return self.client.answerCallbackQuery(
             self.update["id"], text, show_alert, url, cache_time
         )
 
-    async def forward(
+    def forward(
         self,
         chat_id: int,
         message_id: int = None,
@@ -781,13 +784,13 @@ class Update:
                 If True, disable notification for the message
 
         Returns:
-            :class:`~pytdbot.types.Result`
+            :class:`~pytdbot_sync.types.Result`
         """
 
         if (
             isinstance(self.message_id, int) or isinstance(message_id, int)
         ) and isinstance(self.chat_id, int):
-            return await self.client.forwardMessage(
+            return self.client.forwardMessage(
                 chat_id,
                 self.chat_id,
                 message_id or self.message_id,
@@ -795,7 +798,7 @@ class Update:
                 disable_notification,
             )
 
-    async def reply_text(
+    def reply_text(
         self,
         text: str,
         quote: bool = None,
@@ -810,7 +813,7 @@ class Update:
             InlineKeyboardMarkup, ShowKeyboardMarkup, ForceReply, RemoveKeyboard
         ] = None,
     ) -> Result:
-        """Reply to the message with text. Shortcut for :meth:`~pytdbot.Client.sendTextMessage`
+        """Reply to the message with text. Shortcut for :meth:`~pytdbot_sync.Client.sendTextMessage`
 
         Example:
 
@@ -824,7 +827,7 @@ class Update:
 
             .. code-block:: python
 
-                await client.sendTextMessage(
+                client.sendTextMessage(
                     update.chat_id,
                     "Hello, world!",
                     reply_to_message_id=update.message_id
@@ -858,11 +861,11 @@ class Update:
             reply_to_message_id (``int``, *optional*):
                 Identifier of the message to reply to or 0
 
-            reply_markup (:class:`~pytdbot.types.InlineKeyboardMarkup` | :class:`~pytdbot.types.ShowKeyboardMarkup` | :class:`~pytdbot.types.ForceReply` | :class:`~pytdbot.types.RemoveKeyboard`, *optional*):
+            reply_markup (:class:`~pytdbot_sync.types.InlineKeyboardMarkup` | :class:`~pytdbot_sync.types.ShowKeyboardMarkup` | :class:`~pytdbot_sync.types.ForceReply` | :class:`~pytdbot_sync.types.RemoveKeyboard`, *optional*):
                 The message reply markup
 
         Returns:
-            :class:`~pytdbot.types.Result`
+            :class:`~pytdbot_sync.types.Result`
         """
 
         if not reply_to_message_id:
@@ -877,7 +880,7 @@ class Update:
                     reply_to_message_id = self.message_id
 
         if isinstance(self.chat_id, int):
-            return await self.client.sendTextMessage(
+            return self.client.sendTextMessage(
                 self.chat_id,
                 text,
                 entities=entities,
@@ -890,7 +893,7 @@ class Update:
                 reply_markup=reply_markup,
             )
 
-    async def reply_animation(
+    def reply_animation(
         self,
         animation: Union[InputFile, str],
         thumbnail: InputThumbnail = None,
@@ -910,7 +913,7 @@ class Update:
             InlineKeyboardMarkup, ShowKeyboardMarkup, ForceReply, RemoveKeyboard
         ] = None,
     ) -> Result:
-        """Reply to the message with an animation. Shortcut for :meth:`~pytdbot.Client.sendAnimation`
+        """Reply to the message with an animation. Shortcut for :meth:`~pytdbot_sync.Client.sendAnimation`
 
         Example:
 
@@ -925,17 +928,17 @@ class Update:
 
             .. code-block:: python
 
-                await client.sendAnimation(
+                client.sendAnimation(
                     update.chat_id,
                     'https://c.tenor.com/eXZyHOtNs7gAAAAC/cxyduck-cxydck.gif',
                     reply_to_message_id=update.message_id
                 )
 
         Args:
-            animation (:class:`~pytdbot.types.InputFileRemote` | :class:`~pytdbot.types.InputFileLocal` | ``str``, *optional*):
-                Animation to send. Pass a file_id as string to send an animation that exists on the Telegram servers, pass an HTTP URL as a string to send animation by URL, or pass :class:`~pytdbot.types.InputFileLocal` to upload an animation that exists on the local machine
+            animation (:class:`~pytdbot_sync.types.InputFileRemote` | :class:`~pytdbot_sync.types.InputFileLocal` | ``str``, *optional*):
+                Animation to send. Pass a file_id as string to send an animation that exists on the Telegram servers, pass an HTTP URL as a string to send animation by URL, or pass :class:`~pytdbot_sync.types.InputFileLocal` to upload an animation that exists on the local machine
 
-            thumbnail (:class:`~pytdbot.types.InputThumbnail`, *optional*):
+            thumbnail (:class:`~pytdbot_sync.types.InputThumbnail`, *optional*):
                 Thumbnail of the animation to send
 
             quote (``bool``, *optional*)
@@ -974,11 +977,11 @@ class Update:
             reply_to_message_id (``int``, *optional*):
                 Identifier of the message to reply to or 0
 
-            reply_markup (:class:`~pytdbot.types.InlineKeyboardMarkup` | :class:`~pytdbot.types.ShowKeyboardMarkup` | :class:`~pytdbot.types.ForceReply` | :class:`~pytdbot.types.RemoveKeyboard`, *optional*):
+            reply_markup (:class:`~pytdbot_sync.types.InlineKeyboardMarkup` | :class:`~pytdbot_sync.types.ShowKeyboardMarkup` | :class:`~pytdbot_sync.types.ForceReply` | :class:`~pytdbot_sync.types.RemoveKeyboard`, *optional*):
                 The message reply markup
 
         Returns:
-            :class:`~pytdbot.types.Result`
+            :class:`~pytdbot_sync.types.Result`
         """
 
         if not reply_to_message_id:
@@ -993,7 +996,7 @@ class Update:
                     reply_to_message_id = self.message_id
 
         if isinstance(self.chat_id, int):
-            return await self.client.sendAnimation(
+            return self.client.sendAnimation(
                 self.chat_id,
                 animation,
                 thumbnail=thumbnail,
@@ -1011,7 +1014,7 @@ class Update:
                 reply_markup=reply_markup,
             )
 
-    async def reply_audio(
+    def reply_audio(
         self,
         audio: Union[InputFile, str],
         quote: bool = None,
@@ -1029,13 +1032,13 @@ class Update:
             InlineKeyboardMarkup, ShowKeyboardMarkup, ForceReply, RemoveKeyboard
         ] = None,
     ) -> Result:
-        """Reply to the message with an audio. Shortcut for :meth:`~pytdbot.Client.Methods.sendAudio`
+        """Reply to the message with an audio. Shortcut for :meth:`~pytdbot_sync.Client.Methods.sendAudio`
 
         Example:
 
             .. code-block:: python
 
-                await message.reply_audio(
+                message.reply_audio(
                     'https://t.me/KKK9K/1592',
                     quote=True
                 )
@@ -1044,15 +1047,15 @@ class Update:
 
             .. code-block:: python
 
-                await client.sendAudio(
+                client.sendAudio(
                     message.chat_id,
                     'https://t.me/KKK9K/1592',
                     reply_to_message_id=message.message_id
                 )
 
         Args:
-            audio (:class:`~pytdbot.types.InputFileRemote` | :class:`~pytdbot.types.InputFileLocal` | ``str``, *optional*):
-                Audio file to send. Pass a file_id as string to send an audio that exists on the Telegram servers, pass an HTTP URL as a string to send an audio from the Internet, or pass :class:`~pytdbot.types.InputFileLocal` to upload an audio from a file on the local machine
+            audio (:class:`~pytdbot_sync.types.InputFileRemote` | :class:`~pytdbot_sync.types.InputFileLocal` | ``str``, *optional*):
+                Audio file to send. Pass a file_id as string to send an audio that exists on the Telegram servers, pass an HTTP URL as a string to send an audio from the Internet, or pass :class:`~pytdbot_sync.types.InputFileLocal` to upload an audio from a file on the local machine
 
             quote (``bool``, *optional*)
                 If True, the message is sent as a reply to this message. Ignored if ``reply_to_message_id`` is specified. Default to ``True`` in group/channel chats and ``False`` in private chats
@@ -1087,11 +1090,11 @@ class Update:
             reply_to_message_id (``int``, *optional*):
                 Identifier of the message to reply to or 0
 
-            reply_markup (:class:`~pytdbot.types.InlineKeyboardMarkup` | :class:`~pytdbot.types.ShowKeyboardMarkup` | :class:`~pytdbot.types.ForceReply` | :class:`~pytdbot.types.RemoveKeyboard`, *optional*):
+            reply_markup (:class:`~pytdbot_sync.types.InlineKeyboardMarkup` | :class:`~pytdbot_sync.types.ShowKeyboardMarkup` | :class:`~pytdbot_sync.types.ForceReply` | :class:`~pytdbot_sync.types.RemoveKeyboard`, *optional*):
                 The message reply markup
 
         Returns:
-            :class:`~pytdbot.types.Result`
+            :class:`~pytdbot_sync.types.Result`
         """
 
         if not reply_to_message_id:
@@ -1106,7 +1109,7 @@ class Update:
                     reply_to_message_id = self.message_id
 
         if isinstance(self.chat_id, int):
-            return await self.client.sendAudio(
+            return self.client.sendAudio(
                 self.chat_id,
                 audio,
                 caption=caption,
@@ -1122,7 +1125,7 @@ class Update:
                 reply_markup=reply_markup,
             )
 
-    async def reply_document(
+    def reply_document(
         self,
         document: Union[InputFile, str],
         quote: bool = None,
@@ -1137,13 +1140,13 @@ class Update:
             InlineKeyboardMarkup, ShowKeyboardMarkup, ForceReply, RemoveKeyboard
         ] = None,
     ) -> Result:
-        """Reply to the message with a document. Shortcut for :meth:`~pytdbot.Client.sendDocument`
+        """Reply to the message with a document. Shortcut for :meth:`~pytdbot_sync.Client.sendDocument`
 
         Example:
 
             .. code-block:: python
 
-                await message.reply_document(
+                message.reply_document(
                     'https://github.com/tdlib/td/archive/refs/heads/master.zip',
                     quote=True
                 )
@@ -1152,15 +1155,15 @@ class Update:
 
             .. code-block:: python
 
-                await client.sendDocument(
+                client.sendDocument(
                     message.chat_id,
                     'https://github.com/tdlib/td/archive/refs/heads/master.zip',
                     reply_to_message_id=message.message_id
                 )
 
         Args:
-            document (:class:`~pytdbot.types.InputFileRemote` | :class:`~pytdbot.types.InputFileLocal` | ``str``, *optional*):
-                File to send. Pass a file_id as string to send a file that exists on the Telegram servers, pass an HTTP URL as a string to send a file from the Internet, or pass :class:`~pytdbot.types.InputFileLocal` to upload a file from the local machine
+            document (:class:`~pytdbot_sync.types.InputFileRemote` | :class:`~pytdbot_sync.types.InputFileLocal` | ``str``, *optional*):
+                File to send. Pass a file_id as string to send a file that exists on the Telegram servers, pass an HTTP URL as a string to send a file from the Internet, or pass :class:`~pytdbot_sync.types.InputFileLocal` to upload a file from the local machine
 
             quote (``bool``, *optional*)
                 If True, the message is sent as a reply to this message. Ignored if ``reply_to_message_id`` is specified. Default to ``True`` in group/channel chats and ``False`` in private chats
@@ -1186,11 +1189,11 @@ class Update:
             reply_to_message_id (``int``, *optional*):
                 Identifier of the message to reply to or 0
 
-            reply_markup (:class:`~pytdbot.types.InlineKeyboardMarkup` | :class:`~pytdbot.types.ShowKeyboardMarkup` | :class:`~pytdbot.types.ForceReply` | :class:`~pytdbot.types.RemoveKeyboard`, *optional*):
+            reply_markup (:class:`~pytdbot_sync.types.InlineKeyboardMarkup` | :class:`~pytdbot_sync.types.ShowKeyboardMarkup` | :class:`~pytdbot_sync.types.ForceReply` | :class:`~pytdbot_sync.types.RemoveKeyboard`, *optional*):
                 The message reply markup
 
         Returns:
-            :class:`~pytdbot.types.Result`
+            :class:`~pytdbot_sync.types.Result`
         """
 
         if not reply_to_message_id:
@@ -1205,7 +1208,7 @@ class Update:
                     reply_to_message_id = self.message_id
 
         if isinstance(self.chat_id, int):
-            return await self.client.sendDocument(
+            return self.client.sendDocument(
                 self.chat_id,
                 document,
                 caption=caption,
@@ -1218,7 +1221,7 @@ class Update:
                 reply_markup=reply_markup,
             )
 
-    async def reply_sticker(
+    def reply_sticker(
         self,
         sticker: Union[InputFile, str],
         emoji: str = None,
@@ -1231,13 +1234,13 @@ class Update:
             InlineKeyboardMarkup, ShowKeyboardMarkup, ForceReply, RemoveKeyboard
         ] = None,
     ) -> Result:
-        """Reply to the message with a sticker. Shortcut for :meth:`~pytdbot.Client.sendSticker`
+        """Reply to the message with a sticker. Shortcut for :meth:`~pytdbot_sync.Client.sendSticker`
 
         Example:
 
             .. code-block:: python
 
-                await message.reply_sticker(
+                message.reply_sticker(
                     types.InputFileLocal('sticker.webp'),
                     quote=True
                 )
@@ -1246,15 +1249,15 @@ class Update:
 
             .. code-block:: python
 
-                await client.sendSticker(
+                client.sendSticker(
                     message.chat_id,
                     types.InputFileLocal('sticker.webp'),
                     reply_to_message_id=message.message_id
                 )
 
         Args:
-            sticker (:class:`~pytdbot.types.InputFileRemote` | :class:`~pytdbot.types.InputFileLocal` | ``str``, *optional*):
-                Sticker to send. Pass a file_id as string to send a file that exists on the Telegram servers, pass an HTTP URL as a string to send a file from the Internet, or pass :class:`~pytdbot.types.InputFileLocal` to upload a sticker from the local machine
+            sticker (:class:`~pytdbot_sync.types.InputFileRemote` | :class:`~pytdbot_sync.types.InputFileLocal` | ``str``, *optional*):
+                Sticker to send. Pass a file_id as string to send a file that exists on the Telegram servers, pass an HTTP URL as a string to send a file from the Internet, or pass :class:`~pytdbot_sync.types.InputFileLocal` to upload a sticker from the local machine
 
             emoji (``str``, *optional*):
                 Emoji associated with the sticker
@@ -1274,11 +1277,11 @@ class Update:
             reply_to_message_id (``int``, *optional*):
                 Identifier of the message to reply to or 0
 
-            reply_markup (:class:`~pytdbot.types.InlineKeyboardMarkup` | :class:`~pytdbot.types.ShowKeyboardMarkup` | :class:`~pytdbot.types.ForceReply` | :class:`~pytdbot.types.RemoveKeyboard`, *optional*):
+            reply_markup (:class:`~pytdbot_sync.types.InlineKeyboardMarkup` | :class:`~pytdbot_sync.types.ShowKeyboardMarkup` | :class:`~pytdbot_sync.types.ForceReply` | :class:`~pytdbot_sync.types.RemoveKeyboard`, *optional*):
                 The message reply markup
 
         Returns:
-            :class:`~pytdbot.types.Result`
+            :class:`~pytdbot_sync.types.Result`
         """
 
         if not reply_to_message_id:
@@ -1293,7 +1296,7 @@ class Update:
                     reply_to_message_id = self.message_id
 
         if isinstance(self.chat_id, int):
-            return await self.client.sendSticker(
+            return self.client.sendSticker(
                 self.chat_id,
                 sticker,
                 emoji=emoji,
@@ -1304,7 +1307,7 @@ class Update:
                 reply_markup=reply_markup,
             )
 
-    async def reply_video(
+    def reply_video(
         self,
         video: Union[InputFile, str],
         quote: bool = None,
@@ -1323,13 +1326,13 @@ class Update:
             InlineKeyboardMarkup, ShowKeyboardMarkup, ForceReply, RemoveKeyboard
         ] = None,
     ) -> Result:
-        """Reply to the message with a video. Shortcut for :meth:`~pytdbot.Client.sendVideo`
+        """Reply to the message with a video. Shortcut for :meth:`~pytdbot_sync.Client.sendVideo`
 
         Example:
 
             .. code-block:: python
 
-                await message.reply_video(
+                message.reply_video(
                     types.InputFileLocal('video.mp4'),
                     quote=True
                 )
@@ -1338,15 +1341,15 @@ class Update:
 
             .. code-block:: python
 
-                await client.sendVideo(
+                client.sendVideo(
                     message.chat_id,
                     types.InputFileLocal('video.mp4'),
                     reply_to_message_id=message.message_id
                 )
 
         Args:
-            video (:class:`~pytdbot.types.InputFileRemote` | :class:`~pytdbot.types.InputFileLocal` | ``str``, *optional*):
-                Video to send. Pass a file_id as string to send a file that exists on the Telegram servers, pass an HTTP URL as a string to send a file from the Internet, or pass :class:`~pytdbot.types.InputFileLocal` to upload a video from the local machine
+            video (:class:`~pytdbot_sync.types.InputFileRemote` | :class:`~pytdbot_sync.types.InputFileLocal` | ``str``, *optional*):
+                Video to send. Pass a file_id as string to send a file that exists on the Telegram servers, pass an HTTP URL as a string to send a file from the Internet, or pass :class:`~pytdbot_sync.types.InputFileLocal` to upload a video from the local machine
 
             quote (``bool``, *optional*)
                 If True, the message is sent as a reply to this message. Ignored if ``reply_to_message_id`` is specified. Default to ``True`` in group/channel chats and ``False`` in private chats
@@ -1384,11 +1387,11 @@ class Update:
             reply_to_message_id (``int``, *optional*):
                 Identifier of the message to reply to or 0
 
-            reply_markup (:class:`~pytdbot.types.InlineKeyboardMarkup` | :class:`~pytdbot.types.ShowKeyboardMarkup` | :class:`~pytdbot.types.ForceReply` | :class:`~pytdbot.types.RemoveKeyboard`, *optional*):
+            reply_markup (:class:`~pytdbot_sync.types.InlineKeyboardMarkup` | :class:`~pytdbot_sync.types.ShowKeyboardMarkup` | :class:`~pytdbot_sync.types.ForceReply` | :class:`~pytdbot_sync.types.RemoveKeyboard`, *optional*):
                 The message reply markup
 
         Returns:
-            :class:`~pytdbot.types.Result`
+            :class:`~pytdbot_sync.types.Result`
         """
 
         if not reply_to_message_id:
@@ -1403,7 +1406,7 @@ class Update:
                     reply_to_message_id = self.message_id
 
         if isinstance(self.chat_id, int):
-            return await self.client.sendVideo(
+            return self.client.sendVideo(
                 self.chat_id,
                 video,
                 duration=duration,
@@ -1420,7 +1423,7 @@ class Update:
                 reply_markup=reply_markup,
             )
 
-    async def reply_photo(
+    def reply_photo(
         self,
         photo: Union[InputFile, str],
         quote: bool = None,
@@ -1435,13 +1438,13 @@ class Update:
             InlineKeyboardMarkup, ShowKeyboardMarkup, ForceReply, RemoveKeyboard
         ] = None,
     ) -> Result:
-        """Reply to the message with a photo. Shortcut for :meth:`~pytdbot.Client.sendPhoto`
+        """Reply to the message with a photo. Shortcut for :meth:`~pytdbot_sync.Client.sendPhoto`
 
         Example:
 
             .. code-block:: python
 
-                await message.reply_photo(
+                message.reply_photo(
                     types.InputFileLocal('photo.jpg'),
                     quote=True
                 )
@@ -1450,15 +1453,15 @@ class Update:
 
             .. code-block:: python
 
-                await client.sendPhoto(
+                client.sendPhoto(
                     message.chat_id,
                     types.InputFileLocal('photo.jpg'),
                     reply_to_message_id=message.message_id
                 )
 
         Args:
-            photo (:class:`~pytdbot.types.InputFileRemote` | :class:`~pytdbot.types.InputFileLocal` | ``str``, *optional*):
-                Photo to send. Pass a file_id as string to send a file that exists on the Telegram servers, pass an HTTP URL as a string to send a file from the Internet, or pass :class:`~pytdbot.types.InputFileLocal` to upload a photo from the local machine
+            photo (:class:`~pytdbot_sync.types.InputFileRemote` | :class:`~pytdbot_sync.types.InputFileLocal` | ``str``, *optional*):
+                Photo to send. Pass a file_id as string to send a file that exists on the Telegram servers, pass an HTTP URL as a string to send a file from the Internet, or pass :class:`~pytdbot_sync.types.InputFileLocal` to upload a photo from the local machine
 
             quote (``bool``, *optional*)
                 If True, the message is sent as a reply to this message. Ignored if ``reply_to_message_id`` is specified. Default to ``True`` in group/channel chats and ``False`` in private chats
@@ -1484,11 +1487,11 @@ class Update:
             reply_to_message_id (``int``, *optional*):
                 Identifier of the message to reply to or 0
 
-            reply_markup (:class:`~pytdbot.types.InlineKeyboardMarkup` | :class:`~pytdbot.types.ShowKeyboardMarkup` | :class:`~pytdbot.types.ForceReply` | :class:`~pytdbot.types.RemoveKeyboard`, *optional*):
+            reply_markup (:class:`~pytdbot_sync.types.InlineKeyboardMarkup` | :class:`~pytdbot_sync.types.ShowKeyboardMarkup` | :class:`~pytdbot_sync.types.ForceReply` | :class:`~pytdbot_sync.types.RemoveKeyboard`, *optional*):
                 The message reply markup
 
         Returns:
-            :class:`~pytdbot.types.Result`
+            :class:`~pytdbot_sync.types.Result`
         """
 
         if not reply_to_message_id:
@@ -1503,7 +1506,7 @@ class Update:
                     reply_to_message_id = self.message_id
 
         if isinstance(self.chat_id, int):
-            return await self.client.sendPhoto(
+            return self.client.sendPhoto(
                 self.chat_id,
                 photo,
                 caption=caption,
@@ -1516,7 +1519,7 @@ class Update:
                 reply_markup=reply_markup,
             )
 
-    async def reply_voice(
+    def reply_voice(
         self,
         voice: Union[InputFile, str],
         quote: bool = None,
@@ -1532,13 +1535,13 @@ class Update:
             InlineKeyboardMarkup, ShowKeyboardMarkup, ForceReply, RemoveKeyboard
         ] = None,
     ) -> Result:
-        """Reply to the message with a voice. Shortcut for :meth:`~pytdbot.Client.sendVoice`
+        """Reply to the message with a voice. Shortcut for :meth:`~pytdbot_sync.Client.sendVoice`
 
         Example:
 
             .. code-block:: python
 
-                await message.reply_voice(
+                message.reply_voice(
                     types.InputFileLocal('voice.ogg'),
                     quote=True
                 )
@@ -1547,15 +1550,15 @@ class Update:
 
             .. code-block:: python
 
-                await client.sendVoice(
+                client.sendVoice(
                     message.chat_id,
                     types.InputFileLocal('voice.ogg'),
                     reply_to_message_id=message.message_id
                 )
 
         Args:
-            voice (:class:`~pytdbot.types.InputFileRemote` | :class:`~pytdbot.types.InputFileLocal` | ``str``, *optional*):
-                Voice to send. Pass a file_id as string to send a file that exists on the Telegram servers, pass an HTTP URL as a string to send a file from the Internet, or pass :class:`~pytdbot.types.InputFileLocal` to upload a voice from the local machine
+            voice (:class:`~pytdbot_sync.types.InputFileRemote` | :class:`~pytdbot_sync.types.InputFileLocal` | ``str``, *optional*):
+                Voice to send. Pass a file_id as string to send a file that exists on the Telegram servers, pass an HTTP URL as a string to send a file from the Internet, or pass :class:`~pytdbot_sync.types.InputFileLocal` to upload a voice from the local machine
 
             quote (``bool``, *optional*)
                 If True, the message is sent as a reply to this message. Ignored if ``reply_to_message_id`` is specified. Default to ``True`` in group/channel chats and ``False`` in private chats
@@ -1584,11 +1587,11 @@ class Update:
             reply_to_message_id (``int``, *optional*):
                 Identifier of the message to reply to or 0
 
-            reply_markup (:class:`~pytdbot.types.InlineKeyboardMarkup` | :class:`~pytdbot.types.ShowKeyboardMarkup` | :class:`~pytdbot.types.ForceReply` | :class:`~pytdbot.types.RemoveKeyboard`, *optional*):
+            reply_markup (:class:`~pytdbot_sync.types.InlineKeyboardMarkup` | :class:`~pytdbot_sync.types.ShowKeyboardMarkup` | :class:`~pytdbot_sync.types.ForceReply` | :class:`~pytdbot_sync.types.RemoveKeyboard`, *optional*):
                 The message reply markup
 
         Returns:
-            :class:`~pytdbot.types.Result`
+            :class:`~pytdbot_sync.types.Result`
         """
 
         if not reply_to_message_id:
@@ -1603,7 +1606,7 @@ class Update:
                     reply_to_message_id = self.message_id
 
         if isinstance(self.chat_id, int):
-            return await self.client.sendVoice(
+            return self.client.sendVoice(
                 self.chat_id,
                 voice,
                 caption=caption,
@@ -1617,7 +1620,7 @@ class Update:
                 reply_markup=reply_markup,
             )
 
-    async def edit_text(
+    def edit_text(
         self,
         text: str,
         entities: list = None,
@@ -1627,7 +1630,7 @@ class Update:
             InlineKeyboardMarkup, ShowKeyboardMarkup, ForceReply, RemoveKeyboard
         ] = None,
     ) -> Result:
-        """Edit the current recevied message. Shortcut for :meth:`~pytdbot.Client.editTextMessage`
+        """Edit the current recevied message. Shortcut for :meth:`~pytdbot_sync.Client.editTextMessage`
 
         Example:
 
@@ -1641,7 +1644,7 @@ class Update:
 
             .. code-block:: python
 
-                await client.editTextMessage(
+                client.editTextMessage(
                     update.chat_id,
                     update.message_id,
                     "Hello, world!"
@@ -1660,15 +1663,15 @@ class Update:
             disable_web_page_preview (``bool``, *optional*):
                 Disables link previews for links in this message
 
-            reply_markup (:class:`~pytdbot.types.InlineKeyboardMarkup` | :class:`~pytdbot.types.ShowKeyboardMarkup` | :class:`~pytdbot.types.ForceReply` | :class:`~pytdbot.types.RemoveKeyboard`, *optional*):
+            reply_markup (:class:`~pytdbot_sync.types.InlineKeyboardMarkup` | :class:`~pytdbot_sync.types.ShowKeyboardMarkup` | :class:`~pytdbot_sync.types.ForceReply` | :class:`~pytdbot_sync.types.RemoveKeyboard`, *optional*):
                 The message reply markup
 
         Returns:
-            :class:`~pytdbot.types.Result`
+            :class:`~pytdbot_sync.types.Result`
         """
 
         if isinstance(self.message_id, int):
-            return await self.client.editTextMessage(
+            return self.client.editTextMessage(
                 self.chat_id,
                 self.message_id,
                 text,

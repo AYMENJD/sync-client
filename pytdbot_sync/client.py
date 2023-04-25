@@ -1,6 +1,6 @@
 import signal
-import pytdbot
-import asyncio
+import pytdbot_sync
+import time
 
 from platform import python_implementation, python_version
 from os.path import join as join_path
@@ -13,8 +13,9 @@ from logging import getLogger, DEBUG
 from base64 import b64encode
 from deepdiff import DeepDiff
 from concurrent.futures import ThreadPoolExecutor
-from threading import current_thread, main_thread
+from threading import Thread, current_thread, main_thread
 from ujson import dumps
+from queue import Queue
 
 from .tdjson import TdJson
 from .handlers import Decorators, Handler
@@ -28,7 +29,7 @@ logger = getLogger(__name__)
 
 
 class Client(Decorators, Methods):
-    """Pytdbot, a TDLib client
+    """Pytdbot sync, a TDLib client
 
     Args:
         api_id (``int``):
@@ -49,14 +50,14 @@ class Client(Decorators, Methods):
         lib_path (``str``, *optional*):
             Path to TDLib library. Defaults to ``None`` (auto-detect)
 
-        plugins (:class:`~pytdbot.types.Plugins`, *optional*):
+        plugins (:class:`~pytdbot_sync.types.Plugins`, *optional*):
             Plugins to load
 
-        update_class (:class:`~pytdbot.types.Update`, *optional*):
-            Update class to use. Defaults to :class:`~pytdbot.types.Update`
+        update_class (:class:`~pytdbot_sync.types.Update`, *optional*):
+            Update class to use. Defaults to :class:`~pytdbot_sync.types.Update`
 
         default_parse_mode (``str``, *optional*):
-            The default ``parse_mode`` for methods: :meth:`~pytdbot.Client.sendTextMessage`, :meth:`~pytdbot.Client.sendPhoto`, :meth:`~pytdbot.Client.sendAudio`, :meth:`~pytdbot.Client.sendVideo`, :meth:`~pytdbot.Client.sendDocument`, :meth:`~pytdbot.Client.sendAnimation`, :meth:`~pytdbot.Client.sendVoice`, :meth:`~pytdbot.Client.sendCopy`, :meth:`~pytdbot.Client.editTextMessage`; Defaults to ``None`` (Don\'t parse)
+            The default ``parse_mode`` for methods: :meth:`~pytdbot_sync.Client.sendTextMessage`, :meth:`~pytdbot_sync.Client.sendPhoto`, :meth:`~pytdbot_sync.Client.sendAudio`, :meth:`~pytdbot_sync.Client.sendVideo`, :meth:`~pytdbot_sync.Client.sendDocument`, :meth:`~pytdbot_sync.Client.sendAnimation`, :meth:`~pytdbot_sync.Client.sendVoice`, :meth:`~pytdbot_sync.Client.sendCopy`, :meth:`~pytdbot_sync.Client.editTextMessage`; Defaults to ``None`` (Don\'t parse)
             Supported values: ``markdown``, ``markdownv2``, ``html``
 
         system_language_code (``str``, *optional*):
@@ -83,9 +84,6 @@ class Client(Decorators, Methods):
         ignore_file_names (``bool``, *optional*):
             If set to true, original file names will be ignored. Otherwise, downloaded files will be saved under names as close as possible to the original name. Defaults to ``False``
 
-        loop (:py:class:`asyncio.AbstractEventLoop`, *optional*):
-            Event loop. Defaults to ``None`` (auto-detect)
-
         options (``dict``, *optional*):
             Pass key-value dictionary to set TDLib options. Check the list of available options at https://core.telegram.org/tdlib/options
 
@@ -99,7 +97,7 @@ class Client(Decorators, Methods):
         td_verbosity (``int``, *optional*):
             Verbosity level of TDLib. Defaults to ``2``
 
-        td_log (:class:`~pytdbot.types.LogStream`, *optional*):
+        td_log (:class:`~pytdbot_sync.types.LogStream`, *optional*):
             Log stream. Defaults to ``None`` (Log to ``stdout``)
     """
 
@@ -122,7 +120,6 @@ class Client(Decorators, Methods):
         use_message_database: bool = True,
         enable_storage_optimizer: bool = True,
         ignore_file_names: bool = False,
-        loop: asyncio.AbstractEventLoop = None,
         options: dict = None,
         sleep_threshold: int = None,
         workers: int = 5,
@@ -155,8 +152,11 @@ class Client(Decorators, Methods):
         self.sleep_threshold = (
             sleep_threshold if isinstance(sleep_threshold, int) else 0
         )
-        self.workers = workers
-        self.queue = asyncio.Queue()
+        self.workers = ThreadPoolExecutor(
+            workers if isinstance(workers, int) and workers > 0 else 5,
+            "pytdbot_sync_worker",
+        )
+        self.queue = Queue()
         self.td_verbosity = td_verbosity
         self.connection_state: str = None
         self.is_running = None
@@ -169,20 +169,11 @@ class Client(Decorators, Methods):
         self._handlers = {"initializer": [], "finalizer": []}
         self._results = {}
         self._tdjson = TdJson(lib_path, td_verbosity)
-        self._executor = ThreadPoolExecutor(5, "Pytdbot")
-        self._workers_tasks = None
         self._retry_after_prefex = "Too Many Requests: retry after "
         self.__authorization_state = None
         self.__authorization = None
-        self.__cache = {"is_coro_filter": {}}
         self.__login = False
         self.__is_closing = False
-
-        self.loop = (
-            loop
-            if isinstance(loop, asyncio.AbstractEventLoop)
-            else asyncio.get_event_loop()
-        )
 
         if plugins is not None:
             self._load_plugins()
@@ -192,14 +183,14 @@ class Client(Decorators, Methods):
                 {"@type": "setLogStream", "log_stream": td_log.to_dict()}
             )
 
-    async def __aenter__(self):
-        await self.start()
-        await self.login()
+    def __enter__(self):
+        self.start()
+        self.login()
         return self
 
-    async def __aexit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(self, exc_type, exc_val, exc_tb):
         try:
-            await self.stop()
+            self.stop()
         except Exception:
             pass
 
@@ -208,8 +199,8 @@ class Client(Decorators, Methods):
         """Current authorization state"""
         return self.__authorization_state
 
-    async def start(self, login: bool = True) -> None:
-        """Start pytdbot client
+    def start(self, login: bool = True) -> None:
+        """Start Pytdbot sync client
 
         Args:
             login (``bool``, *optional*):
@@ -217,21 +208,16 @@ class Client(Decorators, Methods):
         """
         if not self.is_running:
 
-            logger.info("Starting pytdbot client...")
+            logger.info("Starting Pytdbot sync client...")
 
-            self._workers_tasks = [
-                self.loop.create_task(self._update_worker(x + 1))
-                for x in range(self.workers)
-            ]
+            Thread(target=self.__listen_loop, daemon=True).start()
 
-            logger.info("Started with %s workers", self.workers)
-
-            self.loop.create_task(self.__listen_loop())
+            logger.info("Started with %s workers", self.workers._max_workers)
 
         if login:
-            await self.login()
+            self.login()
 
-    async def login(self) -> None:
+    def login(self) -> None:
         """Login to Telegram."""
 
         if self.is_authenticated:
@@ -239,17 +225,17 @@ class Client(Decorators, Methods):
 
         self.__login = True
 
-        await self.getOption("version")  # Ping TDLib to start authorization proccess
+        self.getOption("version")  # Ping TDLib to start authorization proccess
 
         while self.authorization_state != "authorizationStateReady":
-            await asyncio.sleep(0.1)
+            time.sleep(0.1)
             if self.authorization_state == "authorizationStateClosed":
                 return
 
         if not self.is_running:
             return
 
-        self.me = await self.getMe()
+        self.me = self.getMe()
         if self.me.is_error:
             logger.error("Get me error: {}".format(self.me["message"]))
 
@@ -268,7 +254,7 @@ class Client(Decorators, Methods):
         self,
         update_type: str,
         func: Callable,
-        filters: pytdbot.filters.Filter = None,
+        filters: pytdbot_sync.filters.Filter = None,
         position: int = None,
     ) -> None:
         """Add an update handler
@@ -280,7 +266,7 @@ class Client(Decorators, Methods):
             func (``Callable``):
                 A callable function
 
-            filters (:class:`~pytdbot.filters.Filter`, *optional*):
+            filters (:class:`~pytdbot_sync.filters.Filter`, *optional*):
                 message filter
 
             position (``int``, *optional*):
@@ -294,7 +280,7 @@ class Client(Decorators, Methods):
         elif not isinstance(func, Callable):
             raise TypeError("func must be callable")
         elif filters is not None and not isinstance(filters, Filter):
-            raise TypeError("filters must be instance of pytdbot.filters.Filter")
+            raise TypeError("filters must be instance of pytdbot_sync.filters.Filter")
         else:
             func = Handler(func, update_type, filters, position)
             if update_type not in self._handlers:
@@ -330,7 +316,7 @@ class Client(Decorators, Methods):
                     return True
         return False
 
-    async def invoke(
+    def invoke(
         self,
         request: dict,
     ) -> Result:
@@ -339,9 +325,9 @@ class Client(Decorators, Methods):
         Example:
             .. code-block:: python
 
-                from pytdbot import Client
+                from pytdbot_sync import Client
 
-                async with Client(...) as client:
+                with Client(...) as client:
                     res = await client.invoke({"@type": "getOption", "name": "version"})
                     if not res.is_error:
                         print(res)
@@ -351,7 +337,7 @@ class Client(Decorators, Methods):
                 The request to be sent
 
         Returns:
-            :class:`~pytdbot.types.Result`
+            :class:`~pytdbot_sync.types.Result`
         """
 
         result = Result(request)
@@ -363,7 +349,7 @@ class Client(Decorators, Methods):
             logger.debug("Sending: {}".format(dumps(result.request, indent=4)))
 
         self.__send(result.request)
-        await result
+        result.wait()
 
         if result.is_error:
             if result["code"] == 429:
@@ -378,10 +364,10 @@ class Client(Decorators, Methods):
                         )
                     )
 
-                    await asyncio.sleep(retry_after)
+                    time.sleep(retry_after)
                     self._results[result.id] = result
                     self.__send(result.request)
-                    await result
+                    result.wait()
             elif not self.use_message_database and (
                 result["code"] == 400
                 and result["message"] == "Chat not found"
@@ -391,7 +377,7 @@ class Client(Decorators, Methods):
 
                 logger.debug("Attempt to load chat {}".format(chat_id))
 
-                load_chat = await self.getChat(chat_id)
+                load_chat = self.getChat(chat_id)
 
                 if not load_chat.is_error:
                     logger.debug("Chat {} is loaded".format(chat_id))
@@ -405,27 +391,27 @@ class Client(Decorators, Methods):
                     # If there is a message_id then
                     # we need to load it to avoid MESSAGE_NOT_FOUND
                     if message_id > 0:
-                        await self.getMessage(chat_id, message_id)
+                        self.getMessage(chat_id, message_id)
 
                     # repeat the first request
                     result.reset()
                     self._results[result.id] = result
                     self.__send(result.request)
-                    await result
+                    result.wait()
                 else:
                     logger.error("Couldn't load chat {}".format(chat_id))
 
         return result
 
-    async def call_method(self, method: str, **kwargs) -> Result:
+    def call_method(self, method: str, **kwargs) -> Result:
         """Call a method. with keyword arguments (``kwargs``) support
 
         Example:
             .. code-block:: python
 
-                from pytdbot import Client
+                from pytdbot_sync import Client
 
-                async with Client(...) as client:
+                with Client(...) as client:
                     res = await client.call_method("getOption", name="version"})
                     if not res.is_error:
                         print(res)
@@ -435,12 +421,12 @@ class Client(Decorators, Methods):
                 TDLib method name
 
         Returns:
-            :class:`~pytdbot.types.Result`
+            :class:`~pytdbot_sync.types.Result`
         """
 
         kwargs["@type"] = method
 
-        return await self.invoke(kwargs)
+        return self.invoke(kwargs)
 
     def run(self, login: bool = True) -> None:
         """Start the client and block until the client is stopped
@@ -448,12 +434,12 @@ class Client(Decorators, Methods):
         Example:
             .. code-block:: python
 
-                from pytdbot import Client
+                from pytdbot_sync import Client
 
                 client = Client(...)
 
                 @client.on_updateNewMessage()
-                async def new_message(c,update):
+                def new_message(c,update):
                     await update.reply_text('Hello!')
 
                 client.run()
@@ -465,16 +451,16 @@ class Client(Decorators, Methods):
 
         self._register_signal_handlers()
 
-        self.loop.run_until_complete(self.start(login))
-        self.loop.run_until_complete(self.idle())
+        self.start(login)
+        self.idle()
 
-    async def idle(self):
+    def idle(self):
         """Idle and wait until the client is stopped."""
 
         while self.is_running:
-            await asyncio.sleep(1)
+            time.sleep(1)
 
-    async def stop(self) -> bool:
+    def stop(self) -> bool:
         """Stop the client
 
         Raises:
@@ -494,10 +480,10 @@ class Client(Decorators, Methods):
 
         self.__is_closing = True
 
-        await self.close()
+        self.close()
 
         while self.authorization_state != "authorizationStateClosed":
-            await asyncio.sleep(0.1)
+            time.sleep(0.1)
         else:
             self.__stop_client()
 
@@ -510,10 +496,11 @@ class Client(Decorators, Methods):
             request
         )  # tdjson.send is asynchronous, So we don't need run_in_executor. This improves performance
 
-    async def __receive(self, timeout: float = 2.0) -> dict:
-        return await self.loop.run_in_executor(
-            self._executor, self._tdjson.receive, timeout
-        )
+    def __receive(self, timeout: float = 2.0) -> dict:
+        # return await self.loop.run_in_executor(
+        #     self._executor, self._tdjson.receive, timeout
+        # )
+        return self._tdjson.receive(timeout)
 
     def _check_init_args(self):
         if not isinstance(self.__api_id, int):
@@ -528,15 +515,10 @@ class Client(Decorators, Methods):
             raise TypeError("files_directory must be str")
         elif not isinstance(self.td_verbosity, int):
             raise TypeError("td_verbosity must be int")
-        elif not isinstance(self.workers, int):
-            raise TypeError("workers must be int")
         elif type(Update) is not type(self.update_class):
             raise TypeError(
-                "update_class must be instance of class pytdbot.types.Update"
+                "update_class must be instance of class pytdbot_sync.types.Update"
             )
-
-        if self.workers < 1:
-            raise ValueError("workers must be greater than 0")
 
     def get_retry_after_time(self, error_message: str) -> int:
         """Get the retry after time from flood wait error message
@@ -548,7 +530,6 @@ class Client(Decorators, Methods):
         Returns:
             py:class:`int`
         """
-        assert isinstance(error_message, str), "error_message must be str"
 
         try:
             return int(error_message.removeprefix(self._retry_after_prefex))
@@ -569,45 +550,30 @@ class Client(Decorators, Methods):
                 for name in dir(module):
                     obj = getattr(module, name)
                     if hasattr(obj, "_handler") and isinstance(obj._handler, Handler):
-                        if asyncio.iscoroutinefunction(obj._handler.func):
-                            self.add_handler(
-                                obj._handler.update_type,
+                        self.add_handler(
+                            obj._handler.update_type,
+                            obj._handler.func,
+                            obj._handler.filter,
+                            obj._handler.position,
+                        )
+                        logger.debug(
+                            "Handler {} added from {}".format(
                                 obj._handler.func,
-                                obj._handler.filter,
-                                obj._handler.position,
+                                module_path,
                             )
-                            logger.debug(
-                                "Handler {} added from {}".format(
-                                    obj._handler.func,
-                                    module_path,
-                                )
-                            )
-                            handlers += 1
-                        else:
-                            logger.warn(
-                                "Handler {} is not an async function from module {}".format(
-                                    obj._handler.func,
-                                    module_path,
-                                )
-                            )
+                        )
+                        handlers += 1
+
                 count += 1
         logger.info("From {} plugins got {} handlers".format(count, handlers))
 
-    def is_coro_filter(self, func: Callable) -> bool:
-        if func in self.__cache["is_coro_filter"]:
-            return self.__cache["is_coro_filter"][func]
-        else:
-            is_coro = asyncio.iscoroutinefunction(func)
-            self.__cache["is_coro_filter"][func] = is_coro
-            return is_coro
-
-    async def __listen_loop(self):
+    def __listen_loop(self):
         try:
             self.is_running = True
             logger.info("Listening to updates...")
 
             while self.is_running:
-                update = await self.__receive(100000.0)  # seconds
+                update = self.__receive(100000.0)  # seconds
                 if update is None:
                     continue
                 self._process_update(update)
@@ -641,87 +607,77 @@ class Client(Decorators, Methods):
                 )
         else:
             if update["@type"] == "updateAuthorizationState":
-                self.loop.create_task(self.__handle_authorization_state(update))
+                self.workers.submit(self.__handle_authorization_state, update)
             elif update["@type"] == "updateMessageSendSucceeded":
-                self.loop.create_task(self.__handle_update_message_succeeded(update))
+                self.__handle_update_message_succeeded(update)
             elif update["@type"] == "updateMessageSendFailed":
-                self.loop.create_task(self.__handle_update_message_failed(update))
+                self.__handle_update_message_failed(update)
             elif update["@type"] == "updateConnectionState":
-                self.loop.create_task(self.__handle_connection_state(update))
+                self.__handle_connection_state(update)
             elif update["@type"] == "updateOption":
-                self.loop.create_task(self.__handle_update_option(update))
+                self.__handle_update_option(update)
             elif update["@type"] == "updateUser":
-                self.loop.create_task(self.__handle_update_user(update))
+                self.__handle_update_user(update)
 
-            self.queue.put_nowait(update)
+            self.workers.submit(self._update_worker, update)
 
-    async def __run_initializers(self, update):
+    def __run_initializers(self, update):
         for initializer in self._handlers["initializer"]:
             try:
                 if initializer.filter is not None:
                     filter_func = initializer.filter.func
 
-                    if self.is_coro_filter(filter_func):
-                        if not await filter_func(self, update):
-                            continue
-                    elif not filter_func(self, update):
+                    if not filter_func(self, update):
                         continue
 
-                await initializer.func(self, update)
+                initializer.func(self, update)
             except StopHandlers as e:
                 raise e
             except Exception:
                 logger.exception("Initializer {} failed".format(initializer))
 
-    async def __run_handlers(self, update):
+    def __run_handlers(self, update):
         update_type = update["@type"]
         for handler in self._handlers[update_type]:
             try:
                 if handler.filter is not None:
                     filter_func = handler.filter.func
-                    if self.is_coro_filter(filter_func):
-                        if not await filter_func(self, update):
-                            continue
-                    elif not filter_func(self, update):
+
+                    if not filter_func(self, update):
                         continue
 
-                await handler.func(self, update)
+                handler.func(self, update)
             except StopHandlers as e:
                 raise e
             except Exception:
                 logger.exception("Exception in {}".format(handler))
 
-    async def __run_finalizers(self, update):
+    def __run_finalizers(self, update):
         for finalizer in self._handlers["finalizer"]:
             try:
                 if finalizer.filter is not None:
                     filter_func = finalizer.filter.func
 
-                    if self.is_coro_filter(filter_func):
-                        if not await filter_func(self, update):
-                            continue
-                    elif not filter_func(self, update):
+                    if not filter_func(self, update):
                         continue
 
-                await finalizer.func(self, update)
+                finalizer.func(self, update)
             except StopHandlers as e:
                 raise e
             except Exception:
                 logger.exception("Finalizer {} failed".format(finalizer))
 
-    async def _update_worker(self, worker_id: int):
-        self.is_running = True
-        while self.is_running:
+    def _update_worker(self, update):
+        if self.is_running:
             try:
-                update = await self.queue.get()
                 if "@type" not in update:
-                    continue
+                    return
 
                 if (
                     logger.root.level >= DEBUG
                 ):  # dumping all updates can create performance issues
                     logger.debug(
-                        "w{}: Received: {}".format(worker_id, dumps(update, indent=4)),
+                        "Received: {}".format(dumps(update, indent=4)),
                     )
 
                 if update["@type"] in self._handlers:
@@ -732,20 +688,20 @@ class Client(Decorators, Methods):
                         and update["message"]["is_outgoing"]
                         and "sending_state" in update["message"]
                     ):
-                        continue
+                        return
 
                     try:
-                        await self.__run_initializers(update)
-                        await self.__run_handlers(update)
+                        self.__run_initializers(update)
+                        self.__run_handlers(update)
                     except StopHandlers:
                         pass
                     finally:
-                        await self.__run_finalizers(update)
+                        self.__run_finalizers(update)
             except Exception:
                 logger.exception("Exception in _update_worker")
 
-    async def set_td_paramaters(self):
-        """Make a call to :meth:`~pytdbot.Client.setTdlibParameters` with the current client init parameters
+    def set_td_paramaters(self):
+        """Make a call to :meth:`~pytdbot_sync.Client.setTdlibParameters` with the current client init parameters
 
         Raises:
             `AuthorizationError`
@@ -755,7 +711,7 @@ class Client(Decorators, Methods):
                 "utf-8"
             )
 
-        res = await self.setTdlibParameters(
+        res = self.setTdlibParameters(
             use_test_dc=self.use_test_dc,
             api_id=self.__api_id,
             api_hash=self.__api_hash,
@@ -773,17 +729,17 @@ class Client(Decorators, Methods):
                 "utf-8"
             ),
             database_directory=join_path(self.files_directory, "database"),
-            application_version=f"Pytdbot {pytdbot.__version__}",
+            application_version=f"Pytdbot sync {pytdbot_sync.__version__}",
         )
         if res.is_error:
             raise AuthorizationError(res.result["message"])
 
-    async def _set_bot_token(self):
-        res = await self.checkAuthenticationBotToken(self.__token)
+    def _set_bot_token(self):
+        res = self.checkAuthenticationBotToken(self.__token)
         if res.is_error:
             raise AuthorizationError(res.result["message"])
 
-    async def _set_options(self):
+    def _set_options(self):
         if not isinstance(self.td_options, dict):
             return
 
@@ -809,7 +765,7 @@ class Client(Decorators, Methods):
             )
             logger.debug("Option {} sent with value {}".format(k, str(v)))
 
-    async def __handle_authorization_state(self, update):
+    def __handle_authorization_state(self, update):
         if update["@type"] == "updateAuthorizationState":
             old_authorization_state = self.authorization_state
             self.__authorization_state = update["authorization_state"]["@type"]
@@ -823,31 +779,31 @@ class Client(Decorators, Methods):
 
             if self.__login:
                 if self.authorization_state == "authorizationStateWaitTdlibParameters":
-                    await self._set_options()
-                    await self.set_td_paramaters()
+                    self._set_options()
+                    self.set_td_paramaters()
                 elif self.authorization_state == "authorizationStateWaitPhoneNumber":
                     self._print_welcome()
-                    await self.__handle_authorization_state_wait_phone_number()
+                    self.__handle_authorization_state_wait_phone_number()
                 elif self.authorization_state == "authorizationStateWaitEmailAddress":
-                    await self.__handle_authorization_state_wait_email_address()
+                    self.__handle_authorization_state_wait_email_address()
                 elif self.authorization_state == "authorizationStateWaitEmailCode":
-                    await self.__handle_authorization_state_wait_email_code()
+                    self.__handle_authorization_state_wait_email_code()
                 elif self.authorization_state == "authorizationStateWaitCode":
-                    await self.__handle_authorization_state_wait_code()
+                    self.__handle_authorization_state_wait_code()
                 elif self.authorization_state == "authorizationStateWaitRegistration":
-                    await self.__handle_authorization_state_wait_registration()
+                    self.__handle_authorization_state_wait_registration()
                 elif (
                     old_authorization_state != "authorizationStateWaitPassword"
                     and self.authorization_state == "authorizationStateWaitPassword"
                 ):
-                    await self.__handle_authorization_state_wait_password()
+                    self.__handle_authorization_state_wait_password()
                 elif (
                     self.authorization_state == "authorizationStateClosed"
                     and self.__is_closing is False
                 ):
                     self.__stop_client()
 
-    async def __handle_connection_state(self, update):
+    def __handle_connection_state(self, update):
         if update["@type"] == "updateConnectionState":
             self.connection_state: str = update["state"]["@type"]
             logger.info(
@@ -856,7 +812,7 @@ class Client(Decorators, Methods):
                 )
             )
 
-    async def __handle_update_message_succeeded(self, update):
+    def __handle_update_message_succeeded(self, update):
         m_id = (
             update["old_message_id"].__str__() + update["message"]["chat_id"].__str__()
         )
@@ -865,7 +821,7 @@ class Client(Decorators, Methods):
             result: Result = self._results.pop(m_id)
             result.set_result(update["message"])
 
-    async def __handle_update_message_failed(self, update):
+    def __handle_update_message_failed(self, update):
         m_id = (
             update["old_message_id"].__str__() + update["message"]["chat_id"].__str__()
         )
@@ -883,8 +839,8 @@ class Client(Decorators, Methods):
                         )
                     )
 
-                    await asyncio.sleep(retry_after)
-                    res = await self.invoke(result.request)
+                    time.sleep(retry_after)
+                    res = self.invoke(result.request)
 
                     self._results[
                         res.result["id"].__str__()
@@ -900,7 +856,7 @@ class Client(Decorators, Methods):
                     }
                 )
 
-    async def __handle_update_option(self, update):
+    def __handle_update_option(self, update):
 
         if update["value"]["@type"] == "optionValueBoolean":
             self.options[update["name"]] = bool(update["value"]["value"])
@@ -919,7 +875,7 @@ class Client(Decorators, Methods):
                 )
             )
 
-    async def __handle_update_user(self, update):
+    def __handle_update_user(self, update):
         if self.is_authenticated and update["user"]["id"] == self.me["id"]:
             logger.info(
                 "Updating {} ({}) info".format(
@@ -935,24 +891,24 @@ class Client(Decorators, Methods):
                 logger.exception("deepdiff failed")
             self.me = update["user"]
 
-    async def __handle_authorization_state_wait_phone_number(self):
+    def __handle_authorization_state_wait_phone_number(self):
         if self.authorization_state != "authorizationStateWaitPhoneNumber":
             return
 
         if not isinstance(self.__token, str):
             while self.is_running:
-                user_input = await self.__ainput("Enter a phone number or bot token: ")
+                user_input = input("Enter a phone number or bot token: ")
 
                 if user_input:
-                    y_n = await self.__ainput(
+                    y_n = input(
                         'Is "{}" correct? (y/n): '.format(user_input),
                     )
 
                     if y_n == "" or y_n.lower() in ["y", "yes"]:
                         if ":" in user_input:
-                            res = await self.checkAuthenticationBotToken(user_input)
+                            res = self.checkAuthenticationBotToken(user_input)
                         else:
-                            res = await self.setAuthenticationPhoneNumber(user_input)
+                            res = self.setAuthenticationPhoneNumber(user_input)
 
                         if res.is_error:
                             print(res["message"])
@@ -960,36 +916,36 @@ class Client(Decorators, Methods):
                             break
         else:
             if ":" in self.__token:
-                res = await self.checkAuthenticationBotToken(self.__token)
+                res = self.checkAuthenticationBotToken(self.__token)
             else:
-                res = await self.setAuthenticationPhoneNumber(self.__token)
+                res = self.setAuthenticationPhoneNumber(self.__token)
 
             if res.is_error:
                 raise AuthorizationError(res["message"])
 
-    async def __handle_authorization_state_wait_email_address(self):
+    def __handle_authorization_state_wait_email_address(self):
         if self.authorization_state == "authorizationStateWaitEmailAddress":
             return
 
         while self.is_running:
-            email_address = await self.__ainput("Enter your email address: ")
+            email_address = input("Enter your email address: ")
 
-            res = await self.setAuthenticationEmailAddress(email_address)
+            res = self.setAuthenticationEmailAddress(email_address)
             if res.is_error:
                 print(res["message"])
             else:
                 break
 
-    async def __handle_authorization_state_wait_email_code(self):
+    def __handle_authorization_state_wait_email_code(self):
         if self.authorization_state != "authorizationStateWaitEmailCode":
             return
 
         while self.is_running:
-            code = await self.__ainput(
+            code = input(
                 "Enter the email authentication code you received: ",
             )
 
-            res = await self.checkAuthenticationEmailCode(
+            res = self.checkAuthenticationEmailCode(
                 code={"@type": "emailAddressAuthenticationCode", "code": code}
             )
             if res.is_error:
@@ -997,7 +953,7 @@ class Client(Decorators, Methods):
             else:
                 break
 
-    async def __handle_authorization_state_wait_code(self):
+    def __handle_authorization_state_wait_code(self):
         if self.authorization_state != "authorizationStateWaitCode":
             return
 
@@ -1017,31 +973,31 @@ class Client(Decorators, Methods):
             code_type = "fragment.com SMS"
 
         while self.is_running:
-            code = await self.__ainput(
+            code = input(
                 "Enter the login code received via {}: ".format(code_type),
             )
 
-            res = await self.checkAuthenticationCode(code=code)
+            res = self.checkAuthenticationCode(code=code)
             if res.is_error:
                 print(res["message"])
             else:
                 break
 
-    async def __handle_authorization_state_wait_registration(self):
+    def __handle_authorization_state_wait_registration(self):
         if self.authorization_state != "authorizationStateWaitRegistration":
             return
 
         while self.is_running:
-            first_name = await self.__ainput("Enter your first name: ")
-            last_name = await self.__ainput("Enter your last name: ")
+            first_name = input("Enter your first name: ")
+            last_name = input("Enter your last name: ")
 
-            res = await self.registerUser(first_name=first_name, last_name=last_name)
+            res = self.registerUser(first_name=first_name, last_name=last_name)
             if res.is_error:
                 print(res["message"])
             else:
                 break
 
-    async def __handle_authorization_state_wait_password(self):
+    def __handle_authorization_state_wait_password(self):
         if self.authorization_state != "authorizationStateWaitPassword":
             return
 
@@ -1053,30 +1009,30 @@ class Client(Decorators, Methods):
             )
 
         while self.is_running:
-            password = await self.loop.run_in_executor(
-                self._executor,
-                getpass,
-                "Enter your 2FA password {}: ".format(
-                    "(empty to recover)"
-                    if self.__authorization["has_recovery_email_address"]
-                    else ""
+            password = (
+                getpass(
+                    "Enter your 2FA password {}: ".format(
+                        "(empty to recover)"
+                        if self.__authorization["has_recovery_email_address"]
+                        else ""
+                    )
                 ),
             )
 
             if password == "":
                 if self.__authorization["has_recovery_email_address"]:
-                    y_n = await self.__ainput(
+                    y_n = input(
                         "Are you sure you want to recover your 2FA password? (y/n): ",
                     )
 
                     if y_n.lower() in ["y", "yes"]:
-                        res = await self.requestAuthenticationPasswordRecovery()
+                        res = self.requestAuthenticationPasswordRecovery()
 
                         if res.is_error:
                             raise AuthorizationError(res["message"])
                         else:
                             while True:
-                                recovery_code = await self.__ainput(
+                                recovery_code = input(
                                     "Enter your recovery code sent to {}: ".format(
                                         self.__authorization[
                                             "recovery_email_address_pattern"
@@ -1084,19 +1040,15 @@ class Client(Decorators, Methods):
                                     ),
                                 )
 
-                                res = (
-                                    await self.checkAuthenticationPasswordRecoveryCode(
-                                        recovery_code
-                                    )
+                                res = self.checkAuthenticationPasswordRecoveryCode(
+                                    recovery_code
                                 )
 
                                 if res.is_error:
                                     print(res["message"])
                                 else:
-                                    recover_res = (
-                                        await self.recoverAuthenticationPassword(
-                                            recovery_code
-                                        )
+                                    recover_res = self.recoverAuthenticationPassword(
+                                        recovery_code
                                     )
                                     if recover_res.is_error:
                                         raise AuthorizationError(recover_res["message"])
@@ -1107,7 +1059,7 @@ class Client(Decorators, Methods):
                         "You can't recover your 2FA password because you don't set any recovery email address"
                     )
             else:
-                res = await self.checkAuthenticationPassword(password)
+                res = self.checkAuthenticationPassword(password)
                 if res.is_error:
                     print(res["message"])
                 else:
@@ -1117,46 +1069,31 @@ class Client(Decorators, Methods):
         self.is_authenticated = False
         self.is_running = False
 
-        for worker_task in self._workers_tasks:
-            worker_task.cancel()
-
-        self._executor.shutdown(wait=False, cancel_futures=True)
+        self.workers.shutdown(wait=False, cancel_futures=True)
 
     def _register_signal_handlers(self):
-        def _handle_signal():
-            self.loop.create_task(self.stop())
+        def _handle_signal(sig_num, frame):
+            self.stop()
+
+        if current_thread() is main_thread():
+
             for sig in (
                 signal.SIGINT,
                 signal.SIGTERM,
                 signal.SIGABRT,
                 signal.SIGSEGV,
             ):
-                self.loop.remove_signal_handler(sig)
-
-        if current_thread() is main_thread():
-            try:
-                for sig in (
-                    signal.SIGINT,
-                    signal.SIGTERM,
-                    signal.SIGABRT,
-                    signal.SIGSEGV,
-                ):
-                    self.loop.add_signal_handler(sig, _handle_signal)
-            except NotImplementedError:  # Windows dosen't support add_signal_handler
-                pass
-
-    def __ainput(self, prompt: str):
-        return self.loop.run_in_executor(self._executor, input, prompt)
+                signal.signal(sig, _handle_signal)
 
     def _print_welcome(self):
         print(
-            "Welcome to Pytdbot (v{}). {}".format(
-                pytdbot.__version__, pytdbot.__copyright__
+            "Welcome to Pytdbot sync (v{}). {}".format(
+                pytdbot_sync.__version__, pytdbot_sync.__copyright__
             )
         )
         print(
-            "Pytdbot is free software and comes with ABSOLUTELY NO WARRANTY. Licensed under the terms of {}.\n\n".format(
-                pytdbot.__license__
+            "Pytdbot sync is free software and comes with ABSOLUTELY NO WARRANTY. Licensed under the terms of {}.\n\n".format(
+                pytdbot_sync.__license__
             )
         )
 

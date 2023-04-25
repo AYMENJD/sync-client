@@ -4,7 +4,7 @@ from ..types import Result
 class TDLibFunctions:
     """Auto generated TDLib functions"""
 
-    async def getAuthorizationState(self) -> Result:
+    def getAuthorizationState(self) -> Result:
         """Returns the current authorization state; this is an offline request\. For informational purposes only\. Use updateAuthorizationState instead to maintain the current authorization state\. Can be called before initialization
 
 
@@ -16,9 +16,9 @@ class TDLibFunctions:
             "@type": "getAuthorizationState",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setTdlibParameters(
+    def setTdlibParameters(
         self,
         use_test_dc: bool,
         database_directory: str,
@@ -113,9 +113,9 @@ class TDLibFunctions:
             "ignore_file_names": ignore_file_names,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setAuthenticationPhoneNumber(
+    def setAuthenticationPhoneNumber(
         self, phone_number: str, settings: dict = None
     ) -> Result:
         """Sets the phone number of the user and sends an authentication code to the user\. Works only when the current authorization state is authorizationStateWaitPhoneNumber, or if there is no pending authentication query and the current authorization state is authorizationStateWaitEmailAddress, authorizationStateWaitEmailCode, authorizationStateWaitCode, authorizationStateWaitRegistration, or authorizationStateWaitPassword
@@ -138,9 +138,9 @@ class TDLibFunctions:
             "settings": settings,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setAuthenticationEmailAddress(self, email_address: str) -> Result:
+    def setAuthenticationEmailAddress(self, email_address: str) -> Result:
         """Sets the email address of the user and sends an authentication code to the email address\. Works only when the current authorization state is authorizationStateWaitEmailAddress
 
         Args:
@@ -157,9 +157,9 @@ class TDLibFunctions:
             "email_address": email_address,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def resendAuthenticationCode(self) -> Result:
+    def resendAuthenticationCode(self) -> Result:
         """Resends an authentication code to the user\. Works only when the current authorization state is authorizationStateWaitCode, the next\_code\_type of the result is not null and the server\-specified timeout has passed, or when the current authorization state is authorizationStateWaitEmailCode
 
 
@@ -171,9 +171,9 @@ class TDLibFunctions:
             "@type": "resendAuthenticationCode",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def checkAuthenticationEmailCode(self, code: dict) -> Result:
+    def checkAuthenticationEmailCode(self, code: dict) -> Result:
         """Checks the authentication of a email address\. Works only when the current authorization state is authorizationStateWaitEmailCode
 
         Args:
@@ -190,9 +190,9 @@ class TDLibFunctions:
             "code": code,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def checkAuthenticationCode(self, code: str) -> Result:
+    def checkAuthenticationCode(self, code: str) -> Result:
         """Checks the authentication code\. Works only when the current authorization state is authorizationStateWaitCode
 
         Args:
@@ -209,9 +209,9 @@ class TDLibFunctions:
             "code": code,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def requestQrCodeAuthentication(self, other_user_ids: list) -> Result:
+    def requestQrCodeAuthentication(self, other_user_ids: list) -> Result:
         """Requests QR code authentication by scanning a QR code on another logged in device\. Works only when the current authorization state is authorizationStateWaitPhoneNumber, or if there is no pending authentication query and the current authorization state is authorizationStateWaitEmailAddress, authorizationStateWaitEmailCode, authorizationStateWaitCode, authorizationStateWaitRegistration, or authorizationStateWaitPassword
 
         Args:
@@ -228,9 +228,9 @@ class TDLibFunctions:
             "other_user_ids": other_user_ids,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def registerUser(self, first_name: str, last_name: str) -> Result:
+    def registerUser(self, first_name: str, last_name: str) -> Result:
         """Finishes user registration\. Works only when the current authorization state is authorizationStateWaitRegistration
 
         Args:
@@ -251,9 +251,9 @@ class TDLibFunctions:
             "last_name": last_name,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def resetAuthenticationEmailAddress(self) -> Result:
+    def resetAuthenticationEmailAddress(self) -> Result:
         """Resets the login email address\. May return an error with a message "TASK\_ALREADY\_EXISTS" if reset is still pending\. Works only when the current authorization state is authorizationStateWaitEmailCode and authorization\_state\.can\_reset\_email\_address \=\= true
 
 
@@ -265,9 +265,9 @@ class TDLibFunctions:
             "@type": "resetAuthenticationEmailAddress",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def checkAuthenticationPassword(self, password: str) -> Result:
+    def checkAuthenticationPassword(self, password: str) -> Result:
         """Checks the 2\-step verification password for correctness\. Works only when the current authorization state is authorizationStateWaitPassword
 
         Args:
@@ -284,9 +284,9 @@ class TDLibFunctions:
             "password": password,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def requestAuthenticationPasswordRecovery(self) -> Result:
+    def requestAuthenticationPasswordRecovery(self) -> Result:
         """Requests to send a 2\-step verification password recovery code to an email address that was previously set up\. Works only when the current authorization state is authorizationStateWaitPassword
 
 
@@ -298,11 +298,9 @@ class TDLibFunctions:
             "@type": "requestAuthenticationPasswordRecovery",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def checkAuthenticationPasswordRecoveryCode(
-        self, recovery_code: str
-    ) -> Result:
+    def checkAuthenticationPasswordRecoveryCode(self, recovery_code: str) -> Result:
         """Checks whether a 2\-step verification password recovery code sent to an email address is valid\. Works only when the current authorization state is authorizationStateWaitPassword
 
         Args:
@@ -319,9 +317,9 @@ class TDLibFunctions:
             "recovery_code": recovery_code,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def recoverAuthenticationPassword(
+    def recoverAuthenticationPassword(
         self, recovery_code: str, new_password: str = None, new_hint: str = None
     ) -> Result:
         """Recovers the 2\-step verification password with a password recovery code sent to an email address that was previously set up\. Works only when the current authorization state is authorizationStateWaitPassword
@@ -348,9 +346,9 @@ class TDLibFunctions:
             "new_hint": new_hint,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def sendAuthenticationFirebaseSms(self, token: str) -> Result:
+    def sendAuthenticationFirebaseSms(self, token: str) -> Result:
         """Sends Firebase Authentication SMS to the phone number of the user\. Works only when the current authorization state is authorizationStateWaitCode and the server returned code of the type authenticationCodeTypeFirebaseAndroid or authenticationCodeTypeFirebaseIos
 
         Args:
@@ -367,9 +365,9 @@ class TDLibFunctions:
             "token": token,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def checkAuthenticationBotToken(self, token: str) -> Result:
+    def checkAuthenticationBotToken(self, token: str) -> Result:
         """Checks the authentication token of a bot; to log in as a bot\. Works only when the current authorization state is authorizationStateWaitPhoneNumber\. Can be used instead of setAuthenticationPhoneNumber and checkAuthenticationCode to log in
 
         Args:
@@ -386,9 +384,9 @@ class TDLibFunctions:
             "token": token,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def logOut(self) -> Result:
+    def logOut(self) -> Result:
         """Closes the TDLib instance after a proper logout\. Requires an available network connection\. All local data will be destroyed\. After the logout completes, updateAuthorizationState with authorizationStateClosed will be sent
 
 
@@ -400,9 +398,9 @@ class TDLibFunctions:
             "@type": "logOut",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def close(self) -> Result:
+    def close(self) -> Result:
         """Closes the TDLib instance\. All databases will be flushed to disk and properly closed\. After the close completes, updateAuthorizationState with authorizationStateClosed will be sent\. Can be called before initialization
 
 
@@ -414,9 +412,9 @@ class TDLibFunctions:
             "@type": "close",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def destroy(self) -> Result:
+    def destroy(self) -> Result:
         """Closes the TDLib instance, destroying all local data without a proper logout\. The current user session will remain in the list of all active sessions\. All local data will be destroyed\. After the destruction completes updateAuthorizationState with authorizationStateClosed will be sent\. Can be called before authorization
 
 
@@ -428,9 +426,9 @@ class TDLibFunctions:
             "@type": "destroy",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def confirmQrCodeAuthentication(self, link: str) -> Result:
+    def confirmQrCodeAuthentication(self, link: str) -> Result:
         """Confirms QR code authentication on another device\. Returns created session on success
 
         Args:
@@ -447,9 +445,9 @@ class TDLibFunctions:
             "link": link,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getCurrentState(self) -> Result:
+    def getCurrentState(self) -> Result:
         """Returns all updates needed to restore current TDLib state, i\.e\. all actual updateAuthorizationState/updateUser/updateNewChat and others\. This is especially useful if TDLib is run in a separate process\. Can be called before initialization
 
 
@@ -461,9 +459,9 @@ class TDLibFunctions:
             "@type": "getCurrentState",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setDatabaseEncryptionKey(self, new_encryption_key: bytes) -> Result:
+    def setDatabaseEncryptionKey(self, new_encryption_key: bytes) -> Result:
         """Changes the database encryption key\. Usually the encryption key is never changed and is stored in some OS keychain
 
         Args:
@@ -480,9 +478,9 @@ class TDLibFunctions:
             "new_encryption_key": new_encryption_key,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getPasswordState(self) -> Result:
+    def getPasswordState(self) -> Result:
         """Returns the current state of 2\-step verification
 
 
@@ -494,9 +492,9 @@ class TDLibFunctions:
             "@type": "getPasswordState",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setPassword(
+    def setPassword(
         self,
         old_password: str,
         set_recovery_email_address: bool,
@@ -536,9 +534,9 @@ class TDLibFunctions:
             "new_recovery_email_address": new_recovery_email_address,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setLoginEmailAddress(self, new_login_email_address: str) -> Result:
+    def setLoginEmailAddress(self, new_login_email_address: str) -> Result:
         """Changes the login email address of the user\. The email address can be changed only if the current user already has login email and passwordState\.login\_email\_address\_pattern is non\-empty\. The change will not be applied until the new login email address is confirmed with checkLoginEmailAddressCode\. To use Apple ID/Google ID instead of a email address, call checkLoginEmailAddressCode directly
 
         Args:
@@ -555,9 +553,9 @@ class TDLibFunctions:
             "new_login_email_address": new_login_email_address,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def resendLoginEmailAddressCode(self) -> Result:
+    def resendLoginEmailAddressCode(self) -> Result:
         """Resends the login email address verification code
 
 
@@ -569,9 +567,9 @@ class TDLibFunctions:
             "@type": "resendLoginEmailAddressCode",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def checkLoginEmailAddressCode(self, code: dict) -> Result:
+    def checkLoginEmailAddressCode(self, code: dict) -> Result:
         """Checks the login email address authentication
 
         Args:
@@ -588,9 +586,9 @@ class TDLibFunctions:
             "code": code,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getRecoveryEmailAddress(self, password: str) -> Result:
+    def getRecoveryEmailAddress(self, password: str) -> Result:
         """Returns a 2\-step verification recovery email address that was previously set up\. This method can be used to verify a password provided by the user
 
         Args:
@@ -607,9 +605,9 @@ class TDLibFunctions:
             "password": password,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setRecoveryEmailAddress(
+    def setRecoveryEmailAddress(
         self, password: str, new_recovery_email_address: str
     ) -> Result:
         """Changes the 2\-step verification recovery email address of the user\. If a new recovery email address is specified, then the change will not be applied until the new recovery email address is confirmed\. If new\_recovery\_email\_address is the same as the email address that is currently set up, this call succeeds immediately and aborts all other requests waiting for an email confirmation
@@ -632,9 +630,9 @@ class TDLibFunctions:
             "new_recovery_email_address": new_recovery_email_address,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def checkRecoveryEmailAddressCode(self, code: str) -> Result:
+    def checkRecoveryEmailAddressCode(self, code: str) -> Result:
         """Checks the 2\-step verification recovery email address verification code
 
         Args:
@@ -651,9 +649,9 @@ class TDLibFunctions:
             "code": code,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def resendRecoveryEmailAddressCode(self) -> Result:
+    def resendRecoveryEmailAddressCode(self) -> Result:
         """Resends the 2\-step verification recovery email address verification code
 
 
@@ -665,9 +663,9 @@ class TDLibFunctions:
             "@type": "resendRecoveryEmailAddressCode",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def requestPasswordRecovery(self) -> Result:
+    def requestPasswordRecovery(self) -> Result:
         """Requests to send a 2\-step verification password recovery code to an email address that was previously set up
 
 
@@ -679,9 +677,9 @@ class TDLibFunctions:
             "@type": "requestPasswordRecovery",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def checkPasswordRecoveryCode(self, recovery_code: str) -> Result:
+    def checkPasswordRecoveryCode(self, recovery_code: str) -> Result:
         """Checks whether a 2\-step verification password recovery code sent to an email address is valid
 
         Args:
@@ -698,9 +696,9 @@ class TDLibFunctions:
             "recovery_code": recovery_code,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def recoverPassword(
+    def recoverPassword(
         self, recovery_code: str, new_password: str = None, new_hint: str = None
     ) -> Result:
         """Recovers the 2\-step verification password using a recovery code sent to an email address that was previously set up
@@ -727,9 +725,9 @@ class TDLibFunctions:
             "new_hint": new_hint,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def resetPassword(self) -> Result:
+    def resetPassword(self) -> Result:
         """Removes 2\-step verification password without previous password and access to recovery email address\. The password can't be reset immediately and the request needs to be repeated after the specified time
 
 
@@ -741,9 +739,9 @@ class TDLibFunctions:
             "@type": "resetPassword",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def cancelPasswordReset(self) -> Result:
+    def cancelPasswordReset(self) -> Result:
         """Cancels reset of 2\-step verification password\. The method can be called if passwordState\.pending\_reset\_date \> 0
 
 
@@ -755,9 +753,9 @@ class TDLibFunctions:
             "@type": "cancelPasswordReset",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def createTemporaryPassword(self, password: str, valid_for: int) -> Result:
+    def createTemporaryPassword(self, password: str, valid_for: int) -> Result:
         """Creates a new temporary password for processing payments
 
         Args:
@@ -778,9 +776,9 @@ class TDLibFunctions:
             "valid_for": valid_for,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getTemporaryPasswordState(self) -> Result:
+    def getTemporaryPasswordState(self) -> Result:
         """Returns information about the current temporary password
 
 
@@ -792,9 +790,9 @@ class TDLibFunctions:
             "@type": "getTemporaryPasswordState",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getMe(self) -> Result:
+    def getMe(self) -> Result:
         """Returns the current user
 
 
@@ -806,9 +804,9 @@ class TDLibFunctions:
             "@type": "getMe",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getUser(self, user_id: int) -> Result:
+    def getUser(self, user_id: int) -> Result:
         """Returns information about a user by their identifier\. This is an offline request if the current user is not a bot
 
         Args:
@@ -825,9 +823,9 @@ class TDLibFunctions:
             "user_id": user_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getUserFullInfo(self, user_id: int) -> Result:
+    def getUserFullInfo(self, user_id: int) -> Result:
         """Returns full information about a user by their identifier
 
         Args:
@@ -844,9 +842,9 @@ class TDLibFunctions:
             "user_id": user_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getBasicGroup(self, basic_group_id: int) -> Result:
+    def getBasicGroup(self, basic_group_id: int) -> Result:
         """Returns information about a basic group by its identifier\. This is an offline request if the current user is not a bot
 
         Args:
@@ -863,9 +861,9 @@ class TDLibFunctions:
             "basic_group_id": basic_group_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getBasicGroupFullInfo(self, basic_group_id: int) -> Result:
+    def getBasicGroupFullInfo(self, basic_group_id: int) -> Result:
         """Returns full information about a basic group by its identifier
 
         Args:
@@ -882,9 +880,9 @@ class TDLibFunctions:
             "basic_group_id": basic_group_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getSupergroup(self, supergroup_id: int) -> Result:
+    def getSupergroup(self, supergroup_id: int) -> Result:
         """Returns information about a supergroup or a channel by its identifier\. This is an offline request if the current user is not a bot
 
         Args:
@@ -901,9 +899,9 @@ class TDLibFunctions:
             "supergroup_id": supergroup_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getSupergroupFullInfo(self, supergroup_id: int) -> Result:
+    def getSupergroupFullInfo(self, supergroup_id: int) -> Result:
         """Returns full information about a supergroup or a channel by its identifier, cached for up to 1 minute
 
         Args:
@@ -920,9 +918,9 @@ class TDLibFunctions:
             "supergroup_id": supergroup_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getSecretChat(self, secret_chat_id: int) -> Result:
+    def getSecretChat(self, secret_chat_id: int) -> Result:
         """Returns information about a secret chat by its identifier\. This is an offline request
 
         Args:
@@ -939,9 +937,9 @@ class TDLibFunctions:
             "secret_chat_id": secret_chat_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getChat(self, chat_id: int) -> Result:
+    def getChat(self, chat_id: int) -> Result:
         """Returns information about a chat by its identifier, this is an offline request if the current user is not a bot
 
         Args:
@@ -958,9 +956,9 @@ class TDLibFunctions:
             "chat_id": chat_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getMessage(self, chat_id: int, message_id: int) -> Result:
+    def getMessage(self, chat_id: int, message_id: int) -> Result:
         """Returns information about a message
 
         Args:
@@ -981,9 +979,9 @@ class TDLibFunctions:
             "message_id": message_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getMessageLocally(self, chat_id: int, message_id: int) -> Result:
+    def getMessageLocally(self, chat_id: int, message_id: int) -> Result:
         """Returns information about a message, if it is available without sending network request\. This is an offline request
 
         Args:
@@ -1004,9 +1002,9 @@ class TDLibFunctions:
             "message_id": message_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getRepliedMessage(self, chat_id: int, message_id: int) -> Result:
+    def getRepliedMessage(self, chat_id: int, message_id: int) -> Result:
         """Returns information about a message that is replied by a given message\. Also, returns the pinned message, the game message, the invoice message, and the topic creation message for messages of the types messagePinMessage, messageGameScore, messagePaymentSuccessful, messageChatSetBackground and topic messages without replied message respectively
 
         Args:
@@ -1027,9 +1025,9 @@ class TDLibFunctions:
             "message_id": message_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getChatPinnedMessage(self, chat_id: int) -> Result:
+    def getChatPinnedMessage(self, chat_id: int) -> Result:
         """Returns information about a newest pinned message in the chat
 
         Args:
@@ -1046,9 +1044,9 @@ class TDLibFunctions:
             "chat_id": chat_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getCallbackQueryMessage(
+    def getCallbackQueryMessage(
         self, chat_id: int, message_id: int, callback_query_id: int
     ) -> Result:
         """Returns information about a message with the callback button that originated a callback query; for bots only
@@ -1075,9 +1073,9 @@ class TDLibFunctions:
             "callback_query_id": callback_query_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getMessages(self, chat_id: int, message_ids: list) -> Result:
+    def getMessages(self, chat_id: int, message_ids: list) -> Result:
         """Returns information about messages\. If a message is not found, returns null on the corresponding position of the result
 
         Args:
@@ -1098,9 +1096,9 @@ class TDLibFunctions:
             "message_ids": message_ids,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getMessageThread(self, chat_id: int, message_id: int) -> Result:
+    def getMessageThread(self, chat_id: int, message_id: int) -> Result:
         """Returns information about a message thread\. Can be used only if message\.can\_get\_message\_thread \=\= true
 
         Args:
@@ -1121,9 +1119,9 @@ class TDLibFunctions:
             "message_id": message_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getMessageViewers(self, chat_id: int, message_id: int) -> Result:
+    def getMessageViewers(self, chat_id: int, message_id: int) -> Result:
         """Returns viewers of a recent outgoing message in a basic group or a supergroup chat\. For video notes and voice notes only users, opened content of the message, are returned\. The method can be called if message\.can\_get\_viewers \=\= true
 
         Args:
@@ -1144,9 +1142,9 @@ class TDLibFunctions:
             "message_id": message_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getFile(self, file_id: int) -> Result:
+    def getFile(self, file_id: int) -> Result:
         """Returns information about a file; this is an offline request
 
         Args:
@@ -1163,11 +1161,9 @@ class TDLibFunctions:
             "file_id": file_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getRemoteFile(
-        self, remote_file_id: str, file_type: dict = None
-    ) -> Result:
+    def getRemoteFile(self, remote_file_id: str, file_type: dict = None) -> Result:
         """Returns information about a file by its remote ID; this is an offline request\. Can be used to register a URL as a file for further uploading, or sending as a message\. Even the request succeeds, the file can be used only if it is still accessible to the user\. For example, if the file is from a message, then the message must be not deleted and accessible to the user\. If the file database is disabled, then the corresponding object with the file must be preloaded by the application
 
         Args:
@@ -1188,9 +1184,9 @@ class TDLibFunctions:
             "file_type": file_type,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def loadChats(self, limit: int, chat_list: dict = None) -> Result:
+    def loadChats(self, limit: int, chat_list: dict = None) -> Result:
         """Loads more chats from a chat list\. The loaded chats and their positions in the chat list will be sent through updates\. Chats are sorted by the pair \(chat\.position\.order, chat\.id\) in descending order\. Returns a 404 error if all chats have been loaded
 
         Args:
@@ -1211,9 +1207,9 @@ class TDLibFunctions:
             "limit": limit,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getChats(self, limit: int, chat_list: dict = None) -> Result:
+    def getChats(self, limit: int, chat_list: dict = None) -> Result:
         """Returns an ordered list of chats from the beginning of a chat list\. For informational purposes only\. Use loadChats and updates processing instead to maintain chat lists in a consistent state
 
         Args:
@@ -1234,9 +1230,9 @@ class TDLibFunctions:
             "limit": limit,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def searchPublicChat(self, username: str) -> Result:
+    def searchPublicChat(self, username: str) -> Result:
         """Searches a public chat by its username\. Currently, only private chats, supergroups and channels can be public\. Returns the chat if found; otherwise, an error is returned
 
         Args:
@@ -1253,9 +1249,9 @@ class TDLibFunctions:
             "username": username,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def searchPublicChats(self, query: str) -> Result:
+    def searchPublicChats(self, query: str) -> Result:
         """Searches public chats by looking for specified query in their username and title\. Currently, only private chats, supergroups and channels can be public\. Returns a meaningful number of results\. Excludes private chats with contacts and chats from the chat list from the results
 
         Args:
@@ -1272,9 +1268,9 @@ class TDLibFunctions:
             "query": query,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def searchChats(self, query: str, limit: int) -> Result:
+    def searchChats(self, query: str, limit: int) -> Result:
         """Searches for the specified query in the title and username of already known chats, this is an offline request\. Returns chats in the order seen in the main chat list
 
         Args:
@@ -1295,9 +1291,9 @@ class TDLibFunctions:
             "limit": limit,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def searchChatsOnServer(self, query: str, limit: int) -> Result:
+    def searchChatsOnServer(self, query: str, limit: int) -> Result:
         """Searches for the specified query in the title and username of already known chats via request to the server\. Returns chats in the order seen in the main chat list
 
         Args:
@@ -1318,9 +1314,9 @@ class TDLibFunctions:
             "limit": limit,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def searchChatsNearby(self, location: dict) -> Result:
+    def searchChatsNearby(self, location: dict) -> Result:
         """Returns a list of users and location\-based supergroups nearby\. The list of users nearby will be updated for 60 seconds after the request by the updates updateUsersNearby\. The request must be sent again every 25 seconds with adjusted location to not miss new chats
 
         Args:
@@ -1337,9 +1333,9 @@ class TDLibFunctions:
             "location": location,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getTopChats(self, category: dict, limit: int) -> Result:
+    def getTopChats(self, category: dict, limit: int) -> Result:
         """Returns a list of frequently used chats\. Supported only if the chat info database is enabled
 
         Args:
@@ -1360,9 +1356,9 @@ class TDLibFunctions:
             "limit": limit,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def removeTopChat(self, category: dict, chat_id: int) -> Result:
+    def removeTopChat(self, category: dict, chat_id: int) -> Result:
         """Removes a chat from the list of frequently used chats\. Supported only if the chat info database is enabled
 
         Args:
@@ -1383,9 +1379,9 @@ class TDLibFunctions:
             "chat_id": chat_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def addRecentlyFoundChat(self, chat_id: int) -> Result:
+    def addRecentlyFoundChat(self, chat_id: int) -> Result:
         """Adds a chat to the list of recently found chats\. The chat is added to the beginning of the list\. If the chat is already in the list, it will be removed from the list first
 
         Args:
@@ -1402,9 +1398,9 @@ class TDLibFunctions:
             "chat_id": chat_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def removeRecentlyFoundChat(self, chat_id: int) -> Result:
+    def removeRecentlyFoundChat(self, chat_id: int) -> Result:
         """Removes a chat from the list of recently found chats
 
         Args:
@@ -1421,9 +1417,9 @@ class TDLibFunctions:
             "chat_id": chat_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def clearRecentlyFoundChats(self) -> Result:
+    def clearRecentlyFoundChats(self) -> Result:
         """Clears the list of recently found chats
 
 
@@ -1435,9 +1431,9 @@ class TDLibFunctions:
             "@type": "clearRecentlyFoundChats",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getRecentlyOpenedChats(self, limit: int) -> Result:
+    def getRecentlyOpenedChats(self, limit: int) -> Result:
         """Returns recently opened chats, this is an offline request\. Returns chats in the order of last opening
 
         Args:
@@ -1454,9 +1450,9 @@ class TDLibFunctions:
             "limit": limit,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def checkChatUsername(self, chat_id: int, username: str) -> Result:
+    def checkChatUsername(self, chat_id: int, username: str) -> Result:
         """Checks whether a username can be set for a chat
 
         Args:
@@ -1477,9 +1473,9 @@ class TDLibFunctions:
             "username": username,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getCreatedPublicChats(self, type: dict) -> Result:
+    def getCreatedPublicChats(self, type: dict) -> Result:
         """Returns a list of public chats of the specified type, owned by the user
 
         Args:
@@ -1496,9 +1492,9 @@ class TDLibFunctions:
             "type": type,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def checkCreatedPublicChatsLimit(self, type: dict) -> Result:
+    def checkCreatedPublicChatsLimit(self, type: dict) -> Result:
         """Checks whether the maximum number of owned public chats has been reached\. Returns corresponding error if the limit was reached\. The limit can be increased with Telegram Premium
 
         Args:
@@ -1515,9 +1511,9 @@ class TDLibFunctions:
             "type": type,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getSuitableDiscussionChats(self) -> Result:
+    def getSuitableDiscussionChats(self) -> Result:
         """Returns a list of basic group and supergroup chats, which can be used as a discussion group for a channel\. Returned basic group chats must be first upgraded to supergroups before they can be set as a discussion group\. To set a returned supergroup as a discussion group, access to its old messages must be enabled using toggleSupergroupIsAllHistoryAvailable first
 
 
@@ -1529,9 +1525,9 @@ class TDLibFunctions:
             "@type": "getSuitableDiscussionChats",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getInactiveSupergroupChats(self) -> Result:
+    def getInactiveSupergroupChats(self) -> Result:
         """Returns a list of recently inactive supergroups and channels\. Can be used when user reaches limit on the number of joined supergroups and channels and receives CHANNELS\_TOO\_MUCH error\. Also, the limit can be increased with Telegram Premium
 
 
@@ -1543,9 +1539,9 @@ class TDLibFunctions:
             "@type": "getInactiveSupergroupChats",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getGroupsInCommon(
+    def getGroupsInCommon(
         self, user_id: int, offset_chat_id: int, limit: int
     ) -> Result:
         """Returns a list of common group chats with a given user\. Chats are sorted by their type and creation date
@@ -1572,9 +1568,9 @@ class TDLibFunctions:
             "limit": limit,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getChatHistory(
+    def getChatHistory(
         self,
         chat_id: int,
         from_message_id: int,
@@ -1614,9 +1610,9 @@ class TDLibFunctions:
             "only_local": only_local,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getMessageThreadHistory(
+    def getMessageThreadHistory(
         self,
         chat_id: int,
         message_id: int,
@@ -1656,9 +1652,9 @@ class TDLibFunctions:
             "limit": limit,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def deleteChatHistory(
+    def deleteChatHistory(
         self, chat_id: int, remove_from_chat_list: bool, revoke: bool
     ) -> Result:
         """Deletes all messages in the chat\. Use chat\.can\_be\_deleted\_only\_for\_self and chat\.can\_be\_deleted\_for\_all\_users fields to find whether and how the method can be applied to the chat
@@ -1685,9 +1681,9 @@ class TDLibFunctions:
             "revoke": revoke,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def deleteChat(self, chat_id: int) -> Result:
+    def deleteChat(self, chat_id: int) -> Result:
         """Deletes a chat along with all messages in the corresponding chat for all chat members\. For group chats this will release the usernames and remove all members\. Use the field chat\.can\_be\_deleted\_for\_all\_users to find whether the method can be applied to the chat
 
         Args:
@@ -1704,9 +1700,9 @@ class TDLibFunctions:
             "chat_id": chat_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def searchChatMessages(
+    def searchChatMessages(
         self,
         chat_id: int,
         query: str,
@@ -1761,9 +1757,9 @@ class TDLibFunctions:
             "message_thread_id": message_thread_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def searchMessages(
+    def searchMessages(
         self,
         query: str,
         offset: str,
@@ -1813,9 +1809,9 @@ class TDLibFunctions:
             "max_date": max_date,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def searchSecretMessages(
+    def searchSecretMessages(
         self, chat_id: int, query: str, offset: str, limit: int, filter: dict = None
     ) -> Result:
         """Searches for messages in secret chats\. Returns the results in reverse chronological order\. For optimal performance, the number of returned messages is chosen by TDLib
@@ -1850,11 +1846,9 @@ class TDLibFunctions:
             "filter": filter,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def searchCallMessages(
-        self, offset: str, limit: int, only_missed: bool
-    ) -> Result:
+    def searchCallMessages(self, offset: str, limit: int, only_missed: bool) -> Result:
         """Searches for call messages\. Returns the results in reverse chronological order \(i\.e\., in order of decreasing message\_id\)\. For optimal performance, the number of returned messages is chosen by TDLib
 
         Args:
@@ -1879,9 +1873,9 @@ class TDLibFunctions:
             "only_missed": only_missed,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def searchOutgoingDocumentMessages(self, query: str, limit: int) -> Result:
+    def searchOutgoingDocumentMessages(self, query: str, limit: int) -> Result:
         """Searches for outgoing messages with content of the type messageDocument in all chats except secret chats\. Returns the results in reverse chronological order
 
         Args:
@@ -1902,9 +1896,9 @@ class TDLibFunctions:
             "limit": limit,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def deleteAllCallMessages(self, revoke: bool) -> Result:
+    def deleteAllCallMessages(self, revoke: bool) -> Result:
         """Deletes all call messages
 
         Args:
@@ -1921,11 +1915,9 @@ class TDLibFunctions:
             "revoke": revoke,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def searchChatRecentLocationMessages(
-        self, chat_id: int, limit: int
-    ) -> Result:
+    def searchChatRecentLocationMessages(self, chat_id: int, limit: int) -> Result:
         """Returns information about the recent locations of chat members that were sent to the chat\. Returns up to 1 location message per user
 
         Args:
@@ -1946,9 +1938,9 @@ class TDLibFunctions:
             "limit": limit,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getActiveLiveLocationMessages(self) -> Result:
+    def getActiveLiveLocationMessages(self) -> Result:
         """Returns all active live locations that need to be updated by the application\. The list is persistent across application restarts only if the message database is used
 
 
@@ -1960,9 +1952,9 @@ class TDLibFunctions:
             "@type": "getActiveLiveLocationMessages",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getChatMessageByDate(self, chat_id: int, date: int) -> Result:
+    def getChatMessageByDate(self, chat_id: int, date: int) -> Result:
         """Returns the last message sent in a chat no later than the specified date
 
         Args:
@@ -1983,9 +1975,9 @@ class TDLibFunctions:
             "date": date,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getChatSparseMessagePositions(
+    def getChatSparseMessagePositions(
         self, chat_id: int, filter: dict, from_message_id: int, limit: int
     ) -> Result:
         """Returns sparse positions of messages of the specified type in the chat to be used for shared media scroll implementation\. Returns the results in reverse chronological order \(i\.e\., in order of decreasing message\_id\)\. Cannot be used in secret chats or with searchMessagesFilterFailedToSend filter without an enabled message database
@@ -2016,9 +2008,9 @@ class TDLibFunctions:
             "limit": limit,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getChatMessageCalendar(
+    def getChatMessageCalendar(
         self, chat_id: int, filter: dict, from_message_id: int
     ) -> Result:
         """Returns information about the next messages of the specified type in the chat split by days\. Returns the results in reverse chronological order\. Can return partial result for the last returned day\. Behavior of this method depends on the value of the option "utc\_time\_offset"
@@ -2045,9 +2037,9 @@ class TDLibFunctions:
             "from_message_id": from_message_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getChatMessageCount(
+    def getChatMessageCount(
         self, chat_id: int, filter: dict, return_local: bool
     ) -> Result:
         """Returns approximate number of messages of the specified type in the chat
@@ -2074,9 +2066,9 @@ class TDLibFunctions:
             "return_local": return_local,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getChatMessagePosition(
+    def getChatMessagePosition(
         self, chat_id: int, message_id: int, filter: dict, message_thread_id: int
     ) -> Result:
         """Returns approximate 1\-based position of a message among messages, which can be found by the specified filter in the chat\. Cannot be used in secret chats
@@ -2107,9 +2099,9 @@ class TDLibFunctions:
             "message_thread_id": message_thread_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getChatScheduledMessages(self, chat_id: int) -> Result:
+    def getChatScheduledMessages(self, chat_id: int) -> Result:
         """Returns all scheduled messages in a chat\. The messages are returned in a reverse chronological order \(i\.e\., in order of decreasing message\_id\)
 
         Args:
@@ -2126,9 +2118,9 @@ class TDLibFunctions:
             "chat_id": chat_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getMessagePublicForwards(
+    def getMessagePublicForwards(
         self, chat_id: int, message_id: int, offset: str, limit: int
     ) -> Result:
         """Returns forwarded copies of a channel message to different public channels\. For optimal performance, the number of returned messages is chosen by TDLib
@@ -2159,9 +2151,9 @@ class TDLibFunctions:
             "limit": limit,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getChatSponsoredMessages(self, chat_id: int) -> Result:
+    def getChatSponsoredMessages(self, chat_id: int) -> Result:
         """Returns sponsored messages to be shown in a chat; for channel chats only
 
         Args:
@@ -2178,9 +2170,9 @@ class TDLibFunctions:
             "chat_id": chat_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def removeNotification(
+    def removeNotification(
         self, notification_group_id: int, notification_id: int
     ) -> Result:
         """Removes an active notification from notification list\. Needs to be called only if the notification is removed by the current user
@@ -2203,9 +2195,9 @@ class TDLibFunctions:
             "notification_id": notification_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def removeNotificationGroup(
+    def removeNotificationGroup(
         self, notification_group_id: int, max_notification_id: int
     ) -> Result:
         """Removes a group of active notifications\. Needs to be called only if the notification group is removed by the current user
@@ -2228,9 +2220,9 @@ class TDLibFunctions:
             "max_notification_id": max_notification_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getMessageLink(
+    def getMessageLink(
         self,
         chat_id: int,
         message_id: int,
@@ -2270,9 +2262,9 @@ class TDLibFunctions:
             "in_message_thread": in_message_thread,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getMessageEmbeddingCode(
+    def getMessageEmbeddingCode(
         self, chat_id: int, message_id: int, for_album: bool
     ) -> Result:
         """Returns an HTML code for embedding the message\. Available only for messages in supergroups and channels with a username
@@ -2299,9 +2291,9 @@ class TDLibFunctions:
             "for_album": for_album,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getMessageLinkInfo(self, url: str) -> Result:
+    def getMessageLinkInfo(self, url: str) -> Result:
         """Returns information about a public or private message link\. Can be called for any internal link of the type internalLinkTypeMessage
 
         Args:
@@ -2318,9 +2310,9 @@ class TDLibFunctions:
             "url": url,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def translateText(self, text: dict, to_language_code: str) -> Result:
+    def translateText(self, text: dict, to_language_code: str) -> Result:
         """Translates a text to the given language\. If the current user is a Telegram Premium user, then text formatting is preserved
 
         Args:
@@ -2341,9 +2333,9 @@ class TDLibFunctions:
             "to_language_code": to_language_code,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def translateMessageText(
+    def translateMessageText(
         self, chat_id: int, message_id: int, to_language_code: str
     ) -> Result:
         """Extracts text or caption of the given message and translates it to the given language\. If the current user is a Telegram Premium user, then text formatting is preserved
@@ -2370,9 +2362,9 @@ class TDLibFunctions:
             "to_language_code": to_language_code,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def recognizeSpeech(self, chat_id: int, message_id: int) -> Result:
+    def recognizeSpeech(self, chat_id: int, message_id: int) -> Result:
         """Recognizes speech in a video note or a voice note message\. The message must be successfully sent and must not be scheduled\. May return an error with a message "MSG\_VOICE\_TOO\_LONG" if media duration is too big to be recognized
 
         Args:
@@ -2393,9 +2385,9 @@ class TDLibFunctions:
             "message_id": message_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def rateSpeechRecognition(
+    def rateSpeechRecognition(
         self, chat_id: int, message_id: int, is_good: bool
     ) -> Result:
         """Rates recognized speech in a video note or a voice note message
@@ -2422,9 +2414,9 @@ class TDLibFunctions:
             "is_good": is_good,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getChatAvailableMessageSenders(self, chat_id: int) -> Result:
+    def getChatAvailableMessageSenders(self, chat_id: int) -> Result:
         """Returns list of message sender identifiers, which can be used to send messages in a chat
 
         Args:
@@ -2441,11 +2433,9 @@ class TDLibFunctions:
             "chat_id": chat_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setChatMessageSender(
-        self, chat_id: int, message_sender_id: dict
-    ) -> Result:
+    def setChatMessageSender(self, chat_id: int, message_sender_id: dict) -> Result:
         """Selects a message sender to send messages in a chat
 
         Args:
@@ -2466,9 +2456,9 @@ class TDLibFunctions:
             "message_sender_id": message_sender_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def sendMessage(
+    def sendMessage(
         self,
         chat_id: int,
         message_thread_id: int,
@@ -2513,9 +2503,9 @@ class TDLibFunctions:
             "input_message_content": input_message_content,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def sendMessageAlbum(
+    def sendMessageAlbum(
         self,
         chat_id: int,
         message_thread_id: int,
@@ -2560,9 +2550,9 @@ class TDLibFunctions:
             "only_preview": only_preview,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def sendBotStartMessage(
+    def sendBotStartMessage(
         self, bot_user_id: int, chat_id: int, parameter: str
     ) -> Result:
         """Invites a bot to a chat \(if it is not yet a member\) and sends it the /start command\. Bots can't be invited to a private chat other than the chat with the bot\. Bots can't be invited to channels \(although they can be added as admins\) and secret chats\. Returns the sent message
@@ -2589,9 +2579,9 @@ class TDLibFunctions:
             "parameter": parameter,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def sendInlineQueryResultMessage(
+    def sendInlineQueryResultMessage(
         self,
         chat_id: int,
         message_thread_id: int,
@@ -2641,9 +2631,9 @@ class TDLibFunctions:
             "hide_via_bot": hide_via_bot,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def forwardMessages(
+    def forwardMessages(
         self,
         chat_id: int,
         message_thread_id: int,
@@ -2698,9 +2688,9 @@ class TDLibFunctions:
             "only_preview": only_preview,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def resendMessages(self, chat_id: int, message_ids: list) -> Result:
+    def resendMessages(self, chat_id: int, message_ids: list) -> Result:
         """Resends messages which failed to send\. Can be called only for messages for which messageSendingStateFailed\.can\_retry is true and after specified in messageSendingStateFailed\.retry\_after time passed\. If a message is re\-sent, the corresponding failed to send message is deleted\. Returns the sent messages in the same order as the message identifiers passed in message\_ids\. If a message can't be re\-sent, null will be returned instead of the message
 
         Args:
@@ -2721,9 +2711,9 @@ class TDLibFunctions:
             "message_ids": message_ids,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def sendChatScreenshotTakenNotification(self, chat_id: int) -> Result:
+    def sendChatScreenshotTakenNotification(self, chat_id: int) -> Result:
         """Sends a notification about a screenshot taken in a chat\. Supported only in private and secret chats
 
         Args:
@@ -2740,9 +2730,9 @@ class TDLibFunctions:
             "chat_id": chat_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def addLocalMessage(
+    def addLocalMessage(
         self,
         chat_id: int,
         sender_id: dict,
@@ -2782,11 +2772,9 @@ class TDLibFunctions:
             "input_message_content": input_message_content,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def deleteMessages(
-        self, chat_id: int, message_ids: list, revoke: bool
-    ) -> Result:
+    def deleteMessages(self, chat_id: int, message_ids: list, revoke: bool) -> Result:
         """Deletes messages
 
         Args:
@@ -2811,9 +2799,9 @@ class TDLibFunctions:
             "revoke": revoke,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def deleteChatMessagesBySender(self, chat_id: int, sender_id: dict) -> Result:
+    def deleteChatMessagesBySender(self, chat_id: int, sender_id: dict) -> Result:
         """Deletes all messages sent by the specified message sender in a chat\. Supported only for supergroups; requires can\_delete\_messages administrator privileges
 
         Args:
@@ -2834,9 +2822,9 @@ class TDLibFunctions:
             "sender_id": sender_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def deleteChatMessagesByDate(
+    def deleteChatMessagesByDate(
         self, chat_id: int, min_date: int, max_date: int, revoke: bool
     ) -> Result:
         """Deletes all messages between the specified dates in a chat\. Supported only for private chats and basic groups\. Messages sent in the last 30 seconds will not be deleted
@@ -2867,9 +2855,9 @@ class TDLibFunctions:
             "revoke": revoke,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def editMessageText(
+    def editMessageText(
         self,
         chat_id: int,
         message_id: int,
@@ -2904,9 +2892,9 @@ class TDLibFunctions:
             "input_message_content": input_message_content,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def editMessageLiveLocation(
+    def editMessageLiveLocation(
         self,
         chat_id: int,
         message_id: int,
@@ -2951,9 +2939,9 @@ class TDLibFunctions:
             "proximity_alert_radius": proximity_alert_radius,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def editMessageMedia(
+    def editMessageMedia(
         self,
         chat_id: int,
         message_id: int,
@@ -2988,9 +2976,9 @@ class TDLibFunctions:
             "input_message_content": input_message_content,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def editMessageCaption(
+    def editMessageCaption(
         self,
         chat_id: int,
         message_id: int,
@@ -3025,9 +3013,9 @@ class TDLibFunctions:
             "caption": caption,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def editMessageReplyMarkup(
+    def editMessageReplyMarkup(
         self, chat_id: int, message_id: int, reply_markup: dict = None
     ) -> Result:
         """Edits the message reply markup; for bots only\. Returns the edited message after the edit is completed on the server side
@@ -3054,9 +3042,9 @@ class TDLibFunctions:
             "reply_markup": reply_markup,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def editInlineMessageText(
+    def editInlineMessageText(
         self,
         inline_message_id: str,
         input_message_content: dict,
@@ -3086,9 +3074,9 @@ class TDLibFunctions:
             "input_message_content": input_message_content,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def editInlineMessageLiveLocation(
+    def editInlineMessageLiveLocation(
         self,
         inline_message_id: str,
         heading: int,
@@ -3128,9 +3116,9 @@ class TDLibFunctions:
             "proximity_alert_radius": proximity_alert_radius,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def editInlineMessageMedia(
+    def editInlineMessageMedia(
         self,
         inline_message_id: str,
         input_message_content: dict,
@@ -3160,9 +3148,9 @@ class TDLibFunctions:
             "input_message_content": input_message_content,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def editInlineMessageCaption(
+    def editInlineMessageCaption(
         self, inline_message_id: str, reply_markup: dict = None, caption: dict = None
     ) -> Result:
         """Edits the caption of an inline message sent via a bot; for bots only
@@ -3189,9 +3177,9 @@ class TDLibFunctions:
             "caption": caption,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def editInlineMessageReplyMarkup(
+    def editInlineMessageReplyMarkup(
         self, inline_message_id: str, reply_markup: dict = None
     ) -> Result:
         """Edits the reply markup of an inline message sent via a bot; for bots only
@@ -3214,9 +3202,9 @@ class TDLibFunctions:
             "reply_markup": reply_markup,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def editMessageSchedulingState(
+    def editMessageSchedulingState(
         self, chat_id: int, message_id: int, scheduling_state: dict = None
     ) -> Result:
         """Edits the time when a scheduled message will be sent\. Scheduling state of all messages in the same album or forwarded together with the message will be also changed
@@ -3243,9 +3231,9 @@ class TDLibFunctions:
             "scheduling_state": scheduling_state,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getForumTopicDefaultIcons(self) -> Result:
+    def getForumTopicDefaultIcons(self) -> Result:
         """Returns list of custom emojis, which can be used as forum topic icon by all users
 
 
@@ -3257,9 +3245,9 @@ class TDLibFunctions:
             "@type": "getForumTopicDefaultIcons",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def createForumTopic(self, chat_id: int, name: str, icon: dict) -> Result:
+    def createForumTopic(self, chat_id: int, name: str, icon: dict) -> Result:
         """Creates a topic in a forum supergroup chat; requires can\_manage\_topics rights in the supergroup
 
         Args:
@@ -3284,9 +3272,9 @@ class TDLibFunctions:
             "icon": icon,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def editForumTopic(
+    def editForumTopic(
         self,
         chat_id: int,
         message_thread_id: int,
@@ -3326,9 +3314,9 @@ class TDLibFunctions:
             "icon_custom_emoji_id": icon_custom_emoji_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getForumTopic(self, chat_id: int, message_thread_id: int) -> Result:
+    def getForumTopic(self, chat_id: int, message_thread_id: int) -> Result:
         """Returns information about a forum topic
 
         Args:
@@ -3349,9 +3337,9 @@ class TDLibFunctions:
             "message_thread_id": message_thread_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getForumTopicLink(self, chat_id: int, message_thread_id: int) -> Result:
+    def getForumTopicLink(self, chat_id: int, message_thread_id: int) -> Result:
         """Returns an HTTPS link to a topic in a forum chat\. This is an offline request
 
         Args:
@@ -3372,9 +3360,9 @@ class TDLibFunctions:
             "message_thread_id": message_thread_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getForumTopics(
+    def getForumTopics(
         self,
         chat_id: int,
         query: str,
@@ -3419,9 +3407,9 @@ class TDLibFunctions:
             "limit": limit,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setForumTopicNotificationSettings(
+    def setForumTopicNotificationSettings(
         self, chat_id: int, message_thread_id: int, notification_settings: dict
     ) -> Result:
         """Changes the notification settings of a forum topic
@@ -3448,9 +3436,9 @@ class TDLibFunctions:
             "notification_settings": notification_settings,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def toggleForumTopicIsClosed(
+    def toggleForumTopicIsClosed(
         self, chat_id: int, message_thread_id: int, is_closed: bool
     ) -> Result:
         """Toggles whether a topic is closed in a forum supergroup chat; requires can\_manage\_topics administrator right in the supergroup unless the user is creator of the topic
@@ -3477,11 +3465,9 @@ class TDLibFunctions:
             "is_closed": is_closed,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def toggleGeneralForumTopicIsHidden(
-        self, chat_id: int, is_hidden: bool
-    ) -> Result:
+    def toggleGeneralForumTopicIsHidden(self, chat_id: int, is_hidden: bool) -> Result:
         """Toggles whether a General topic is hidden in a forum supergroup chat; requires can\_manage\_topics administrator right in the supergroup
 
         Args:
@@ -3502,9 +3488,9 @@ class TDLibFunctions:
             "is_hidden": is_hidden,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def toggleForumTopicIsPinned(
+    def toggleForumTopicIsPinned(
         self, chat_id: int, message_thread_id: int, is_pinned: bool
     ) -> Result:
         """Changes the pinned state of a forum topic; requires can\_manage\_topics administrator right in the supergroup\. There can be up to getOption\("pinned\_forum\_topic\_count\_max"\) pinned forum topics
@@ -3531,11 +3517,9 @@ class TDLibFunctions:
             "is_pinned": is_pinned,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setPinnedForumTopics(
-        self, chat_id: int, message_thread_ids: list
-    ) -> Result:
+    def setPinnedForumTopics(self, chat_id: int, message_thread_ids: list) -> Result:
         """Changes the order of pinned forum topics
 
         Args:
@@ -3556,9 +3540,9 @@ class TDLibFunctions:
             "message_thread_ids": message_thread_ids,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def deleteForumTopic(self, chat_id: int, message_thread_id: int) -> Result:
+    def deleteForumTopic(self, chat_id: int, message_thread_id: int) -> Result:
         """Deletes all messages in a forum topic; requires can\_delete\_messages administrator right in the supergroup unless the user is creator of the topic, the topic has no messages from other users and has at most 11 messages
 
         Args:
@@ -3579,9 +3563,9 @@ class TDLibFunctions:
             "message_thread_id": message_thread_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getEmojiReaction(self, emoji: str) -> Result:
+    def getEmojiReaction(self, emoji: str) -> Result:
         """Returns information about a emoji reaction\. Returns a 404 error if the reaction is not found
 
         Args:
@@ -3598,9 +3582,9 @@ class TDLibFunctions:
             "emoji": emoji,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getCustomEmojiReactionAnimations(self) -> Result:
+    def getCustomEmojiReactionAnimations(self) -> Result:
         """Returns TGS stickers with generic animations for custom emoji reactions
 
 
@@ -3612,9 +3596,9 @@ class TDLibFunctions:
             "@type": "getCustomEmojiReactionAnimations",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getMessageAvailableReactions(
+    def getMessageAvailableReactions(
         self, chat_id: int, message_id: int, row_size: int
     ) -> Result:
         """Returns reactions, which can be added to a message\. The list can change after updateActiveEmojiReactions, updateChatAvailableReactions for the chat, or updateMessageInteractionInfo for the message
@@ -3641,9 +3625,9 @@ class TDLibFunctions:
             "row_size": row_size,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def clearRecentReactions(self) -> Result:
+    def clearRecentReactions(self) -> Result:
         """Clears the list of recently used reactions
 
 
@@ -3655,9 +3639,9 @@ class TDLibFunctions:
             "@type": "clearRecentReactions",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def addMessageReaction(
+    def addMessageReaction(
         self,
         chat_id: int,
         message_id: int,
@@ -3697,9 +3681,9 @@ class TDLibFunctions:
             "update_recent_reactions": update_recent_reactions,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def removeMessageReaction(
+    def removeMessageReaction(
         self, chat_id: int, message_id: int, reaction_type: dict
     ) -> Result:
         """Removes a reaction from a message\. A chosen reaction can always be removed
@@ -3726,9 +3710,9 @@ class TDLibFunctions:
             "reaction_type": reaction_type,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getMessageAddedReactions(
+    def getMessageAddedReactions(
         self,
         chat_id: int,
         message_id: int,
@@ -3768,9 +3752,9 @@ class TDLibFunctions:
             "limit": limit,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setDefaultReactionType(self, reaction_type: dict) -> Result:
+    def setDefaultReactionType(self, reaction_type: dict) -> Result:
         """Changes type of default reaction for the current user
 
         Args:
@@ -3787,9 +3771,9 @@ class TDLibFunctions:
             "reaction_type": reaction_type,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getTextEntities(self, text: str) -> Result:
+    def getTextEntities(self, text: str) -> Result:
         """Returns all entities \(mentions, hashtags, cashtags, bot commands, bank card numbers, URLs, and email addresses\) found in the text\. Can be called synchronously
 
         Args:
@@ -3806,9 +3790,9 @@ class TDLibFunctions:
             "text": text,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def parseTextEntities(self, text: str, parse_mode: dict) -> Result:
+    def parseTextEntities(self, text: str, parse_mode: dict) -> Result:
         """Parses Bold, Italic, Underline, Strikethrough, Spoiler, CustomEmoji, Code, Pre, PreCode, TextUrl and MentionName entities from a marked\-up text\. Can be called synchronously
 
         Args:
@@ -3829,9 +3813,9 @@ class TDLibFunctions:
             "parse_mode": parse_mode,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def parseMarkdown(self, text: dict) -> Result:
+    def parseMarkdown(self, text: dict) -> Result:
         """Parses Markdown entities in a human\-friendly format, ignoring markup errors\. Can be called synchronously
 
         Args:
@@ -3848,9 +3832,9 @@ class TDLibFunctions:
             "text": text,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getMarkdownText(self, text: dict) -> Result:
+    def getMarkdownText(self, text: dict) -> Result:
         """Replaces text entities with Markdown formatting in a human\-friendly format\. Entities that can't be represented in Markdown unambiguously are kept as is\. Can be called synchronously
 
         Args:
@@ -3867,9 +3851,9 @@ class TDLibFunctions:
             "text": text,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getFileMimeType(self, file_name: str) -> Result:
+    def getFileMimeType(self, file_name: str) -> Result:
         """Returns the MIME type of a file, guessed by its extension\. Returns an empty string on failure\. Can be called synchronously
 
         Args:
@@ -3886,9 +3870,9 @@ class TDLibFunctions:
             "file_name": file_name,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getFileExtension(self, mime_type: str) -> Result:
+    def getFileExtension(self, mime_type: str) -> Result:
         """Returns the extension of a file, guessed by its MIME type\. Returns an empty string on failure\. Can be called synchronously
 
         Args:
@@ -3905,9 +3889,9 @@ class TDLibFunctions:
             "mime_type": mime_type,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def cleanFileName(self, file_name: str) -> Result:
+    def cleanFileName(self, file_name: str) -> Result:
         """Removes potentially dangerous characters from the name of a file\. The encoding of the file name is supposed to be UTF\-8\. Returns an empty string on failure\. Can be called synchronously
 
         Args:
@@ -3924,9 +3908,9 @@ class TDLibFunctions:
             "file_name": file_name,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getLanguagePackString(
+    def getLanguagePackString(
         self,
         language_pack_database_path: str,
         localization_target: str,
@@ -3961,9 +3945,9 @@ class TDLibFunctions:
             "key": key,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getJsonValue(self, json: str) -> Result:
+    def getJsonValue(self, json: str) -> Result:
         """Converts a JSON\-serialized string to corresponding JsonValue object\. Can be called synchronously
 
         Args:
@@ -3980,9 +3964,9 @@ class TDLibFunctions:
             "json": json,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getJsonString(self, json_value: dict) -> Result:
+    def getJsonString(self, json_value: dict) -> Result:
         """Converts a JsonValue object to corresponding JSON\-serialized string\. Can be called synchronously
 
         Args:
@@ -3999,9 +3983,9 @@ class TDLibFunctions:
             "json_value": json_value,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getThemeParametersJsonString(self, theme: dict) -> Result:
+    def getThemeParametersJsonString(self, theme: dict) -> Result:
         """Converts a themeParameters object to corresponding JSON\-serialized string\. Can be called synchronously
 
         Args:
@@ -4018,11 +4002,9 @@ class TDLibFunctions:
             "theme": theme,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setPollAnswer(
-        self, chat_id: int, message_id: int, option_ids: list
-    ) -> Result:
+    def setPollAnswer(self, chat_id: int, message_id: int, option_ids: list) -> Result:
         """Changes the user answer to a poll\. A poll in quiz mode can be answered only once
 
         Args:
@@ -4047,9 +4029,9 @@ class TDLibFunctions:
             "option_ids": option_ids,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getPollVoters(
+    def getPollVoters(
         self, chat_id: int, message_id: int, option_id: int, offset: int, limit: int
     ) -> Result:
         """Returns users voted for the specified option in a non\-anonymous polls\. For optimal performance, the number of returned users is chosen by TDLib
@@ -4084,9 +4066,9 @@ class TDLibFunctions:
             "limit": limit,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def stopPoll(
+    def stopPoll(
         self, chat_id: int, message_id: int, reply_markup: dict = None
     ) -> Result:
         """Stops a poll\. A poll in a message can be stopped when the message has can\_be\_edited flag set
@@ -4113,9 +4095,9 @@ class TDLibFunctions:
             "reply_markup": reply_markup,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def hideSuggestedAction(self, action: dict) -> Result:
+    def hideSuggestedAction(self, action: dict) -> Result:
         """Hides a suggested action
 
         Args:
@@ -4132,11 +4114,9 @@ class TDLibFunctions:
             "action": action,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getLoginUrlInfo(
-        self, chat_id: int, message_id: int, button_id: int
-    ) -> Result:
+    def getLoginUrlInfo(self, chat_id: int, message_id: int, button_id: int) -> Result:
         """Returns information about a button of type inlineKeyboardButtonTypeLoginUrl\. The method needs to be called when the user presses the button
 
         Args:
@@ -4161,9 +4141,9 @@ class TDLibFunctions:
             "button_id": button_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getLoginUrl(
+    def getLoginUrl(
         self, chat_id: int, message_id: int, button_id: int, allow_write_access: bool
     ) -> Result:
         """Returns an HTTP URL which can be used to automatically authorize the user on a website after clicking an inline button of type inlineKeyboardButtonTypeLoginUrl\. Use the method getLoginUrlInfo to find whether a prior user confirmation is needed\. If an error is returned, then the button must be handled as an ordinary URL button
@@ -4194,9 +4174,9 @@ class TDLibFunctions:
             "allow_write_access": allow_write_access,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def shareUserWithBot(
+    def shareUserWithBot(
         self,
         chat_id: int,
         message_id: int,
@@ -4236,9 +4216,9 @@ class TDLibFunctions:
             "only_check": only_check,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def shareChatWithBot(
+    def shareChatWithBot(
         self,
         chat_id: int,
         message_id: int,
@@ -4278,9 +4258,9 @@ class TDLibFunctions:
             "only_check": only_check,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getInlineQueryResults(
+    def getInlineQueryResults(
         self,
         bot_user_id: int,
         chat_id: int,
@@ -4320,9 +4300,9 @@ class TDLibFunctions:
             "offset": offset,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def answerInlineQuery(
+    def answerInlineQuery(
         self,
         inline_query_id: int,
         is_personal: bool,
@@ -4367,9 +4347,9 @@ class TDLibFunctions:
             "next_offset": next_offset,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def searchWebApp(self, bot_user_id: int, web_app_short_name: str) -> Result:
+    def searchWebApp(self, bot_user_id: int, web_app_short_name: str) -> Result:
         """Returns information about a Web App by its short name\. Returns a 404 error if the Web App is not found
 
         Args:
@@ -4390,9 +4370,9 @@ class TDLibFunctions:
             "web_app_short_name": web_app_short_name,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getWebAppLinkUrl(
+    def getWebAppLinkUrl(
         self,
         chat_id: int,
         bot_user_id: int,
@@ -4442,9 +4422,9 @@ class TDLibFunctions:
             "allow_write_access": allow_write_access,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getWebAppUrl(
+    def getWebAppUrl(
         self, bot_user_id: int, url: str, application_name: str, theme: dict = None
     ) -> Result:
         """Returns an HTTPS URL of a Web App to open after keyboardButtonTypeWebApp or inlineQueryResultsButtonTypeWebApp button is pressed
@@ -4475,11 +4455,9 @@ class TDLibFunctions:
             "application_name": application_name,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def sendWebAppData(
-        self, bot_user_id: int, button_text: str, data: str
-    ) -> Result:
+    def sendWebAppData(self, bot_user_id: int, button_text: str, data: str) -> Result:
         """Sends data received from a keyboardButtonTypeWebApp Web App to a bot
 
         Args:
@@ -4504,9 +4482,9 @@ class TDLibFunctions:
             "data": data,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def openWebApp(
+    def openWebApp(
         self,
         chat_id: int,
         bot_user_id: int,
@@ -4556,9 +4534,9 @@ class TDLibFunctions:
             "reply_to_message_id": reply_to_message_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def closeWebApp(self, web_app_launch_id: int) -> Result:
+    def closeWebApp(self, web_app_launch_id: int) -> Result:
         """Informs TDLib that a previously opened Web App was closed
 
         Args:
@@ -4575,9 +4553,9 @@ class TDLibFunctions:
             "web_app_launch_id": web_app_launch_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def answerWebAppQuery(self, web_app_query_id: str, result: dict) -> Result:
+    def answerWebAppQuery(self, web_app_query_id: str, result: dict) -> Result:
         """Sets the result of interaction with a Web App and sends corresponding message on behalf of the user to the chat from which the query originated; for bots only
 
         Args:
@@ -4598,9 +4576,9 @@ class TDLibFunctions:
             "result": result,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getCallbackQueryAnswer(
+    def getCallbackQueryAnswer(
         self, chat_id: int, message_id: int, payload: dict
     ) -> Result:
         """Sends a callback query to a bot and returns an answer\. Returns an error with code 502 if the bot fails to answer the query before the query timeout expires
@@ -4627,9 +4605,9 @@ class TDLibFunctions:
             "payload": payload,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def answerCallbackQuery(
+    def answerCallbackQuery(
         self,
         callback_query_id: int,
         text: str,
@@ -4669,9 +4647,9 @@ class TDLibFunctions:
             "cache_time": cache_time,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def answerShippingQuery(
+    def answerShippingQuery(
         self, shipping_query_id: int, shipping_options: list, error_message: str
     ) -> Result:
         """Sets the result of a shipping query; for bots only
@@ -4698,9 +4676,9 @@ class TDLibFunctions:
             "error_message": error_message,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def answerPreCheckoutQuery(
+    def answerPreCheckoutQuery(
         self, pre_checkout_query_id: int, error_message: str
     ) -> Result:
         """Sets the result of a pre\-checkout query; for bots only
@@ -4723,9 +4701,9 @@ class TDLibFunctions:
             "error_message": error_message,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setGameScore(
+    def setGameScore(
         self,
         chat_id: int,
         message_id: int,
@@ -4770,9 +4748,9 @@ class TDLibFunctions:
             "force": force,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setInlineGameScore(
+    def setInlineGameScore(
         self,
         inline_message_id: str,
         edit_message: bool,
@@ -4812,11 +4790,9 @@ class TDLibFunctions:
             "force": force,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getGameHighScores(
-        self, chat_id: int, message_id: int, user_id: int
-    ) -> Result:
+    def getGameHighScores(self, chat_id: int, message_id: int, user_id: int) -> Result:
         """Returns the high scores for a game and some part of the high score table in the range of the specified user; for bots only
 
         Args:
@@ -4841,11 +4817,9 @@ class TDLibFunctions:
             "user_id": user_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getInlineGameHighScores(
-        self, inline_message_id: str, user_id: int
-    ) -> Result:
+    def getInlineGameHighScores(self, inline_message_id: str, user_id: int) -> Result:
         """Returns game high scores and some part of the high score table in the range of the specified user; for bots only
 
         Args:
@@ -4866,9 +4840,9 @@ class TDLibFunctions:
             "user_id": user_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def deleteChatReplyMarkup(self, chat_id: int, message_id: int) -> Result:
+    def deleteChatReplyMarkup(self, chat_id: int, message_id: int) -> Result:
         """Deletes the default reply markup from a chat\. Must be called after a one\-time keyboard or a replyMarkupForceReply reply markup has been used\. An updateChatReplyMarkup update will be sent if the reply markup is changed
 
         Args:
@@ -4889,9 +4863,9 @@ class TDLibFunctions:
             "message_id": message_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def sendChatAction(
+    def sendChatAction(
         self, chat_id: int, message_thread_id: int, action: dict = None
     ) -> Result:
         """Sends a notification about user activity in a chat
@@ -4918,9 +4892,9 @@ class TDLibFunctions:
             "action": action,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def openChat(self, chat_id: int) -> Result:
+    def openChat(self, chat_id: int) -> Result:
         """Informs TDLib that the chat is opened by the user\. Many useful activities depend on the chat being opened or closed \(e\.g\., in supergroups and channels all updates are received only for opened chats\)
 
         Args:
@@ -4937,9 +4911,9 @@ class TDLibFunctions:
             "chat_id": chat_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def closeChat(self, chat_id: int) -> Result:
+    def closeChat(self, chat_id: int) -> Result:
         """Informs TDLib that the chat is closed by the user\. Many useful activities depend on the chat being opened or closed
 
         Args:
@@ -4956,9 +4930,9 @@ class TDLibFunctions:
             "chat_id": chat_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def viewMessages(
+    def viewMessages(
         self, chat_id: int, message_ids: list, force_read: bool, source: dict = None
     ) -> Result:
         """Informs TDLib that messages are being viewed by the user\. Sponsored messages must be marked as viewed only when the entire text of the message is shown on the screen \(excluding the button\)\. Many useful activities depend on whether the messages are currently being viewed or not \(e\.g\., marking messages as read, incrementing a view counter, updating a view counter, removing deleted messages in supergroups and channels\)
@@ -4989,9 +4963,9 @@ class TDLibFunctions:
             "force_read": force_read,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def openMessageContent(self, chat_id: int, message_id: int) -> Result:
+    def openMessageContent(self, chat_id: int, message_id: int) -> Result:
         """Informs TDLib that the message content has been opened \(e\.g\., the user has opened a photo, video, document, location or venue, or has listened to an audio file or voice note message\)\. An updateMessageContentOpened update will be generated if something has changed
 
         Args:
@@ -5012,9 +4986,9 @@ class TDLibFunctions:
             "message_id": message_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def clickAnimatedEmojiMessage(self, chat_id: int, message_id: int) -> Result:
+    def clickAnimatedEmojiMessage(self, chat_id: int, message_id: int) -> Result:
         """Informs TDLib that a message with an animated emoji was clicked by the user\. Returns a big animated sticker to be played or a 404 error if usual animation needs to be played
 
         Args:
@@ -5035,9 +5009,9 @@ class TDLibFunctions:
             "message_id": message_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getInternalLink(self, type: dict, is_http: bool) -> Result:
+    def getInternalLink(self, type: dict, is_http: bool) -> Result:
         """Returns an HTTPS or a tg: link with the given type\. Can be called before authorization
 
         Args:
@@ -5058,9 +5032,9 @@ class TDLibFunctions:
             "is_http": is_http,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getInternalLinkType(self, link: str) -> Result:
+    def getInternalLinkType(self, link: str) -> Result:
         """Returns information about the type of an internal link\. Returns a 404 error if the link is not internal\. Can be called before authorization
 
         Args:
@@ -5077,9 +5051,9 @@ class TDLibFunctions:
             "link": link,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getExternalLinkInfo(self, link: str) -> Result:
+    def getExternalLinkInfo(self, link: str) -> Result:
         """Returns information about an action to be done when the current user clicks an external link\. Don't use this method for links from secret chats if web page preview is disabled in secret chats
 
         Args:
@@ -5096,9 +5070,9 @@ class TDLibFunctions:
             "link": link,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getExternalLink(self, link: str, allow_write_access: bool) -> Result:
+    def getExternalLink(self, link: str, allow_write_access: bool) -> Result:
         """Returns an HTTP URL which can be used to automatically authorize the current user on a website after clicking an HTTP link\. Use the method getExternalLinkInfo to find whether a prior user confirmation is needed
 
         Args:
@@ -5119,9 +5093,9 @@ class TDLibFunctions:
             "allow_write_access": allow_write_access,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def readAllChatMentions(self, chat_id: int) -> Result:
+    def readAllChatMentions(self, chat_id: int) -> Result:
         """Marks all mentions in a chat as read
 
         Args:
@@ -5138,9 +5112,9 @@ class TDLibFunctions:
             "chat_id": chat_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def readAllMessageThreadMentions(
+    def readAllMessageThreadMentions(
         self, chat_id: int, message_thread_id: int
     ) -> Result:
         """Marks all mentions in a forum topic as read
@@ -5163,9 +5137,9 @@ class TDLibFunctions:
             "message_thread_id": message_thread_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def readAllChatReactions(self, chat_id: int) -> Result:
+    def readAllChatReactions(self, chat_id: int) -> Result:
         """Marks all reactions in a chat or a forum topic as read
 
         Args:
@@ -5182,9 +5156,9 @@ class TDLibFunctions:
             "chat_id": chat_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def readAllMessageThreadReactions(
+    def readAllMessageThreadReactions(
         self, chat_id: int, message_thread_id: int
     ) -> Result:
         """Marks all reactions in a forum topic as read
@@ -5207,9 +5181,9 @@ class TDLibFunctions:
             "message_thread_id": message_thread_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def createPrivateChat(self, user_id: int, force: bool) -> Result:
+    def createPrivateChat(self, user_id: int, force: bool) -> Result:
         """Returns an existing chat corresponding to a given user
 
         Args:
@@ -5230,9 +5204,9 @@ class TDLibFunctions:
             "force": force,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def createBasicGroupChat(self, basic_group_id: int, force: bool) -> Result:
+    def createBasicGroupChat(self, basic_group_id: int, force: bool) -> Result:
         """Returns an existing chat corresponding to a known basic group
 
         Args:
@@ -5253,9 +5227,9 @@ class TDLibFunctions:
             "force": force,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def createSupergroupChat(self, supergroup_id: int, force: bool) -> Result:
+    def createSupergroupChat(self, supergroup_id: int, force: bool) -> Result:
         """Returns an existing chat corresponding to a known supergroup or channel
 
         Args:
@@ -5276,9 +5250,9 @@ class TDLibFunctions:
             "force": force,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def createSecretChat(self, secret_chat_id: int) -> Result:
+    def createSecretChat(self, secret_chat_id: int) -> Result:
         """Returns an existing chat corresponding to a known secret chat
 
         Args:
@@ -5295,9 +5269,9 @@ class TDLibFunctions:
             "secret_chat_id": secret_chat_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def createNewBasicGroupChat(
+    def createNewBasicGroupChat(
         self, title: str, message_auto_delete_time: int, user_ids: list = None
     ) -> Result:
         """Creates a new basic group and sends a corresponding messageBasicGroupChatCreate\. Returns the newly created chat
@@ -5324,9 +5298,9 @@ class TDLibFunctions:
             "message_auto_delete_time": message_auto_delete_time,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def createNewSupergroupChat(
+    def createNewSupergroupChat(
         self,
         title: str,
         is_forum: bool,
@@ -5376,9 +5350,9 @@ class TDLibFunctions:
             "for_import": for_import,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def createNewSecretChat(self, user_id: int) -> Result:
+    def createNewSecretChat(self, user_id: int) -> Result:
         """Creates a new secret chat\. Returns the newly created chat
 
         Args:
@@ -5395,9 +5369,9 @@ class TDLibFunctions:
             "user_id": user_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def upgradeBasicGroupChatToSupergroupChat(self, chat_id: int) -> Result:
+    def upgradeBasicGroupChatToSupergroupChat(self, chat_id: int) -> Result:
         """Creates a new supergroup from an existing basic group and sends a corresponding messageChatUpgradeTo and messageChatUpgradeFrom; requires creator privileges\. Deactivates the original basic group
 
         Args:
@@ -5414,9 +5388,9 @@ class TDLibFunctions:
             "chat_id": chat_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getChatListsToAddChat(self, chat_id: int) -> Result:
+    def getChatListsToAddChat(self, chat_id: int) -> Result:
         """Returns chat lists to which the chat can be added\. This is an offline request
 
         Args:
@@ -5433,9 +5407,9 @@ class TDLibFunctions:
             "chat_id": chat_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def addChatToList(self, chat_id: int, chat_list: dict) -> Result:
+    def addChatToList(self, chat_id: int, chat_list: dict) -> Result:
         """Adds a chat to a chat list\. A chat can't be simultaneously in Main and Archive chat lists, so it is automatically removed from another one if needed
 
         Args:
@@ -5456,9 +5430,9 @@ class TDLibFunctions:
             "chat_list": chat_list,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getChatFolder(self, chat_folder_id: int) -> Result:
+    def getChatFolder(self, chat_folder_id: int) -> Result:
         """Returns information about a chat folder by its identifier
 
         Args:
@@ -5475,9 +5449,9 @@ class TDLibFunctions:
             "chat_folder_id": chat_folder_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def createChatFolder(self, folder: dict) -> Result:
+    def createChatFolder(self, folder: dict) -> Result:
         """Creates new chat folder\. Returns information about the created chat folder\. There can be up to getOption\("chat\_folder\_count\_max"\) chat folders, but the limit can be increased with Telegram Premium
 
         Args:
@@ -5494,9 +5468,9 @@ class TDLibFunctions:
             "folder": folder,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def editChatFolder(self, chat_folder_id: int, folder: dict) -> Result:
+    def editChatFolder(self, chat_folder_id: int, folder: dict) -> Result:
         """Edits existing chat folder\. Returns information about the edited chat folder
 
         Args:
@@ -5517,11 +5491,9 @@ class TDLibFunctions:
             "folder": folder,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def deleteChatFolder(
-        self, chat_folder_id: int, leave_chat_ids: list
-    ) -> Result:
+    def deleteChatFolder(self, chat_folder_id: int, leave_chat_ids: list) -> Result:
         """Deletes existing chat folder
 
         Args:
@@ -5542,9 +5514,9 @@ class TDLibFunctions:
             "leave_chat_ids": leave_chat_ids,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getChatFolderChatsToLeave(self, chat_folder_id: int) -> Result:
+    def getChatFolderChatsToLeave(self, chat_folder_id: int) -> Result:
         """Returns identifiers of pinned or always included chats from a chat folder, which are suggested to be left when the chat folder is deleted
 
         Args:
@@ -5561,9 +5533,9 @@ class TDLibFunctions:
             "chat_folder_id": chat_folder_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def reorderChatFolders(
+    def reorderChatFolders(
         self, chat_folder_ids: list, main_chat_list_position: int
     ) -> Result:
         """Changes the order of chat folders
@@ -5586,9 +5558,9 @@ class TDLibFunctions:
             "main_chat_list_position": main_chat_list_position,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getRecommendedChatFolders(self) -> Result:
+    def getRecommendedChatFolders(self) -> Result:
         """Returns recommended chat folders for the current user
 
 
@@ -5600,9 +5572,9 @@ class TDLibFunctions:
             "@type": "getRecommendedChatFolders",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getChatFolderDefaultIconName(self, folder: dict) -> Result:
+    def getChatFolderDefaultIconName(self, folder: dict) -> Result:
         """Returns default icon name for a folder\. Can be called synchronously
 
         Args:
@@ -5619,9 +5591,9 @@ class TDLibFunctions:
             "folder": folder,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getChatsForChatFolderInviteLink(self, chat_folder_id: int) -> Result:
+    def getChatsForChatFolderInviteLink(self, chat_folder_id: int) -> Result:
         """Returns identifiers of chats from a chat folder, suitable for adding to a chat folder invite link
 
         Args:
@@ -5638,9 +5610,9 @@ class TDLibFunctions:
             "chat_folder_id": chat_folder_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def createChatFolderInviteLink(
+    def createChatFolderInviteLink(
         self, chat_folder_id: int, name: str, chat_ids: list
     ) -> Result:
         """Creates a new invite link for a chat folder\. A link can be created for a chat folder if it has only pinned and included chats
@@ -5667,9 +5639,9 @@ class TDLibFunctions:
             "chat_ids": chat_ids,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getChatFolderInviteLinks(self, chat_folder_id: int) -> Result:
+    def getChatFolderInviteLinks(self, chat_folder_id: int) -> Result:
         """Returns invite links created by the current user for a shareable chat folder
 
         Args:
@@ -5686,9 +5658,9 @@ class TDLibFunctions:
             "chat_folder_id": chat_folder_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def editChatFolderInviteLink(
+    def editChatFolderInviteLink(
         self, chat_folder_id: int, invite_link: str, name: str, chat_ids: list
     ) -> Result:
         """Edits an invite link for a chat folder
@@ -5719,9 +5691,9 @@ class TDLibFunctions:
             "chat_ids": chat_ids,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def deleteChatFolderInviteLink(
+    def deleteChatFolderInviteLink(
         self, chat_folder_id: int, invite_link: str
     ) -> Result:
         """Deletes an invite link for a chat folder
@@ -5744,9 +5716,9 @@ class TDLibFunctions:
             "invite_link": invite_link,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def checkChatFolderInviteLink(self, invite_link: str) -> Result:
+    def checkChatFolderInviteLink(self, invite_link: str) -> Result:
         """Checks the validity of an invite link for a chat folder and returns information about the corresponding chat folder
 
         Args:
@@ -5763,11 +5735,9 @@ class TDLibFunctions:
             "invite_link": invite_link,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def addChatFolderByInviteLink(
-        self, invite_link: str, chat_ids: list
-    ) -> Result:
+    def addChatFolderByInviteLink(self, invite_link: str, chat_ids: list) -> Result:
         """Adds a chat folder by an invite link
 
         Args:
@@ -5788,9 +5758,9 @@ class TDLibFunctions:
             "chat_ids": chat_ids,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getChatFolderNewChats(self, chat_folder_id: int) -> Result:
+    def getChatFolderNewChats(self, chat_folder_id: int) -> Result:
         """Returns new chats added to a shareable chat folder by its owner\. The method must be called at most once in getOption\("chat\_folder\_new\_chats\_update\_period"\) for the given chat folder
 
         Args:
@@ -5807,9 +5777,9 @@ class TDLibFunctions:
             "chat_folder_id": chat_folder_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def processChatFolderNewChats(
+    def processChatFolderNewChats(
         self, chat_folder_id: int, added_chat_ids: list
     ) -> Result:
         """Process new chats added to a shareable chat folder by its owner
@@ -5832,9 +5802,9 @@ class TDLibFunctions:
             "added_chat_ids": added_chat_ids,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setChatTitle(self, chat_id: int, title: str) -> Result:
+    def setChatTitle(self, chat_id: int, title: str) -> Result:
         """Changes the chat title\. Supported only for basic groups, supergroups and channels\. Requires can\_change\_info administrator right
 
         Args:
@@ -5855,9 +5825,9 @@ class TDLibFunctions:
             "title": title,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setChatPhoto(self, chat_id: int, photo: dict = None) -> Result:
+    def setChatPhoto(self, chat_id: int, photo: dict = None) -> Result:
         """Changes the photo of a chat\. Supported only for basic groups, supergroups and channels\. Requires can\_change\_info administrator right
 
         Args:
@@ -5878,9 +5848,9 @@ class TDLibFunctions:
             "photo": photo,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setChatMessageAutoDeleteTime(
+    def setChatMessageAutoDeleteTime(
         self, chat_id: int, message_auto_delete_time: int
     ) -> Result:
         """Changes the message auto\-delete or self\-destruct \(for secret chats\) time in a chat\. Requires change\_info administrator right in basic groups, supergroups and channels Message auto\-delete time can't be changed in a chat with the current user \(Saved Messages\) and the chat 777000 \(Telegram\)\.
@@ -5903,9 +5873,9 @@ class TDLibFunctions:
             "message_auto_delete_time": message_auto_delete_time,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setChatPermissions(self, chat_id: int, permissions: dict) -> Result:
+    def setChatPermissions(self, chat_id: int, permissions: dict) -> Result:
         """Changes the chat members permissions\. Supported only for basic groups and supergroups\. Requires can\_restrict\_members administrator right
 
         Args:
@@ -5926,9 +5896,9 @@ class TDLibFunctions:
             "permissions": permissions,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setChatBackground(
+    def setChatBackground(
         self,
         chat_id: int,
         dark_theme_dimming: int,
@@ -5963,9 +5933,9 @@ class TDLibFunctions:
             "dark_theme_dimming": dark_theme_dimming,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setChatTheme(self, chat_id: int, theme_name: str) -> Result:
+    def setChatTheme(self, chat_id: int, theme_name: str) -> Result:
         """Changes the chat theme\. Supported only in private and secret chats
 
         Args:
@@ -5986,9 +5956,9 @@ class TDLibFunctions:
             "theme_name": theme_name,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setChatDraftMessage(
+    def setChatDraftMessage(
         self, chat_id: int, message_thread_id: int, draft_message: dict = None
     ) -> Result:
         """Changes the draft message in a chat
@@ -6015,9 +5985,9 @@ class TDLibFunctions:
             "draft_message": draft_message,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setChatNotificationSettings(
+    def setChatNotificationSettings(
         self, chat_id: int, notification_settings: dict
     ) -> Result:
         """Changes the notification settings of a chat\. Notification settings of a chat with the current user \(Saved Messages\) can't be changed
@@ -6040,9 +6010,9 @@ class TDLibFunctions:
             "notification_settings": notification_settings,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def toggleChatHasProtectedContent(
+    def toggleChatHasProtectedContent(
         self, chat_id: int, has_protected_content: bool
     ) -> Result:
         """Changes the ability of users to save, forward, or copy chat content\. Supported only for basic groups, supergroups and channels\. Requires owner privileges
@@ -6065,11 +6035,9 @@ class TDLibFunctions:
             "has_protected_content": has_protected_content,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def toggleChatIsTranslatable(
-        self, chat_id: int, is_translatable: bool
-    ) -> Result:
+    def toggleChatIsTranslatable(self, chat_id: int, is_translatable: bool) -> Result:
         """Changes the translatable state of a chat; for Telegram Premium users only
 
         Args:
@@ -6090,9 +6058,9 @@ class TDLibFunctions:
             "is_translatable": is_translatable,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def toggleChatIsMarkedAsUnread(
+    def toggleChatIsMarkedAsUnread(
         self, chat_id: int, is_marked_as_unread: bool
     ) -> Result:
         """Changes the marked as unread state of a chat
@@ -6115,9 +6083,9 @@ class TDLibFunctions:
             "is_marked_as_unread": is_marked_as_unread,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def toggleChatDefaultDisableNotification(
+    def toggleChatDefaultDisableNotification(
         self, chat_id: int, default_disable_notification: bool
     ) -> Result:
         """Changes the value of the default disable\_notification parameter, used when a message is sent to a chat
@@ -6140,9 +6108,9 @@ class TDLibFunctions:
             "default_disable_notification": default_disable_notification,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setChatAvailableReactions(
+    def setChatAvailableReactions(
         self, chat_id: int, available_reactions: dict
     ) -> Result:
         """Changes reactions, available in a chat\. Available for basic groups, supergroups, and channels\. Requires can\_change\_info administrator right
@@ -6165,9 +6133,9 @@ class TDLibFunctions:
             "available_reactions": available_reactions,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setChatClientData(self, chat_id: int, client_data: str) -> Result:
+    def setChatClientData(self, chat_id: int, client_data: str) -> Result:
         """Changes application\-specific data associated with a chat
 
         Args:
@@ -6188,9 +6156,9 @@ class TDLibFunctions:
             "client_data": client_data,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setChatDescription(self, chat_id: int, description: str) -> Result:
+    def setChatDescription(self, chat_id: int, description: str) -> Result:
         """Changes information about a chat\. Available for basic groups, supergroups, and channels\. Requires can\_change\_info administrator right
 
         Args:
@@ -6211,11 +6179,9 @@ class TDLibFunctions:
             "description": description,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setChatDiscussionGroup(
-        self, chat_id: int, discussion_chat_id: int
-    ) -> Result:
+    def setChatDiscussionGroup(self, chat_id: int, discussion_chat_id: int) -> Result:
         """Changes the discussion group of a channel chat; requires can\_change\_info administrator right in the channel if it is specified
 
         Args:
@@ -6236,9 +6202,9 @@ class TDLibFunctions:
             "discussion_chat_id": discussion_chat_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setChatLocation(self, chat_id: int, location: dict) -> Result:
+    def setChatLocation(self, chat_id: int, location: dict) -> Result:
         """Changes the location of a chat\. Available only for some location\-based supergroups, use supergroupFullInfo\.can\_set\_location to check whether the method is allowed to use
 
         Args:
@@ -6259,9 +6225,9 @@ class TDLibFunctions:
             "location": location,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setChatSlowModeDelay(self, chat_id: int, slow_mode_delay: int) -> Result:
+    def setChatSlowModeDelay(self, chat_id: int, slow_mode_delay: int) -> Result:
         """Changes the slow mode delay of a chat\. Available only for supergroups; requires can\_restrict\_members rights
 
         Args:
@@ -6282,9 +6248,9 @@ class TDLibFunctions:
             "slow_mode_delay": slow_mode_delay,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def pinChatMessage(
+    def pinChatMessage(
         self,
         chat_id: int,
         message_id: int,
@@ -6319,9 +6285,9 @@ class TDLibFunctions:
             "only_for_self": only_for_self,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def unpinChatMessage(self, chat_id: int, message_id: int) -> Result:
+    def unpinChatMessage(self, chat_id: int, message_id: int) -> Result:
         """Removes a pinned message from a chat; requires can\_pin\_messages rights in the group or can\_edit\_messages rights in the channel
 
         Args:
@@ -6342,9 +6308,9 @@ class TDLibFunctions:
             "message_id": message_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def unpinAllChatMessages(self, chat_id: int) -> Result:
+    def unpinAllChatMessages(self, chat_id: int) -> Result:
         """Removes all pinned messages from a chat; requires can\_pin\_messages rights in the group or can\_edit\_messages rights in the channel
 
         Args:
@@ -6361,9 +6327,9 @@ class TDLibFunctions:
             "chat_id": chat_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def unpinAllMessageThreadMessages(
+    def unpinAllMessageThreadMessages(
         self, chat_id: int, message_thread_id: int
     ) -> Result:
         """Removes all pinned messages from a forum topic; requires can\_pin\_messages rights in the supergroup
@@ -6386,9 +6352,9 @@ class TDLibFunctions:
             "message_thread_id": message_thread_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def joinChat(self, chat_id: int) -> Result:
+    def joinChat(self, chat_id: int) -> Result:
         """Adds the current user as a new member to a chat\. Private and secret chats can't be joined using this method\. May return an error with a message "INVITE\_REQUEST\_SENT" if only a join request was created
 
         Args:
@@ -6405,9 +6371,9 @@ class TDLibFunctions:
             "chat_id": chat_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def leaveChat(self, chat_id: int) -> Result:
+    def leaveChat(self, chat_id: int) -> Result:
         """Removes the current user from chat members\. Private and secret chats can't be left using this method
 
         Args:
@@ -6424,11 +6390,9 @@ class TDLibFunctions:
             "chat_id": chat_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def addChatMember(
-        self, chat_id: int, user_id: int, forward_limit: int
-    ) -> Result:
+    def addChatMember(self, chat_id: int, user_id: int, forward_limit: int) -> Result:
         """Adds a new member to a chat\. Members can't be added to private or secret chats
 
         Args:
@@ -6453,9 +6417,9 @@ class TDLibFunctions:
             "forward_limit": forward_limit,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def addChatMembers(self, chat_id: int, user_ids: list) -> Result:
+    def addChatMembers(self, chat_id: int, user_ids: list) -> Result:
         """Adds multiple new members to a chat\. Currently, this method is only available for supergroups and channels\. This method can't be used to join a chat\. Members can't be added to a channel if it has more than 200 members
 
         Args:
@@ -6476,9 +6440,9 @@ class TDLibFunctions:
             "user_ids": user_ids,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setChatMemberStatus(
+    def setChatMemberStatus(
         self, chat_id: int, member_id: dict, status: dict
     ) -> Result:
         """Changes the status of a chat member, needs appropriate privileges\. This function is currently not suitable for transferring chat ownership; use transferChatOwnership instead\. Use addChatMember or banChatMember if some additional parameters needs to be passed
@@ -6505,9 +6469,9 @@ class TDLibFunctions:
             "status": status,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def banChatMember(
+    def banChatMember(
         self,
         chat_id: int,
         member_id: dict,
@@ -6542,9 +6506,9 @@ class TDLibFunctions:
             "revoke_messages": revoke_messages,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def canTransferOwnership(self) -> Result:
+    def canTransferOwnership(self) -> Result:
         """Checks whether the current session can be used to transfer a chat ownership to another user
 
 
@@ -6556,9 +6520,9 @@ class TDLibFunctions:
             "@type": "canTransferOwnership",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def transferChatOwnership(
+    def transferChatOwnership(
         self, chat_id: int, user_id: int, password: str
     ) -> Result:
         """Changes the owner of a chat\. The current user must be a current owner of the chat\. Use the method canTransferOwnership to check whether the ownership can be transferred from the current session\. Available only for supergroups and channel chats
@@ -6585,9 +6549,9 @@ class TDLibFunctions:
             "password": password,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getChatMember(self, chat_id: int, member_id: dict) -> Result:
+    def getChatMember(self, chat_id: int, member_id: dict) -> Result:
         """Returns information about a single member of a chat
 
         Args:
@@ -6608,9 +6572,9 @@ class TDLibFunctions:
             "member_id": member_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def searchChatMembers(
+    def searchChatMembers(
         self, chat_id: int, query: str, limit: int, filter: dict = None
     ) -> Result:
         """Searches for a specified query in the first name, last name and usernames of the members of a specified chat\. Requires administrator rights in channels
@@ -6641,9 +6605,9 @@ class TDLibFunctions:
             "filter": filter,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getChatAdministrators(self, chat_id: int) -> Result:
+    def getChatAdministrators(self, chat_id: int) -> Result:
         """Returns a list of administrators of the chat with their custom titles
 
         Args:
@@ -6660,9 +6624,9 @@ class TDLibFunctions:
             "chat_id": chat_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def clearAllDraftMessages(self, exclude_secret_chats: bool) -> Result:
+    def clearAllDraftMessages(self, exclude_secret_chats: bool) -> Result:
         """Clears message drafts in all chats
 
         Args:
@@ -6679,9 +6643,9 @@ class TDLibFunctions:
             "exclude_secret_chats": exclude_secret_chats,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getSavedNotificationSound(self, notification_sound_id: int) -> Result:
+    def getSavedNotificationSound(self, notification_sound_id: int) -> Result:
         """Returns saved notification sound by its identifier\. Returns a 404 error if there is no saved notification sound with the specified identifier
 
         Args:
@@ -6698,9 +6662,9 @@ class TDLibFunctions:
             "notification_sound_id": notification_sound_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getSavedNotificationSounds(self) -> Result:
+    def getSavedNotificationSounds(self) -> Result:
         """Returns list of saved notification sounds\. If a sound isn't in the list, then default sound needs to be used
 
 
@@ -6712,9 +6676,9 @@ class TDLibFunctions:
             "@type": "getSavedNotificationSounds",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def addSavedNotificationSound(self, sound: dict) -> Result:
+    def addSavedNotificationSound(self, sound: dict) -> Result:
         """Adds a new notification sound to the list of saved notification sounds\. The new notification sound is added to the top of the list\. If it is already in the list, its position isn't changed
 
         Args:
@@ -6731,9 +6695,9 @@ class TDLibFunctions:
             "sound": sound,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def removeSavedNotificationSound(self, notification_sound_id: int) -> Result:
+    def removeSavedNotificationSound(self, notification_sound_id: int) -> Result:
         """Removes a notification sound from the list of saved notification sounds
 
         Args:
@@ -6750,9 +6714,9 @@ class TDLibFunctions:
             "notification_sound_id": notification_sound_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getChatNotificationSettingsExceptions(
+    def getChatNotificationSettingsExceptions(
         self, compare_sound: bool, scope: dict = None
     ) -> Result:
         """Returns list of chats with non\-default notification settings
@@ -6775,9 +6739,9 @@ class TDLibFunctions:
             "compare_sound": compare_sound,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getScopeNotificationSettings(self, scope: dict) -> Result:
+    def getScopeNotificationSettings(self, scope: dict) -> Result:
         """Returns the notification settings for chats of a given type
 
         Args:
@@ -6794,9 +6758,9 @@ class TDLibFunctions:
             "scope": scope,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setScopeNotificationSettings(
+    def setScopeNotificationSettings(
         self, scope: dict, notification_settings: dict
     ) -> Result:
         """Changes notification settings for chats of a given type
@@ -6819,9 +6783,9 @@ class TDLibFunctions:
             "notification_settings": notification_settings,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def resetAllNotificationSettings(self) -> Result:
+    def resetAllNotificationSettings(self) -> Result:
         """Resets all notification settings to their default values\. By default, all chats are unmuted and message previews are shown
 
 
@@ -6833,9 +6797,9 @@ class TDLibFunctions:
             "@type": "resetAllNotificationSettings",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def toggleChatIsPinned(
+    def toggleChatIsPinned(
         self, chat_list: dict, chat_id: int, is_pinned: bool
     ) -> Result:
         """Changes the pinned state of a chat\. There can be up to getOption\("pinned\_chat\_count\_max"\)/getOption\("pinned\_archived\_chat\_count\_max"\) pinned non\-secret chats and the same number of secret chats in the main/archive chat list\. The limit can be increased with Telegram Premium
@@ -6862,9 +6826,9 @@ class TDLibFunctions:
             "is_pinned": is_pinned,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setPinnedChats(self, chat_list: dict, chat_ids: list) -> Result:
+    def setPinnedChats(self, chat_list: dict, chat_ids: list) -> Result:
         """Changes the order of pinned chats
 
         Args:
@@ -6885,9 +6849,9 @@ class TDLibFunctions:
             "chat_ids": chat_ids,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def readChatList(self, chat_list: dict) -> Result:
+    def readChatList(self, chat_list: dict) -> Result:
         """Traverse all chats in a chat list and marks all messages in the chats as read
 
         Args:
@@ -6904,9 +6868,9 @@ class TDLibFunctions:
             "chat_list": chat_list,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getAttachmentMenuBot(self, bot_user_id: int) -> Result:
+    def getAttachmentMenuBot(self, bot_user_id: int) -> Result:
         """Returns information about a bot that can be added to attachment menu
 
         Args:
@@ -6923,9 +6887,9 @@ class TDLibFunctions:
             "bot_user_id": bot_user_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def toggleBotIsAddedToAttachmentMenu(
+    def toggleBotIsAddedToAttachmentMenu(
         self, bot_user_id: int, is_added: bool, allow_write_access: bool
     ) -> Result:
         """Adds or removes a bot to attachment menu\. Bot can be added to attachment menu, only if userTypeBot\.can\_be\_added\_to\_attachment\_menu \=\= true
@@ -6952,9 +6916,9 @@ class TDLibFunctions:
             "allow_write_access": allow_write_access,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getThemedEmojiStatuses(self) -> Result:
+    def getThemedEmojiStatuses(self) -> Result:
         """Returns up to 8 emoji statuses, which must be shown right after the default Premium Badge in the emoji status list
 
 
@@ -6966,9 +6930,9 @@ class TDLibFunctions:
             "@type": "getThemedEmojiStatuses",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getRecentEmojiStatuses(self) -> Result:
+    def getRecentEmojiStatuses(self) -> Result:
         """Returns recent emoji statuses
 
 
@@ -6980,9 +6944,9 @@ class TDLibFunctions:
             "@type": "getRecentEmojiStatuses",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getDefaultEmojiStatuses(self) -> Result:
+    def getDefaultEmojiStatuses(self) -> Result:
         """Returns default emoji statuses
 
 
@@ -6994,9 +6958,9 @@ class TDLibFunctions:
             "@type": "getDefaultEmojiStatuses",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def clearRecentEmojiStatuses(self) -> Result:
+    def clearRecentEmojiStatuses(self) -> Result:
         """Clears the list of recently used emoji statuses
 
 
@@ -7008,9 +6972,9 @@ class TDLibFunctions:
             "@type": "clearRecentEmojiStatuses",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def downloadFile(
+    def downloadFile(
         self, file_id: int, priority: int, offset: int, limit: int, synchronous: bool
     ) -> Result:
         """Downloads a file from the cloud\. Download progress and completion of the download will be notified through updateFile updates
@@ -7045,9 +7009,9 @@ class TDLibFunctions:
             "synchronous": synchronous,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getFileDownloadedPrefixSize(self, file_id: int, offset: int) -> Result:
+    def getFileDownloadedPrefixSize(self, file_id: int, offset: int) -> Result:
         """Returns file downloaded prefix size from a given offset, in bytes
 
         Args:
@@ -7068,9 +7032,9 @@ class TDLibFunctions:
             "offset": offset,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def cancelDownloadFile(self, file_id: int, only_if_pending: bool) -> Result:
+    def cancelDownloadFile(self, file_id: int, only_if_pending: bool) -> Result:
         """Stops the downloading of a file\. If a file has already been downloaded, does nothing
 
         Args:
@@ -7091,9 +7055,9 @@ class TDLibFunctions:
             "only_if_pending": only_if_pending,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getSuggestedFileName(self, file_id: int, directory: str) -> Result:
+    def getSuggestedFileName(self, file_id: int, directory: str) -> Result:
         """Returns suggested name for saving a file in a given directory
 
         Args:
@@ -7114,9 +7078,9 @@ class TDLibFunctions:
             "directory": directory,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def preliminaryUploadFile(
+    def preliminaryUploadFile(
         self, file: dict, priority: int, file_type: dict = None
     ) -> Result:
         """Preliminary uploads a file to the cloud before sending it in a message, which can be useful for uploading of being recorded voice and video notes\. Updates updateFile will be used to notify about upload progress and successful completion of the upload\. The file will not have a persistent remote identifier until it will be sent in a message
@@ -7143,9 +7107,9 @@ class TDLibFunctions:
             "priority": priority,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def cancelPreliminaryUploadFile(self, file_id: int) -> Result:
+    def cancelPreliminaryUploadFile(self, file_id: int) -> Result:
         """Stops the preliminary uploading of a file\. Supported only for files uploaded by using preliminaryUploadFile\. For other files the behavior is undefined
 
         Args:
@@ -7162,9 +7126,9 @@ class TDLibFunctions:
             "file_id": file_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def writeGeneratedFilePart(
+    def writeGeneratedFilePart(
         self, generation_id: int, offset: int, data: bytes
     ) -> Result:
         """Writes a part of a generated file\. This method is intended to be used only if the application has no direct access to TDLib's file system, because it is usually slower than a direct write to the destination file
@@ -7191,9 +7155,9 @@ class TDLibFunctions:
             "data": data,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setFileGenerationProgress(
+    def setFileGenerationProgress(
         self, generation_id: int, expected_size: int, local_prefix_size: int
     ) -> Result:
         """Informs TDLib on a file generation progress
@@ -7220,11 +7184,9 @@ class TDLibFunctions:
             "local_prefix_size": local_prefix_size,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def finishFileGeneration(
-        self, generation_id: int, error: dict = None
-    ) -> Result:
+    def finishFileGeneration(self, generation_id: int, error: dict = None) -> Result:
         """Finishes the file generation
 
         Args:
@@ -7245,9 +7207,9 @@ class TDLibFunctions:
             "error": error,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def readFilePart(self, file_id: int, offset: int, count: int) -> Result:
+    def readFilePart(self, file_id: int, offset: int, count: int) -> Result:
         """Reads a part of a file from the TDLib file cache and returns read bytes\. This method is intended to be used only if the application has no direct access to TDLib's file system, because it is usually slower than a direct read from the file
 
         Args:
@@ -7272,9 +7234,9 @@ class TDLibFunctions:
             "count": count,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def deleteFile(self, file_id: int) -> Result:
+    def deleteFile(self, file_id: int) -> Result:
         """Deletes a file from the TDLib file cache
 
         Args:
@@ -7291,9 +7253,9 @@ class TDLibFunctions:
             "file_id": file_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def addFileToDownloads(
+    def addFileToDownloads(
         self, file_id: int, chat_id: int, message_id: int, priority: int
     ) -> Result:
         """Adds a file from a message to the list of file downloads\. Download progress and completion of the download will be notified through updateFile updates\. If message database is used, the list of file downloads is persistent across application restarts\. The downloading is independent from download using downloadFile, i\.e\. it continues if downloadFile is canceled or is used to download a part of the file
@@ -7324,9 +7286,9 @@ class TDLibFunctions:
             "priority": priority,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def toggleDownloadIsPaused(self, file_id: int, is_paused: bool) -> Result:
+    def toggleDownloadIsPaused(self, file_id: int, is_paused: bool) -> Result:
         """Changes pause state of a file in the file download list
 
         Args:
@@ -7347,9 +7309,9 @@ class TDLibFunctions:
             "is_paused": is_paused,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def toggleAllDownloadsArePaused(self, are_paused: bool) -> Result:
+    def toggleAllDownloadsArePaused(self, are_paused: bool) -> Result:
         """Changes pause state of all files in the file download list
 
         Args:
@@ -7366,11 +7328,9 @@ class TDLibFunctions:
             "are_paused": are_paused,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def removeFileFromDownloads(
-        self, file_id: int, delete_from_cache: bool
-    ) -> Result:
+    def removeFileFromDownloads(self, file_id: int, delete_from_cache: bool) -> Result:
         """Removes a file from the file download list
 
         Args:
@@ -7391,9 +7351,9 @@ class TDLibFunctions:
             "delete_from_cache": delete_from_cache,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def removeAllFilesFromDownloads(
+    def removeAllFilesFromDownloads(
         self, only_active: bool, only_completed: bool, delete_from_cache: bool
     ) -> Result:
         """Removes all files from the file download list
@@ -7420,9 +7380,9 @@ class TDLibFunctions:
             "delete_from_cache": delete_from_cache,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def searchFileDownloads(
+    def searchFileDownloads(
         self,
         only_active: bool,
         only_completed: bool,
@@ -7462,9 +7422,9 @@ class TDLibFunctions:
             "limit": limit,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getMessageFileType(self, message_file_head: str) -> Result:
+    def getMessageFileType(self, message_file_head: str) -> Result:
         """Returns information about a file with messages exported from another application
 
         Args:
@@ -7481,9 +7441,9 @@ class TDLibFunctions:
             "message_file_head": message_file_head,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getMessageImportConfirmationText(self, chat_id: int) -> Result:
+    def getMessageImportConfirmationText(self, chat_id: int) -> Result:
         """Returns a confirmation text to be shown to the user before starting message import
 
         Args:
@@ -7500,9 +7460,9 @@ class TDLibFunctions:
             "chat_id": chat_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def importMessages(
+    def importMessages(
         self, chat_id: int, message_file: dict, attached_files: list
     ) -> Result:
         """Imports messages exported from another app
@@ -7529,9 +7489,9 @@ class TDLibFunctions:
             "attached_files": attached_files,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def replacePrimaryChatInviteLink(self, chat_id: int) -> Result:
+    def replacePrimaryChatInviteLink(self, chat_id: int) -> Result:
         """Replaces current primary invite link for a chat with a new primary invite link\. Available for basic groups, supergroups, and channels\. Requires administrator privileges and can\_invite\_users right
 
         Args:
@@ -7548,9 +7508,9 @@ class TDLibFunctions:
             "chat_id": chat_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def createChatInviteLink(
+    def createChatInviteLink(
         self,
         chat_id: int,
         name: str,
@@ -7590,9 +7550,9 @@ class TDLibFunctions:
             "creates_join_request": creates_join_request,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def editChatInviteLink(
+    def editChatInviteLink(
         self,
         chat_id: int,
         invite_link: str,
@@ -7637,9 +7597,9 @@ class TDLibFunctions:
             "creates_join_request": creates_join_request,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getChatInviteLink(self, chat_id: int, invite_link: str) -> Result:
+    def getChatInviteLink(self, chat_id: int, invite_link: str) -> Result:
         """Returns information about an invite link\. Requires administrator privileges and can\_invite\_users right in the chat to get own links and owner privileges to get other links
 
         Args:
@@ -7660,9 +7620,9 @@ class TDLibFunctions:
             "invite_link": invite_link,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getChatInviteLinkCounts(self, chat_id: int) -> Result:
+    def getChatInviteLinkCounts(self, chat_id: int) -> Result:
         """Returns list of chat administrators with number of their invite links\. Requires owner privileges in the chat
 
         Args:
@@ -7679,9 +7639,9 @@ class TDLibFunctions:
             "chat_id": chat_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getChatInviteLinks(
+    def getChatInviteLinks(
         self,
         chat_id: int,
         creator_user_id: int,
@@ -7726,9 +7686,9 @@ class TDLibFunctions:
             "limit": limit,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getChatInviteLinkMembers(
+    def getChatInviteLinkMembers(
         self, chat_id: int, invite_link: str, limit: int, offset_member: dict = None
     ) -> Result:
         """Returns chat members joined a chat via an invite link\. Requires administrator privileges and can\_invite\_users right in the chat for own links and owner privileges for other links
@@ -7759,9 +7719,9 @@ class TDLibFunctions:
             "limit": limit,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def revokeChatInviteLink(self, chat_id: int, invite_link: str) -> Result:
+    def revokeChatInviteLink(self, chat_id: int, invite_link: str) -> Result:
         """Revokes invite link for a chat\. Available for basic groups, supergroups, and channels\. Requires administrator privileges and can\_invite\_users right in the chat for own links and owner privileges for other links\. If a primary link is revoked, then additionally to the revoked link returns new primary link
 
         Args:
@@ -7782,11 +7742,9 @@ class TDLibFunctions:
             "invite_link": invite_link,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def deleteRevokedChatInviteLink(
-        self, chat_id: int, invite_link: str
-    ) -> Result:
+    def deleteRevokedChatInviteLink(self, chat_id: int, invite_link: str) -> Result:
         """Deletes revoked chat invite links\. Requires administrator privileges and can\_invite\_users right in the chat for own links and owner privileges for other links
 
         Args:
@@ -7807,9 +7765,9 @@ class TDLibFunctions:
             "invite_link": invite_link,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def deleteAllRevokedChatInviteLinks(
+    def deleteAllRevokedChatInviteLinks(
         self, chat_id: int, creator_user_id: int
     ) -> Result:
         """Deletes all revoked chat invite links created by a given chat administrator\. Requires administrator privileges and can\_invite\_users right in the chat for own links and owner privileges for other links
@@ -7832,9 +7790,9 @@ class TDLibFunctions:
             "creator_user_id": creator_user_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def checkChatInviteLink(self, invite_link: str) -> Result:
+    def checkChatInviteLink(self, invite_link: str) -> Result:
         """Checks the validity of an invite link for a chat and returns information about the corresponding chat
 
         Args:
@@ -7851,9 +7809,9 @@ class TDLibFunctions:
             "invite_link": invite_link,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def joinChatByInviteLink(self, invite_link: str) -> Result:
+    def joinChatByInviteLink(self, invite_link: str) -> Result:
         """Uses an invite link to add the current user to the chat if possible\. May return an error with a message "INVITE\_REQUEST\_SENT" if only a join request was created
 
         Args:
@@ -7870,9 +7828,9 @@ class TDLibFunctions:
             "invite_link": invite_link,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getChatJoinRequests(
+    def getChatJoinRequests(
         self,
         chat_id: int,
         invite_link: str,
@@ -7912,9 +7870,9 @@ class TDLibFunctions:
             "limit": limit,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def processChatJoinRequest(
+    def processChatJoinRequest(
         self, chat_id: int, user_id: int, approve: bool
     ) -> Result:
         """Handles a pending join request in a chat
@@ -7941,9 +7899,9 @@ class TDLibFunctions:
             "approve": approve,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def processChatJoinRequests(
+    def processChatJoinRequests(
         self, chat_id: int, invite_link: str, approve: bool
     ) -> Result:
         """Handles all pending join requests for a given link in a chat
@@ -7970,9 +7928,9 @@ class TDLibFunctions:
             "approve": approve,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def createCall(self, user_id: int, protocol: dict, is_video: bool) -> Result:
+    def createCall(self, user_id: int, protocol: dict, is_video: bool) -> Result:
         """Creates a new call
 
         Args:
@@ -7997,9 +7955,9 @@ class TDLibFunctions:
             "is_video": is_video,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def acceptCall(self, call_id: int, protocol: dict) -> Result:
+    def acceptCall(self, call_id: int, protocol: dict) -> Result:
         """Accepts an incoming call
 
         Args:
@@ -8020,9 +7978,9 @@ class TDLibFunctions:
             "protocol": protocol,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def sendCallSignalingData(self, call_id: int, data: bytes) -> Result:
+    def sendCallSignalingData(self, call_id: int, data: bytes) -> Result:
         """Sends call signaling data
 
         Args:
@@ -8043,9 +8001,9 @@ class TDLibFunctions:
             "data": data,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def discardCall(
+    def discardCall(
         self,
         call_id: int,
         is_disconnected: bool,
@@ -8085,9 +8043,9 @@ class TDLibFunctions:
             "connection_id": connection_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def sendCallRating(
+    def sendCallRating(
         self, call_id: int, rating: int, comment: str, problems: list
     ) -> Result:
         """Sends a call rating
@@ -8118,11 +8076,9 @@ class TDLibFunctions:
             "problems": problems,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def sendCallDebugInformation(
-        self, call_id: int, debug_information: str
-    ) -> Result:
+    def sendCallDebugInformation(self, call_id: int, debug_information: str) -> Result:
         """Sends debug information for a call to Telegram servers
 
         Args:
@@ -8143,9 +8099,9 @@ class TDLibFunctions:
             "debug_information": debug_information,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def sendCallLog(self, call_id: int, log_file: dict) -> Result:
+    def sendCallLog(self, call_id: int, log_file: dict) -> Result:
         """Sends log file for a call to Telegram servers
 
         Args:
@@ -8166,9 +8122,9 @@ class TDLibFunctions:
             "log_file": log_file,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getVideoChatAvailableParticipants(self, chat_id: int) -> Result:
+    def getVideoChatAvailableParticipants(self, chat_id: int) -> Result:
         """Returns list of participant identifiers, on whose behalf a video chat in the chat can be joined
 
         Args:
@@ -8185,9 +8141,9 @@ class TDLibFunctions:
             "chat_id": chat_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setVideoChatDefaultParticipant(
+    def setVideoChatDefaultParticipant(
         self, chat_id: int, default_participant_id: dict
     ) -> Result:
         """Changes default participant identifier, on whose behalf a video chat in the chat will be joined
@@ -8210,9 +8166,9 @@ class TDLibFunctions:
             "default_participant_id": default_participant_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def createVideoChat(
+    def createVideoChat(
         self, chat_id: int, title: str, start_date: int, is_rtmp_stream: bool
     ) -> Result:
         """Creates a video chat \(a group call bound to a chat\)\. Available only for basic groups, supergroups and channels; requires can\_manage\_video\_chats rights
@@ -8243,9 +8199,9 @@ class TDLibFunctions:
             "is_rtmp_stream": is_rtmp_stream,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getVideoChatRtmpUrl(self, chat_id: int) -> Result:
+    def getVideoChatRtmpUrl(self, chat_id: int) -> Result:
         """Returns RTMP URL for streaming to the chat; requires creator privileges
 
         Args:
@@ -8262,9 +8218,9 @@ class TDLibFunctions:
             "chat_id": chat_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def replaceVideoChatRtmpUrl(self, chat_id: int) -> Result:
+    def replaceVideoChatRtmpUrl(self, chat_id: int) -> Result:
         """Replaces the current RTMP URL for streaming to the chat; requires creator privileges
 
         Args:
@@ -8281,9 +8237,9 @@ class TDLibFunctions:
             "chat_id": chat_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getGroupCall(self, group_call_id: int) -> Result:
+    def getGroupCall(self, group_call_id: int) -> Result:
         """Returns information about a group call
 
         Args:
@@ -8300,9 +8256,9 @@ class TDLibFunctions:
             "group_call_id": group_call_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def startScheduledGroupCall(self, group_call_id: int) -> Result:
+    def startScheduledGroupCall(self, group_call_id: int) -> Result:
         """Starts a scheduled group call
 
         Args:
@@ -8319,9 +8275,9 @@ class TDLibFunctions:
             "group_call_id": group_call_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def toggleGroupCallEnabledStartNotification(
+    def toggleGroupCallEnabledStartNotification(
         self, group_call_id: int, enabled_start_notification: bool
     ) -> Result:
         """Toggles whether the current user will receive a notification when the group call will start; scheduled group calls only
@@ -8344,9 +8300,9 @@ class TDLibFunctions:
             "enabled_start_notification": enabled_start_notification,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def joinGroupCall(
+    def joinGroupCall(
         self,
         group_call_id: int,
         audio_source_id: int,
@@ -8396,9 +8352,9 @@ class TDLibFunctions:
             "invite_hash": invite_hash,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def startGroupCallScreenSharing(
+    def startGroupCallScreenSharing(
         self, group_call_id: int, audio_source_id: int, payload: str
     ) -> Result:
         """Starts screen sharing in a joined group call\. Returns join response payload for tgcalls
@@ -8425,9 +8381,9 @@ class TDLibFunctions:
             "payload": payload,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def toggleGroupCallScreenSharingIsPaused(
+    def toggleGroupCallScreenSharingIsPaused(
         self, group_call_id: int, is_paused: bool
     ) -> Result:
         """Pauses or unpauses screen sharing in a joined group call
@@ -8450,9 +8406,9 @@ class TDLibFunctions:
             "is_paused": is_paused,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def endGroupCallScreenSharing(self, group_call_id: int) -> Result:
+    def endGroupCallScreenSharing(self, group_call_id: int) -> Result:
         """Ends screen sharing in a joined group call
 
         Args:
@@ -8469,9 +8425,9 @@ class TDLibFunctions:
             "group_call_id": group_call_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setGroupCallTitle(self, group_call_id: int, title: str) -> Result:
+    def setGroupCallTitle(self, group_call_id: int, title: str) -> Result:
         """Sets group call title\. Requires groupCall\.can\_be\_managed group call flag
 
         Args:
@@ -8492,9 +8448,9 @@ class TDLibFunctions:
             "title": title,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def toggleGroupCallMuteNewParticipants(
+    def toggleGroupCallMuteNewParticipants(
         self, group_call_id: int, mute_new_participants: bool
     ) -> Result:
         """Toggles whether new participants of a group call can be unmuted only by administrators of the group call\. Requires groupCall\.can\_toggle\_mute\_new\_participants group call flag
@@ -8517,11 +8473,9 @@ class TDLibFunctions:
             "mute_new_participants": mute_new_participants,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def inviteGroupCallParticipants(
-        self, group_call_id: int, user_ids: list
-    ) -> Result:
+    def inviteGroupCallParticipants(self, group_call_id: int, user_ids: list) -> Result:
         """Invites users to an active group call\. Sends a service message of type messageInviteToGroupCall for video chats
 
         Args:
@@ -8542,9 +8496,9 @@ class TDLibFunctions:
             "user_ids": user_ids,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getGroupCallInviteLink(
+    def getGroupCallInviteLink(
         self, group_call_id: int, can_self_unmute: bool
     ) -> Result:
         """Returns invite link to a video chat in a public chat
@@ -8567,9 +8521,9 @@ class TDLibFunctions:
             "can_self_unmute": can_self_unmute,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def revokeGroupCallInviteLink(self, group_call_id: int) -> Result:
+    def revokeGroupCallInviteLink(self, group_call_id: int) -> Result:
         """Revokes invite link for a group call\. Requires groupCall\.can\_be\_managed group call flag
 
         Args:
@@ -8586,9 +8540,9 @@ class TDLibFunctions:
             "group_call_id": group_call_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def startGroupCallRecording(
+    def startGroupCallRecording(
         self,
         group_call_id: int,
         title: str,
@@ -8623,9 +8577,9 @@ class TDLibFunctions:
             "use_portrait_orientation": use_portrait_orientation,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def endGroupCallRecording(self, group_call_id: int) -> Result:
+    def endGroupCallRecording(self, group_call_id: int) -> Result:
         """Ends recording of an active group call\. Requires groupCall\.can\_be\_managed group call flag
 
         Args:
@@ -8642,9 +8596,9 @@ class TDLibFunctions:
             "group_call_id": group_call_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def toggleGroupCallIsMyVideoPaused(
+    def toggleGroupCallIsMyVideoPaused(
         self, group_call_id: int, is_my_video_paused: bool
     ) -> Result:
         """Toggles whether current user's video is paused
@@ -8667,9 +8621,9 @@ class TDLibFunctions:
             "is_my_video_paused": is_my_video_paused,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def toggleGroupCallIsMyVideoEnabled(
+    def toggleGroupCallIsMyVideoEnabled(
         self, group_call_id: int, is_my_video_enabled: bool
     ) -> Result:
         """Toggles whether current user's video is enabled
@@ -8692,9 +8646,9 @@ class TDLibFunctions:
             "is_my_video_enabled": is_my_video_enabled,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setGroupCallParticipantIsSpeaking(
+    def setGroupCallParticipantIsSpeaking(
         self, group_call_id: int, audio_source: int, is_speaking: bool
     ) -> Result:
         """Informs TDLib that speaking state of a participant of an active group has changed
@@ -8721,9 +8675,9 @@ class TDLibFunctions:
             "is_speaking": is_speaking,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def toggleGroupCallParticipantIsMuted(
+    def toggleGroupCallParticipantIsMuted(
         self, group_call_id: int, participant_id: dict, is_muted: bool
     ) -> Result:
         """Toggles whether a participant of an active group call is muted, unmuted, or allowed to unmute themselves
@@ -8750,9 +8704,9 @@ class TDLibFunctions:
             "is_muted": is_muted,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setGroupCallParticipantVolumeLevel(
+    def setGroupCallParticipantVolumeLevel(
         self, group_call_id: int, participant_id: dict, volume_level: int
     ) -> Result:
         """Changes volume level of a participant of an active group call\. If the current user can manage the group call, then the participant's volume level will be changed for all users with the default volume level
@@ -8779,9 +8733,9 @@ class TDLibFunctions:
             "volume_level": volume_level,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def toggleGroupCallParticipantIsHandRaised(
+    def toggleGroupCallParticipantIsHandRaised(
         self, group_call_id: int, participant_id: dict, is_hand_raised: bool
     ) -> Result:
         """Toggles whether a group call participant hand is rased
@@ -8808,9 +8762,9 @@ class TDLibFunctions:
             "is_hand_raised": is_hand_raised,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def loadGroupCallParticipants(self, group_call_id: int, limit: int) -> Result:
+    def loadGroupCallParticipants(self, group_call_id: int, limit: int) -> Result:
         """Loads more participants of a group call\. The loaded participants will be received through updates\. Use the field groupCall\.loaded\_all\_participants to check whether all participants have already been loaded
 
         Args:
@@ -8831,9 +8785,9 @@ class TDLibFunctions:
             "limit": limit,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def leaveGroupCall(self, group_call_id: int) -> Result:
+    def leaveGroupCall(self, group_call_id: int) -> Result:
         """Leaves a group call
 
         Args:
@@ -8850,9 +8804,9 @@ class TDLibFunctions:
             "group_call_id": group_call_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def endGroupCall(self, group_call_id: int) -> Result:
+    def endGroupCall(self, group_call_id: int) -> Result:
         """Ends a group call\. Requires groupCall\.can\_be\_managed
 
         Args:
@@ -8869,9 +8823,9 @@ class TDLibFunctions:
             "group_call_id": group_call_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getGroupCallStreams(self, group_call_id: int) -> Result:
+    def getGroupCallStreams(self, group_call_id: int) -> Result:
         """Returns information about available group call streams
 
         Args:
@@ -8888,9 +8842,9 @@ class TDLibFunctions:
             "group_call_id": group_call_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getGroupCallStreamSegment(
+    def getGroupCallStreamSegment(
         self,
         group_call_id: int,
         time_offset: int,
@@ -8930,11 +8884,9 @@ class TDLibFunctions:
             "video_quality": video_quality,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def toggleMessageSenderIsBlocked(
-        self, sender_id: dict, is_blocked: bool
-    ) -> Result:
+    def toggleMessageSenderIsBlocked(self, sender_id: dict, is_blocked: bool) -> Result:
         """Changes the block state of a message sender\. Currently, only users and supergroup chats can be blocked
 
         Args:
@@ -8955,9 +8907,9 @@ class TDLibFunctions:
             "is_blocked": is_blocked,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def blockMessageSenderFromReplies(
+    def blockMessageSenderFromReplies(
         self,
         message_id: int,
         delete_message: bool,
@@ -8992,9 +8944,9 @@ class TDLibFunctions:
             "report_spam": report_spam,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getBlockedMessageSenders(self, offset: int, limit: int) -> Result:
+    def getBlockedMessageSenders(self, offset: int, limit: int) -> Result:
         """Returns users and chats that were blocked by the current user
 
         Args:
@@ -9015,9 +8967,9 @@ class TDLibFunctions:
             "limit": limit,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def addContact(self, contact: dict, share_phone_number: bool) -> Result:
+    def addContact(self, contact: dict, share_phone_number: bool) -> Result:
         """Adds a user to the contact list or edits an existing contact by their user identifier
 
         Args:
@@ -9038,9 +8990,9 @@ class TDLibFunctions:
             "share_phone_number": share_phone_number,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def importContacts(self, contacts: list) -> Result:
+    def importContacts(self, contacts: list) -> Result:
         """Adds new contacts or edits existing contacts by their phone numbers; contacts' user identifiers are ignored
 
         Args:
@@ -9057,9 +9009,9 @@ class TDLibFunctions:
             "contacts": contacts,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getContacts(self) -> Result:
+    def getContacts(self) -> Result:
         """Returns all user contacts
 
 
@@ -9071,9 +9023,9 @@ class TDLibFunctions:
             "@type": "getContacts",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def searchContacts(self, limit: int, query: str = None) -> Result:
+    def searchContacts(self, limit: int, query: str = None) -> Result:
         """Searches for the specified query in the first names, last names and usernames of the known user contacts
 
         Args:
@@ -9094,9 +9046,9 @@ class TDLibFunctions:
             "limit": limit,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def removeContacts(self, user_ids: list) -> Result:
+    def removeContacts(self, user_ids: list) -> Result:
         """Removes users from the contact list
 
         Args:
@@ -9113,9 +9065,9 @@ class TDLibFunctions:
             "user_ids": user_ids,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getImportedContactCount(self) -> Result:
+    def getImportedContactCount(self) -> Result:
         """Returns the total number of imported contacts
 
 
@@ -9127,9 +9079,9 @@ class TDLibFunctions:
             "@type": "getImportedContactCount",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def changeImportedContacts(self, contacts: list) -> Result:
+    def changeImportedContacts(self, contacts: list) -> Result:
         """Changes imported contacts using the list of contacts saved on the device\. Imports newly added contacts and, if at least the file database is enabled, deletes recently deleted contacts\. Query result depends on the result of the previous query, so only one query is possible at the same time
 
         Args:
@@ -9146,9 +9098,9 @@ class TDLibFunctions:
             "contacts": contacts,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def clearImportedContacts(self) -> Result:
+    def clearImportedContacts(self) -> Result:
         """Clears all imported contacts, contact list remains unchanged
 
 
@@ -9160,11 +9112,9 @@ class TDLibFunctions:
             "@type": "clearImportedContacts",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setUserPersonalProfilePhoto(
-        self, user_id: int, photo: dict = None
-    ) -> Result:
+    def setUserPersonalProfilePhoto(self, user_id: int, photo: dict = None) -> Result:
         """Changes a personal profile photo of a contact user
 
         Args:
@@ -9185,9 +9135,9 @@ class TDLibFunctions:
             "photo": photo,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def suggestUserProfilePhoto(self, user_id: int, photo: dict) -> Result:
+    def suggestUserProfilePhoto(self, user_id: int, photo: dict) -> Result:
         """Suggests a profile photo to another regular user with common messages
 
         Args:
@@ -9208,9 +9158,9 @@ class TDLibFunctions:
             "photo": photo,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def searchUserByPhoneNumber(self, phone_number: str) -> Result:
+    def searchUserByPhoneNumber(self, phone_number: str) -> Result:
         """Searches a user by their phone number\. Returns a 404 error if the user can't be found
 
         Args:
@@ -9227,9 +9177,9 @@ class TDLibFunctions:
             "phone_number": phone_number,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def sharePhoneNumber(self, user_id: int) -> Result:
+    def sharePhoneNumber(self, user_id: int) -> Result:
         """Shares the phone number of the current user with a mutual contact\. Supposed to be called when the user clicks on chatActionBarSharePhoneNumber
 
         Args:
@@ -9246,11 +9196,9 @@ class TDLibFunctions:
             "user_id": user_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getUserProfilePhotos(
-        self, user_id: int, offset: int, limit: int
-    ) -> Result:
+    def getUserProfilePhotos(self, user_id: int, offset: int, limit: int) -> Result:
         """Returns the profile photos of a user\. Personal and public photo aren't returned
 
         Args:
@@ -9275,9 +9223,9 @@ class TDLibFunctions:
             "limit": limit,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getStickers(
+    def getStickers(
         self, sticker_type: dict, query: str, limit: int, chat_id: int
     ) -> Result:
         """Returns stickers from the installed sticker sets that correspond to any of the given emoji or can be found by sticker\-specific keywords\. If the query is non\-empty, then favorite, recently used or trending stickers may also be returned
@@ -9308,11 +9256,9 @@ class TDLibFunctions:
             "chat_id": chat_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def searchStickers(
-        self, sticker_type: dict, emojis: str, limit: int
-    ) -> Result:
+    def searchStickers(self, sticker_type: dict, emojis: str, limit: int) -> Result:
         """Searches for stickers from public sticker sets that correspond to any of the given emoji
 
         Args:
@@ -9337,9 +9283,9 @@ class TDLibFunctions:
             "limit": limit,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getPremiumStickers(self, limit: int) -> Result:
+    def getPremiumStickers(self, limit: int) -> Result:
         """Returns premium stickers from regular sticker sets
 
         Args:
@@ -9356,9 +9302,9 @@ class TDLibFunctions:
             "limit": limit,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getInstalledStickerSets(self, sticker_type: dict) -> Result:
+    def getInstalledStickerSets(self, sticker_type: dict) -> Result:
         """Returns a list of installed sticker sets
 
         Args:
@@ -9375,9 +9321,9 @@ class TDLibFunctions:
             "sticker_type": sticker_type,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getArchivedStickerSets(
+    def getArchivedStickerSets(
         self, sticker_type: dict, offset_sticker_set_id: int, limit: int
     ) -> Result:
         """Returns a list of archived sticker sets
@@ -9404,9 +9350,9 @@ class TDLibFunctions:
             "limit": limit,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getTrendingStickerSets(
+    def getTrendingStickerSets(
         self, sticker_type: dict, offset: int, limit: int
     ) -> Result:
         """Returns a list of trending sticker sets\. For optimal performance, the number of returned sticker sets is chosen by TDLib
@@ -9433,9 +9379,9 @@ class TDLibFunctions:
             "limit": limit,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getAttachedStickerSets(self, file_id: int) -> Result:
+    def getAttachedStickerSets(self, file_id: int) -> Result:
         """Returns a list of sticker sets attached to a file, including regular, mask, and emoji sticker sets\. Currently, only animations, photos, and videos can have attached sticker sets
 
         Args:
@@ -9452,9 +9398,9 @@ class TDLibFunctions:
             "file_id": file_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getStickerSet(self, set_id: int) -> Result:
+    def getStickerSet(self, set_id: int) -> Result:
         """Returns information about a sticker set by its identifier
 
         Args:
@@ -9471,9 +9417,9 @@ class TDLibFunctions:
             "set_id": set_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def searchStickerSet(self, name: str) -> Result:
+    def searchStickerSet(self, name: str) -> Result:
         """Searches for a sticker set by its name
 
         Args:
@@ -9490,9 +9436,9 @@ class TDLibFunctions:
             "name": name,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def searchInstalledStickerSets(
+    def searchInstalledStickerSets(
         self, sticker_type: dict, query: str, limit: int
     ) -> Result:
         """Searches for installed sticker sets by looking for specified query in their title and name
@@ -9519,9 +9465,9 @@ class TDLibFunctions:
             "limit": limit,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def searchStickerSets(self, query: str) -> Result:
+    def searchStickerSets(self, query: str) -> Result:
         """Searches for ordinary sticker sets by looking for specified query in their title and name\. Excludes installed sticker sets from the results
 
         Args:
@@ -9538,9 +9484,9 @@ class TDLibFunctions:
             "query": query,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def changeStickerSet(
+    def changeStickerSet(
         self, set_id: int, is_installed: bool, is_archived: bool
     ) -> Result:
         """Installs/uninstalls or activates/archives a sticker set
@@ -9567,9 +9513,9 @@ class TDLibFunctions:
             "is_archived": is_archived,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def viewTrendingStickerSets(self, sticker_set_ids: list) -> Result:
+    def viewTrendingStickerSets(self, sticker_set_ids: list) -> Result:
         """Informs the server that some trending sticker sets have been viewed by the user
 
         Args:
@@ -9586,9 +9532,9 @@ class TDLibFunctions:
             "sticker_set_ids": sticker_set_ids,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def reorderInstalledStickerSets(
+    def reorderInstalledStickerSets(
         self, sticker_type: dict, sticker_set_ids: list
     ) -> Result:
         """Changes the order of installed sticker sets
@@ -9611,9 +9557,9 @@ class TDLibFunctions:
             "sticker_set_ids": sticker_set_ids,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getRecentStickers(self, is_attached: bool) -> Result:
+    def getRecentStickers(self, is_attached: bool) -> Result:
         """Returns a list of recently used stickers
 
         Args:
@@ -9630,9 +9576,9 @@ class TDLibFunctions:
             "is_attached": is_attached,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def addRecentSticker(self, is_attached: bool, sticker: dict) -> Result:
+    def addRecentSticker(self, is_attached: bool, sticker: dict) -> Result:
         """Manually adds a new sticker to the list of recently used stickers\. The new sticker is added to the top of the list\. If the sticker was already in the list, it is removed from the list first\. Only stickers belonging to a sticker set can be added to this list\. Emoji stickers can't be added to recent stickers
 
         Args:
@@ -9653,9 +9599,9 @@ class TDLibFunctions:
             "sticker": sticker,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def removeRecentSticker(self, is_attached: bool, sticker: dict) -> Result:
+    def removeRecentSticker(self, is_attached: bool, sticker: dict) -> Result:
         """Removes a sticker from the list of recently used stickers
 
         Args:
@@ -9676,9 +9622,9 @@ class TDLibFunctions:
             "sticker": sticker,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def clearRecentStickers(self, is_attached: bool) -> Result:
+    def clearRecentStickers(self, is_attached: bool) -> Result:
         """Clears the list of recently used stickers
 
         Args:
@@ -9695,9 +9641,9 @@ class TDLibFunctions:
             "is_attached": is_attached,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getFavoriteStickers(self) -> Result:
+    def getFavoriteStickers(self) -> Result:
         """Returns favorite stickers
 
 
@@ -9709,9 +9655,9 @@ class TDLibFunctions:
             "@type": "getFavoriteStickers",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def addFavoriteSticker(self, sticker: dict) -> Result:
+    def addFavoriteSticker(self, sticker: dict) -> Result:
         """Adds a new sticker to the list of favorite stickers\. The new sticker is added to the top of the list\. If the sticker was already in the list, it is removed from the list first\. Only stickers belonging to a sticker set can be added to this list\. Emoji stickers can't be added to favorite stickers
 
         Args:
@@ -9728,9 +9674,9 @@ class TDLibFunctions:
             "sticker": sticker,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def removeFavoriteSticker(self, sticker: dict) -> Result:
+    def removeFavoriteSticker(self, sticker: dict) -> Result:
         """Removes a sticker from the list of favorite stickers
 
         Args:
@@ -9747,9 +9693,9 @@ class TDLibFunctions:
             "sticker": sticker,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getStickerEmojis(self, sticker: dict) -> Result:
+    def getStickerEmojis(self, sticker: dict) -> Result:
         """Returns emoji corresponding to a sticker\. The list is only for informational purposes, because a sticker is always sent with a fixed emoji from the corresponding Sticker object
 
         Args:
@@ -9766,9 +9712,9 @@ class TDLibFunctions:
             "sticker": sticker,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def searchEmojis(
+    def searchEmojis(
         self, text: str, exact_match: bool, input_language_codes: list = None
     ) -> Result:
         """Searches for emojis by keywords\. Supported only if the file database is enabled
@@ -9795,9 +9741,9 @@ class TDLibFunctions:
             "input_language_codes": input_language_codes,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getEmojiCategories(self, type: dict = None) -> Result:
+    def getEmojiCategories(self, type: dict = None) -> Result:
         """Returns available emojis categories
 
         Args:
@@ -9814,9 +9760,9 @@ class TDLibFunctions:
             "type": type,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getAnimatedEmoji(self, emoji: str) -> Result:
+    def getAnimatedEmoji(self, emoji: str) -> Result:
         """Returns an animated emoji corresponding to a given emoji\. Returns a 404 error if the emoji has no animated emoji
 
         Args:
@@ -9833,9 +9779,9 @@ class TDLibFunctions:
             "emoji": emoji,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getEmojiSuggestionsUrl(self, language_code: str) -> Result:
+    def getEmojiSuggestionsUrl(self, language_code: str) -> Result:
         """Returns an HTTP URL which can be used to automatically log in to the translation platform and suggest new emoji replacements\. The URL will be valid for 30 seconds after generation
 
         Args:
@@ -9852,9 +9798,9 @@ class TDLibFunctions:
             "language_code": language_code,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getCustomEmojiStickers(self, custom_emoji_ids: list) -> Result:
+    def getCustomEmojiStickers(self, custom_emoji_ids: list) -> Result:
         """Returns list of custom emoji stickers by their identifiers\. Stickers are returned in arbitrary order\. Only found stickers are returned
 
         Args:
@@ -9871,9 +9817,9 @@ class TDLibFunctions:
             "custom_emoji_ids": custom_emoji_ids,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getDefaultChatPhotoCustomEmojiStickers(self) -> Result:
+    def getDefaultChatPhotoCustomEmojiStickers(self) -> Result:
         """Returns default list of custom emoji stickers for placing on a chat photo
 
 
@@ -9885,9 +9831,9 @@ class TDLibFunctions:
             "@type": "getDefaultChatPhotoCustomEmojiStickers",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getDefaultProfilePhotoCustomEmojiStickers(self) -> Result:
+    def getDefaultProfilePhotoCustomEmojiStickers(self) -> Result:
         """Returns default list of custom emoji stickers for placing on a profile photo
 
 
@@ -9899,9 +9845,9 @@ class TDLibFunctions:
             "@type": "getDefaultProfilePhotoCustomEmojiStickers",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getSavedAnimations(self) -> Result:
+    def getSavedAnimations(self) -> Result:
         """Returns saved animations
 
 
@@ -9913,9 +9859,9 @@ class TDLibFunctions:
             "@type": "getSavedAnimations",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def addSavedAnimation(self, animation: dict) -> Result:
+    def addSavedAnimation(self, animation: dict) -> Result:
         """Manually adds a new animation to the list of saved animations\. The new animation is added to the beginning of the list\. If the animation was already in the list, it is removed first\. Only non\-secret video animations with MIME type "video/mp4" can be added to the list
 
         Args:
@@ -9932,9 +9878,9 @@ class TDLibFunctions:
             "animation": animation,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def removeSavedAnimation(self, animation: dict) -> Result:
+    def removeSavedAnimation(self, animation: dict) -> Result:
         """Removes an animation from the list of saved animations
 
         Args:
@@ -9951,9 +9897,9 @@ class TDLibFunctions:
             "animation": animation,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getRecentInlineBots(self) -> Result:
+    def getRecentInlineBots(self) -> Result:
         """Returns up to 20 recently used inline bots in the order of their last usage
 
 
@@ -9965,9 +9911,9 @@ class TDLibFunctions:
             "@type": "getRecentInlineBots",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def searchHashtags(self, prefix: str, limit: int) -> Result:
+    def searchHashtags(self, prefix: str, limit: int) -> Result:
         """Searches for recently used hashtags by their prefix
 
         Args:
@@ -9988,9 +9934,9 @@ class TDLibFunctions:
             "limit": limit,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def removeRecentHashtag(self, hashtag: str) -> Result:
+    def removeRecentHashtag(self, hashtag: str) -> Result:
         """Removes a hashtag from the list of recently used hashtags
 
         Args:
@@ -10007,9 +9953,9 @@ class TDLibFunctions:
             "hashtag": hashtag,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getWebPagePreview(self, text: dict) -> Result:
+    def getWebPagePreview(self, text: dict) -> Result:
         """Returns a web page preview by the text of the message\. Do not call this function too often\. Returns a 404 error if the web page has no preview
 
         Args:
@@ -10026,9 +9972,9 @@ class TDLibFunctions:
             "text": text,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getWebPageInstantView(self, url: str, force_full: bool) -> Result:
+    def getWebPageInstantView(self, url: str, force_full: bool) -> Result:
         """Returns an instant view version of a web page if available\. Returns a 404 error if the web page has no instant view page
 
         Args:
@@ -10049,9 +9995,9 @@ class TDLibFunctions:
             "force_full": force_full,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setProfilePhoto(self, photo: dict, is_public: bool) -> Result:
+    def setProfilePhoto(self, photo: dict, is_public: bool) -> Result:
         """Changes a profile photo for the current user
 
         Args:
@@ -10072,9 +10018,9 @@ class TDLibFunctions:
             "is_public": is_public,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def deleteProfilePhoto(self, profile_photo_id: int) -> Result:
+    def deleteProfilePhoto(self, profile_photo_id: int) -> Result:
         """Deletes a profile photo
 
         Args:
@@ -10091,9 +10037,9 @@ class TDLibFunctions:
             "profile_photo_id": profile_photo_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setName(self, first_name: str, last_name: str) -> Result:
+    def setName(self, first_name: str, last_name: str) -> Result:
         """Changes the first and last name of the current user
 
         Args:
@@ -10114,9 +10060,9 @@ class TDLibFunctions:
             "last_name": last_name,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setBio(self, bio: str) -> Result:
+    def setBio(self, bio: str) -> Result:
         """Changes the bio of the current user
 
         Args:
@@ -10133,9 +10079,9 @@ class TDLibFunctions:
             "bio": bio,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setUsername(self, username: str) -> Result:
+    def setUsername(self, username: str) -> Result:
         """Changes the editable username of the current user
 
         Args:
@@ -10152,9 +10098,9 @@ class TDLibFunctions:
             "username": username,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def toggleUsernameIsActive(self, username: str, is_active: bool) -> Result:
+    def toggleUsernameIsActive(self, username: str, is_active: bool) -> Result:
         """Changes active state for a username of the current user\. The editable username can't be disabled\. May return an error with a message "USERNAMES\_ACTIVE\_TOO\_MUCH" if the maximum number of active usernames has been reached
 
         Args:
@@ -10175,9 +10121,9 @@ class TDLibFunctions:
             "is_active": is_active,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def reorderActiveUsernames(self, usernames: list) -> Result:
+    def reorderActiveUsernames(self, usernames: list) -> Result:
         """Changes order of active usernames of the current user
 
         Args:
@@ -10194,9 +10140,9 @@ class TDLibFunctions:
             "usernames": usernames,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setEmojiStatus(self, duration: int, emoji_status: dict = None) -> Result:
+    def setEmojiStatus(self, duration: int, emoji_status: dict = None) -> Result:
         """Changes the emoji status of the current user; for Telegram Premium users only
 
         Args:
@@ -10217,9 +10163,9 @@ class TDLibFunctions:
             "duration": duration,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setLocation(self, location: dict) -> Result:
+    def setLocation(self, location: dict) -> Result:
         """Changes the location of the current user\. Needs to be called if getOption\("is\_location\_visible"\) is true and location changes for more than 1 kilometer
 
         Args:
@@ -10236,11 +10182,9 @@ class TDLibFunctions:
             "location": location,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def changePhoneNumber(
-        self, phone_number: str, settings: dict = None
-    ) -> Result:
+    def changePhoneNumber(self, phone_number: str, settings: dict = None) -> Result:
         """Changes the phone number of the user and sends an authentication code to the user's new phone number\. On success, returns information about the sent code
 
         Args:
@@ -10261,9 +10205,9 @@ class TDLibFunctions:
             "settings": settings,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def resendChangePhoneNumberCode(self) -> Result:
+    def resendChangePhoneNumberCode(self) -> Result:
         """Resends the authentication code sent to confirm a new phone number for the current user\. Works only if the previously received authenticationCodeInfo next\_code\_type was not null and the server\-specified timeout has passed
 
 
@@ -10275,9 +10219,9 @@ class TDLibFunctions:
             "@type": "resendChangePhoneNumberCode",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def checkChangePhoneNumberCode(self, code: str) -> Result:
+    def checkChangePhoneNumberCode(self, code: str) -> Result:
         """Checks the authentication code sent to confirm a new phone number of the user
 
         Args:
@@ -10294,9 +10238,9 @@ class TDLibFunctions:
             "code": code,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getUserLink(self) -> Result:
+    def getUserLink(self) -> Result:
         """Returns an HTTPS link, which can be used to get information about the current user
 
 
@@ -10308,9 +10252,9 @@ class TDLibFunctions:
             "@type": "getUserLink",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def searchUserByToken(self, token: str) -> Result:
+    def searchUserByToken(self, token: str) -> Result:
         """Searches a user by a token from the user's link
 
         Args:
@@ -10327,9 +10271,9 @@ class TDLibFunctions:
             "token": token,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setCommands(
+    def setCommands(
         self, language_code: str, commands: list, scope: dict = None
     ) -> Result:
         """Sets the list of commands supported by the bot for the given user scope and language; for bots only
@@ -10356,9 +10300,9 @@ class TDLibFunctions:
             "commands": commands,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def deleteCommands(self, language_code: str, scope: dict = None) -> Result:
+    def deleteCommands(self, language_code: str, scope: dict = None) -> Result:
         """Deletes commands supported by the bot for the given user scope and language; for bots only
 
         Args:
@@ -10379,9 +10323,9 @@ class TDLibFunctions:
             "language_code": language_code,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getCommands(self, language_code: str, scope: dict = None) -> Result:
+    def getCommands(self, language_code: str, scope: dict = None) -> Result:
         """Returns list of commands supported by the bot for the given user scope and language; for bots only
 
         Args:
@@ -10402,9 +10346,9 @@ class TDLibFunctions:
             "language_code": language_code,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setMenuButton(self, user_id: int, menu_button: dict) -> Result:
+    def setMenuButton(self, user_id: int, menu_button: dict) -> Result:
         """Sets menu button for the given user or for all users; for bots only
 
         Args:
@@ -10425,9 +10369,9 @@ class TDLibFunctions:
             "menu_button": menu_button,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getMenuButton(self, user_id: int) -> Result:
+    def getMenuButton(self, user_id: int) -> Result:
         """Returns menu button set by the bot for the given user; for bots only
 
         Args:
@@ -10444,9 +10388,9 @@ class TDLibFunctions:
             "user_id": user_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setDefaultGroupAdministratorRights(
+    def setDefaultGroupAdministratorRights(
         self, default_group_administrator_rights: dict = None
     ) -> Result:
         """Sets default administrator rights for adding the bot to basic group and supergroup chats; for bots only
@@ -10465,9 +10409,9 @@ class TDLibFunctions:
             "default_group_administrator_rights": default_group_administrator_rights,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setDefaultChannelAdministratorRights(
+    def setDefaultChannelAdministratorRights(
         self, default_channel_administrator_rights: dict = None
     ) -> Result:
         """Sets default administrator rights for adding the bot to channel chats; for bots only
@@ -10486,11 +10430,9 @@ class TDLibFunctions:
             "default_channel_administrator_rights": default_channel_administrator_rights,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setBotName(
-        self, bot_user_id: int, language_code: str, name: str
-    ) -> Result:
+    def setBotName(self, bot_user_id: int, language_code: str, name: str) -> Result:
         """Sets the name of a bot\. Can be called only if userTypeBot\.can\_be\_edited \=\= true
 
         Args:
@@ -10515,9 +10457,9 @@ class TDLibFunctions:
             "name": name,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getBotName(self, bot_user_id: int, language_code: str) -> Result:
+    def getBotName(self, bot_user_id: int, language_code: str) -> Result:
         """Returns the name of a bot in the given language\. Can be called only if userTypeBot\.can\_be\_edited \=\= true
 
         Args:
@@ -10538,9 +10480,9 @@ class TDLibFunctions:
             "language_code": language_code,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setBotProfilePhoto(self, bot_user_id: int, photo: dict = None) -> Result:
+    def setBotProfilePhoto(self, bot_user_id: int, photo: dict = None) -> Result:
         """Changes a profile photo for a bot
 
         Args:
@@ -10561,9 +10503,9 @@ class TDLibFunctions:
             "photo": photo,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def toggleBotUsernameIsActive(
+    def toggleBotUsernameIsActive(
         self, bot_user_id: int, username: str, is_active: bool
     ) -> Result:
         """Changes active state for a username of a bot\. The editable username can't be disabled\. May return an error with a message "USERNAMES\_ACTIVE\_TOO\_MUCH" if the maximum number of active usernames has been reached\. Can be called only if userTypeBot\.can\_be\_edited \=\= true
@@ -10590,11 +10532,9 @@ class TDLibFunctions:
             "is_active": is_active,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def reorderActiveBotUsernames(
-        self, bot_user_id: int, usernames: list
-    ) -> Result:
+    def reorderActiveBotUsernames(self, bot_user_id: int, usernames: list) -> Result:
         """Changes order of active usernames of a bot\. Can be called only if userTypeBot\.can\_be\_edited \=\= true
 
         Args:
@@ -10615,9 +10555,9 @@ class TDLibFunctions:
             "usernames": usernames,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setBotInfoDescription(
+    def setBotInfoDescription(
         self, bot_user_id: int, language_code: str, description: str
     ) -> Result:
         """Sets the text shown in the chat with a bot if the chat is empty\. Can be called only if userTypeBot\.can\_be\_edited \=\= true
@@ -10644,11 +10584,9 @@ class TDLibFunctions:
             "description": description,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getBotInfoDescription(
-        self, bot_user_id: int, language_code: str
-    ) -> Result:
+    def getBotInfoDescription(self, bot_user_id: int, language_code: str) -> Result:
         """Returns the text shown in the chat with a bot if the chat is empty in the given language\. Can be called only if userTypeBot\.can\_be\_edited \=\= true
 
         Args:
@@ -10669,9 +10607,9 @@ class TDLibFunctions:
             "language_code": language_code,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setBotInfoShortDescription(
+    def setBotInfoShortDescription(
         self, bot_user_id: int, language_code: str, short_description: str
     ) -> Result:
         """Sets the text shown on a bot's profile page and sent together with the link when users share the bot\. Can be called only if userTypeBot\.can\_be\_edited \=\= true
@@ -10698,9 +10636,9 @@ class TDLibFunctions:
             "short_description": short_description,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getBotInfoShortDescription(
+    def getBotInfoShortDescription(
         self, bot_user_id: int, language_code: str
     ) -> Result:
         """Returns the text shown on a bot's profile page and sent together with the link when users share the bot in the given language\. Can be called only if userTypeBot\.can\_be\_edited \=\= true
@@ -10723,9 +10661,9 @@ class TDLibFunctions:
             "language_code": language_code,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getActiveSessions(self) -> Result:
+    def getActiveSessions(self) -> Result:
         """Returns all active sessions of the current user
 
 
@@ -10737,9 +10675,9 @@ class TDLibFunctions:
             "@type": "getActiveSessions",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def terminateSession(self, session_id: int) -> Result:
+    def terminateSession(self, session_id: int) -> Result:
         """Terminates a session of the current user
 
         Args:
@@ -10756,9 +10694,9 @@ class TDLibFunctions:
             "session_id": session_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def terminateAllOtherSessions(self) -> Result:
+    def terminateAllOtherSessions(self) -> Result:
         """Terminates all other sessions of the current user
 
 
@@ -10770,9 +10708,9 @@ class TDLibFunctions:
             "@type": "terminateAllOtherSessions",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def toggleSessionCanAcceptCalls(
+    def toggleSessionCanAcceptCalls(
         self, session_id: int, can_accept_calls: bool
     ) -> Result:
         """Toggles whether a session can accept incoming calls
@@ -10795,9 +10733,9 @@ class TDLibFunctions:
             "can_accept_calls": can_accept_calls,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def toggleSessionCanAcceptSecretChats(
+    def toggleSessionCanAcceptSecretChats(
         self, session_id: int, can_accept_secret_chats: bool
     ) -> Result:
         """Toggles whether a session can accept incoming secret chats
@@ -10820,9 +10758,9 @@ class TDLibFunctions:
             "can_accept_secret_chats": can_accept_secret_chats,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setInactiveSessionTtl(self, inactive_session_ttl_days: int) -> Result:
+    def setInactiveSessionTtl(self, inactive_session_ttl_days: int) -> Result:
         """Changes the period of inactivity after which sessions will automatically be terminated
 
         Args:
@@ -10839,9 +10777,9 @@ class TDLibFunctions:
             "inactive_session_ttl_days": inactive_session_ttl_days,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getConnectedWebsites(self) -> Result:
+    def getConnectedWebsites(self) -> Result:
         """Returns all website where the current user used Telegram to log in
 
 
@@ -10853,9 +10791,9 @@ class TDLibFunctions:
             "@type": "getConnectedWebsites",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def disconnectWebsite(self, website_id: int) -> Result:
+    def disconnectWebsite(self, website_id: int) -> Result:
         """Disconnects website from the current user's Telegram account
 
         Args:
@@ -10872,9 +10810,9 @@ class TDLibFunctions:
             "website_id": website_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def disconnectAllWebsites(self) -> Result:
+    def disconnectAllWebsites(self) -> Result:
         """Disconnects all websites from the current user's Telegram account
 
 
@@ -10886,9 +10824,9 @@ class TDLibFunctions:
             "@type": "disconnectAllWebsites",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setSupergroupUsername(self, supergroup_id: int, username: str) -> Result:
+    def setSupergroupUsername(self, supergroup_id: int, username: str) -> Result:
         """Changes the editable username of a supergroup or channel, requires owner privileges in the supergroup or channel
 
         Args:
@@ -10909,9 +10847,9 @@ class TDLibFunctions:
             "username": username,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def toggleSupergroupUsernameIsActive(
+    def toggleSupergroupUsernameIsActive(
         self, supergroup_id: int, username: str, is_active: bool
     ) -> Result:
         """Changes active state for a username of a supergroup or channel, requires owner privileges in the supergroup or channel\. The editable username can't be disabled\. May return an error with a message "USERNAMES\_ACTIVE\_TOO\_MUCH" if the maximum number of active usernames has been reached
@@ -10938,9 +10876,9 @@ class TDLibFunctions:
             "is_active": is_active,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def disableAllSupergroupUsernames(self, supergroup_id: int) -> Result:
+    def disableAllSupergroupUsernames(self, supergroup_id: int) -> Result:
         """Disables all active non\-editable usernames of a supergroup or channel, requires owner privileges in the supergroup or channel
 
         Args:
@@ -10957,9 +10895,9 @@ class TDLibFunctions:
             "supergroup_id": supergroup_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def reorderSupergroupActiveUsernames(
+    def reorderSupergroupActiveUsernames(
         self, supergroup_id: int, usernames: list
     ) -> Result:
         """Changes order of active usernames of a supergroup or channel, requires owner privileges in the supergroup or channel
@@ -10982,9 +10920,9 @@ class TDLibFunctions:
             "usernames": usernames,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setSupergroupStickerSet(
+    def setSupergroupStickerSet(
         self, supergroup_id: int, sticker_set_id: int
     ) -> Result:
         """Changes the sticker set of a supergroup; requires can\_change\_info administrator right
@@ -11007,9 +10945,9 @@ class TDLibFunctions:
             "sticker_set_id": sticker_set_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def toggleSupergroupSignMessages(
+    def toggleSupergroupSignMessages(
         self, supergroup_id: int, sign_messages: bool
     ) -> Result:
         """Toggles whether sender signature is added to sent messages in a channel; requires can\_change\_info administrator right
@@ -11032,9 +10970,9 @@ class TDLibFunctions:
             "sign_messages": sign_messages,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def toggleSupergroupJoinToSendMessages(
+    def toggleSupergroupJoinToSendMessages(
         self, supergroup_id: int, join_to_send_messages: bool
     ) -> Result:
         """Toggles whether joining is mandatory to send messages to a discussion supergroup; requires can\_restrict\_members administrator right
@@ -11057,9 +10995,9 @@ class TDLibFunctions:
             "join_to_send_messages": join_to_send_messages,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def toggleSupergroupJoinByRequest(
+    def toggleSupergroupJoinByRequest(
         self, supergroup_id: int, join_by_request: bool
     ) -> Result:
         """Toggles whether all users directly joining the supergroup need to be approved by supergroup administrators; requires can\_restrict\_members administrator right
@@ -11082,9 +11020,9 @@ class TDLibFunctions:
             "join_by_request": join_by_request,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def toggleSupergroupIsAllHistoryAvailable(
+    def toggleSupergroupIsAllHistoryAvailable(
         self, supergroup_id: int, is_all_history_available: bool
     ) -> Result:
         """Toggles whether the message history of a supergroup is available to new members; requires can\_change\_info administrator right
@@ -11107,9 +11045,9 @@ class TDLibFunctions:
             "is_all_history_available": is_all_history_available,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def toggleSupergroupHasHiddenMembers(
+    def toggleSupergroupHasHiddenMembers(
         self, supergroup_id: int, has_hidden_members: bool
     ) -> Result:
         """Toggles whether non\-administrators can receive only administrators and bots using getSupergroupMembers or searchChatMembers\. Can be called only if supergroupFullInfo\.can\_hide\_members \=\= true
@@ -11132,9 +11070,9 @@ class TDLibFunctions:
             "has_hidden_members": has_hidden_members,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def toggleSupergroupHasAggressiveAntiSpamEnabled(
+    def toggleSupergroupHasAggressiveAntiSpamEnabled(
         self, supergroup_id: int, has_aggressive_anti_spam_enabled: bool
     ) -> Result:
         """Toggles whether aggressive anti\-spam checks are enabled in the supergroup\. Can be called only if supergroupFullInfo\.can\_toggle\_aggressive\_anti\_spam \=\= true
@@ -11157,11 +11095,9 @@ class TDLibFunctions:
             "has_aggressive_anti_spam_enabled": has_aggressive_anti_spam_enabled,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def toggleSupergroupIsForum(
-        self, supergroup_id: int, is_forum: bool
-    ) -> Result:
+    def toggleSupergroupIsForum(self, supergroup_id: int, is_forum: bool) -> Result:
         """Toggles whether the supergroup is a forum; requires owner privileges in the supergroup\. Discussion supergroups can't be converted to forums
 
         Args:
@@ -11182,9 +11118,9 @@ class TDLibFunctions:
             "is_forum": is_forum,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def toggleSupergroupIsBroadcastGroup(self, supergroup_id: int) -> Result:
+    def toggleSupergroupIsBroadcastGroup(self, supergroup_id: int) -> Result:
         """Upgrades supergroup to a broadcast group; requires owner privileges in the supergroup
 
         Args:
@@ -11201,11 +11137,9 @@ class TDLibFunctions:
             "supergroup_id": supergroup_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def reportSupergroupSpam(
-        self, supergroup_id: int, message_ids: list
-    ) -> Result:
+    def reportSupergroupSpam(self, supergroup_id: int, message_ids: list) -> Result:
         """Reports messages in a supergroup as spam; requires administrator rights in the supergroup
 
         Args:
@@ -11226,9 +11160,9 @@ class TDLibFunctions:
             "message_ids": message_ids,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def reportSupergroupAntiSpamFalsePositive(
+    def reportSupergroupAntiSpamFalsePositive(
         self, supergroup_id: int, message_id: int
     ) -> Result:
         """Reports a false deletion of a message by aggressive anti\-spam checks; requires administrator rights in the supergroup\. Can be called only for messages from chatEventMessageDeleted with can\_report\_anti\_spam\_false\_positive \=\= true
@@ -11251,9 +11185,9 @@ class TDLibFunctions:
             "message_id": message_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getSupergroupMembers(
+    def getSupergroupMembers(
         self, supergroup_id: int, offset: int, limit: int, filter: dict = None
     ) -> Result:
         """Returns information about members or banned users in a supergroup or channel\. Can be used only if supergroupFullInfo\.can\_get\_members \=\= true; additionally, administrator privileges may be required for some filters
@@ -11284,9 +11218,9 @@ class TDLibFunctions:
             "limit": limit,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def closeSecretChat(self, secret_chat_id: int) -> Result:
+    def closeSecretChat(self, secret_chat_id: int) -> Result:
         """Closes a secret chat, effectively transferring its state to secretChatStateClosed
 
         Args:
@@ -11303,9 +11237,9 @@ class TDLibFunctions:
             "secret_chat_id": secret_chat_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getChatEventLog(
+    def getChatEventLog(
         self,
         chat_id: int,
         query: str,
@@ -11350,9 +11284,9 @@ class TDLibFunctions:
             "user_ids": user_ids,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getPaymentForm(self, input_invoice: dict, theme: dict = None) -> Result:
+    def getPaymentForm(self, input_invoice: dict, theme: dict = None) -> Result:
         """Returns an invoice payment form\. This method must be called when the user presses inlineKeyboardButtonBuy
 
         Args:
@@ -11373,9 +11307,9 @@ class TDLibFunctions:
             "theme": theme,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def validateOrderInfo(
+    def validateOrderInfo(
         self, input_invoice: dict, allow_save: bool, order_info: dict = None
     ) -> Result:
         """Validates the order information provided by a user and returns the available shipping options for a flexible invoice
@@ -11402,9 +11336,9 @@ class TDLibFunctions:
             "allow_save": allow_save,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def sendPaymentForm(
+    def sendPaymentForm(
         self,
         input_invoice: dict,
         payment_form_id: int,
@@ -11449,9 +11383,9 @@ class TDLibFunctions:
             "tip_amount": tip_amount,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getPaymentReceipt(self, chat_id: int, message_id: int) -> Result:
+    def getPaymentReceipt(self, chat_id: int, message_id: int) -> Result:
         """Returns information about a successful payment
 
         Args:
@@ -11472,9 +11406,9 @@ class TDLibFunctions:
             "message_id": message_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getSavedOrderInfo(self) -> Result:
+    def getSavedOrderInfo(self) -> Result:
         """Returns saved order information\. Returns a 404 error if there is no saved order information
 
 
@@ -11486,9 +11420,9 @@ class TDLibFunctions:
             "@type": "getSavedOrderInfo",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def deleteSavedOrderInfo(self) -> Result:
+    def deleteSavedOrderInfo(self) -> Result:
         """Deletes saved order information
 
 
@@ -11500,9 +11434,9 @@ class TDLibFunctions:
             "@type": "deleteSavedOrderInfo",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def deleteSavedCredentials(self) -> Result:
+    def deleteSavedCredentials(self) -> Result:
         """Deletes saved credentials for all payment provider bots
 
 
@@ -11514,9 +11448,9 @@ class TDLibFunctions:
             "@type": "deleteSavedCredentials",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def createInvoiceLink(self, invoice: dict) -> Result:
+    def createInvoiceLink(self, invoice: dict) -> Result:
         """Creates a link for the given invoice; for bots only
 
         Args:
@@ -11533,9 +11467,9 @@ class TDLibFunctions:
             "invoice": invoice,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getSupportUser(self) -> Result:
+    def getSupportUser(self) -> Result:
         """Returns a user that can be contacted to get support
 
 
@@ -11547,9 +11481,9 @@ class TDLibFunctions:
             "@type": "getSupportUser",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getBackgrounds(self, for_dark_theme: bool) -> Result:
+    def getBackgrounds(self, for_dark_theme: bool) -> Result:
         """Returns backgrounds installed by the user
 
         Args:
@@ -11566,9 +11500,9 @@ class TDLibFunctions:
             "for_dark_theme": for_dark_theme,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getBackgroundUrl(self, name: str, type: dict) -> Result:
+    def getBackgroundUrl(self, name: str, type: dict) -> Result:
         """Constructs a persistent HTTP URL for a background
 
         Args:
@@ -11589,9 +11523,9 @@ class TDLibFunctions:
             "type": type,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def searchBackground(self, name: str) -> Result:
+    def searchBackground(self, name: str) -> Result:
         """Searches for a background by its name
 
         Args:
@@ -11608,9 +11542,9 @@ class TDLibFunctions:
             "name": name,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setBackground(
+    def setBackground(
         self, for_dark_theme: bool, background: dict = None, type: dict = None
     ) -> Result:
         """Changes the background selected by the user; adds background to the list of installed backgrounds
@@ -11637,9 +11571,9 @@ class TDLibFunctions:
             "for_dark_theme": for_dark_theme,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def removeBackground(self, background_id: int) -> Result:
+    def removeBackground(self, background_id: int) -> Result:
         """Removes background from the list of installed backgrounds
 
         Args:
@@ -11656,9 +11590,9 @@ class TDLibFunctions:
             "background_id": background_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def resetBackgrounds(self) -> Result:
+    def resetBackgrounds(self) -> Result:
         """Resets list of installed backgrounds to its default value
 
 
@@ -11670,9 +11604,9 @@ class TDLibFunctions:
             "@type": "resetBackgrounds",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getLocalizationTargetInfo(self, only_local: bool) -> Result:
+    def getLocalizationTargetInfo(self, only_local: bool) -> Result:
         """Returns information about the current localization target\. This is an offline request if only\_local is true\. Can be called before authorization
 
         Args:
@@ -11689,9 +11623,9 @@ class TDLibFunctions:
             "only_local": only_local,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getLanguagePackInfo(self, language_pack_id: str) -> Result:
+    def getLanguagePackInfo(self, language_pack_id: str) -> Result:
         """Returns information about a language pack\. Returned language pack identifier may be different from a provided one\. Can be called before authorization
 
         Args:
@@ -11708,9 +11642,9 @@ class TDLibFunctions:
             "language_pack_id": language_pack_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getLanguagePackStrings(self, language_pack_id: str, keys: list) -> Result:
+    def getLanguagePackStrings(self, language_pack_id: str, keys: list) -> Result:
         """Returns strings from a language pack in the current localization target by their keys\. Can be called before authorization
 
         Args:
@@ -11731,9 +11665,9 @@ class TDLibFunctions:
             "keys": keys,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def synchronizeLanguagePack(self, language_pack_id: str) -> Result:
+    def synchronizeLanguagePack(self, language_pack_id: str) -> Result:
         """Fetches the latest versions of all strings from a language pack in the current localization target from the server\. This method doesn't need to be called explicitly for the current used/base language packs\. Can be called before authorization
 
         Args:
@@ -11750,9 +11684,9 @@ class TDLibFunctions:
             "language_pack_id": language_pack_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def addCustomServerLanguagePack(self, language_pack_id: str) -> Result:
+    def addCustomServerLanguagePack(self, language_pack_id: str) -> Result:
         """Adds a custom server language pack to the list of installed language packs in current localization target\. Can be called before authorization
 
         Args:
@@ -11769,9 +11703,9 @@ class TDLibFunctions:
             "language_pack_id": language_pack_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setCustomLanguagePack(self, info: dict, strings: list) -> Result:
+    def setCustomLanguagePack(self, info: dict, strings: list) -> Result:
         """Adds or changes a custom local language pack to the current localization target
 
         Args:
@@ -11792,9 +11726,9 @@ class TDLibFunctions:
             "strings": strings,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def editCustomLanguagePackInfo(self, info: dict) -> Result:
+    def editCustomLanguagePackInfo(self, info: dict) -> Result:
         """Edits information about a custom local language pack in the current localization target\. Can be called before authorization
 
         Args:
@@ -11811,9 +11745,9 @@ class TDLibFunctions:
             "info": info,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setCustomLanguagePackString(
+    def setCustomLanguagePackString(
         self, language_pack_id: str, new_string: dict
     ) -> Result:
         """Adds, edits or deletes a string in a custom local language pack\. Can be called before authorization
@@ -11836,9 +11770,9 @@ class TDLibFunctions:
             "new_string": new_string,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def deleteLanguagePack(self, language_pack_id: str) -> Result:
+    def deleteLanguagePack(self, language_pack_id: str) -> Result:
         """Deletes all information about a language pack in the current localization target\. The language pack which is currently in use \(including base language pack\) or is being synchronized can't be deleted\. Can be called before authorization
 
         Args:
@@ -11855,9 +11789,9 @@ class TDLibFunctions:
             "language_pack_id": language_pack_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def registerDevice(self, device_token: dict, other_user_ids: list) -> Result:
+    def registerDevice(self, device_token: dict, other_user_ids: list) -> Result:
         """Registers the currently used device for receiving push notifications\. Returns a globally unique identifier of the push notification subscription
 
         Args:
@@ -11878,9 +11812,9 @@ class TDLibFunctions:
             "other_user_ids": other_user_ids,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def processPushNotification(self, payload: str) -> Result:
+    def processPushNotification(self, payload: str) -> Result:
         """Handles a push notification\. Returns error with code 406 if the push notification is not supported and connection to the server is required to fetch new data\. Can be called before authorization
 
         Args:
@@ -11897,9 +11831,9 @@ class TDLibFunctions:
             "payload": payload,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getPushReceiverId(self, payload: str) -> Result:
+    def getPushReceiverId(self, payload: str) -> Result:
         """Returns a globally unique push notification subscription identifier for identification of an account, which has received a push notification\. Can be called synchronously
 
         Args:
@@ -11916,9 +11850,9 @@ class TDLibFunctions:
             "payload": payload,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getRecentlyVisitedTMeUrls(self, referrer: str) -> Result:
+    def getRecentlyVisitedTMeUrls(self, referrer: str) -> Result:
         """Returns t\.me URLs recently visited by a newly registered user
 
         Args:
@@ -11935,9 +11869,9 @@ class TDLibFunctions:
             "referrer": referrer,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setUserPrivacySettingRules(self, setting: dict, rules: dict) -> Result:
+    def setUserPrivacySettingRules(self, setting: dict, rules: dict) -> Result:
         """Changes user privacy settings
 
         Args:
@@ -11958,9 +11892,9 @@ class TDLibFunctions:
             "rules": rules,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getUserPrivacySettingRules(self, setting: dict) -> Result:
+    def getUserPrivacySettingRules(self, setting: dict) -> Result:
         """Returns the current privacy settings
 
         Args:
@@ -11977,9 +11911,9 @@ class TDLibFunctions:
             "setting": setting,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getOption(self, name: str) -> Result:
+    def getOption(self, name: str) -> Result:
         """Returns the value of an option by its name\. \(Check the list of available options on https://core\.telegram\.org/tdlib/options\.\) Can be called before authorization\. Can be called synchronously for options "version" and "commit\_hash"
 
         Args:
@@ -11996,9 +11930,9 @@ class TDLibFunctions:
             "name": name,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setOption(self, name: str, value: dict = None) -> Result:
+    def setOption(self, name: str, value: dict = None) -> Result:
         """Sets the value of an option\. \(Check the list of available options on https://core\.telegram\.org/tdlib/options\.\) Only writable options can be set\. Can be called before authorization
 
         Args:
@@ -12019,9 +11953,9 @@ class TDLibFunctions:
             "value": value,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setAccountTtl(self, ttl: dict) -> Result:
+    def setAccountTtl(self, ttl: dict) -> Result:
         """Changes the period of inactivity after which the account of the current user will automatically be deleted
 
         Args:
@@ -12038,9 +11972,9 @@ class TDLibFunctions:
             "ttl": ttl,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getAccountTtl(self) -> Result:
+    def getAccountTtl(self) -> Result:
         """Returns the period of inactivity after which the account of the current user will automatically be deleted
 
 
@@ -12052,9 +11986,9 @@ class TDLibFunctions:
             "@type": "getAccountTtl",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def deleteAccount(self, reason: str, password: str) -> Result:
+    def deleteAccount(self, reason: str, password: str) -> Result:
         """Deletes the account of the current user, deleting all information associated with the user from the server\. The phone number of the account can be used to create a new account\. Can be called before authorization when the current authorization state is authorizationStateWaitPassword
 
         Args:
@@ -12075,11 +12009,9 @@ class TDLibFunctions:
             "password": password,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setDefaultMessageAutoDeleteTime(
-        self, message_auto_delete_time: dict
-    ) -> Result:
+    def setDefaultMessageAutoDeleteTime(self, message_auto_delete_time: dict) -> Result:
         """Changes the default message auto\-delete time for new chats
 
         Args:
@@ -12096,9 +12028,9 @@ class TDLibFunctions:
             "message_auto_delete_time": message_auto_delete_time,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getDefaultMessageAutoDeleteTime(self) -> Result:
+    def getDefaultMessageAutoDeleteTime(self) -> Result:
         """Returns default message auto\-delete time setting for new chats
 
 
@@ -12110,9 +12042,9 @@ class TDLibFunctions:
             "@type": "getDefaultMessageAutoDeleteTime",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def removeChatActionBar(self, chat_id: int) -> Result:
+    def removeChatActionBar(self, chat_id: int) -> Result:
         """Removes a chat action bar without any other action
 
         Args:
@@ -12129,9 +12061,9 @@ class TDLibFunctions:
             "chat_id": chat_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def reportChat(
+    def reportChat(
         self, chat_id: int, reason: dict, text: str, message_ids: list = None
     ) -> Result:
         """Reports a chat to the Telegram moderators\. A chat can be reported only from the chat action bar, or if chat\.can\_be\_reported
@@ -12162,9 +12094,9 @@ class TDLibFunctions:
             "text": text,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def reportChatPhoto(
+    def reportChatPhoto(
         self, chat_id: int, file_id: int, reason: dict, text: str
     ) -> Result:
         """Reports a chat photo to the Telegram moderators\. A chat photo can be reported only if chat\.can\_be\_reported
@@ -12195,9 +12127,9 @@ class TDLibFunctions:
             "text": text,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def reportMessageReactions(
+    def reportMessageReactions(
         self, chat_id: int, message_id: int, sender_id: dict
     ) -> Result:
         """Reports reactions set on a message to the Telegram moderators\. Reactions on a message can be reported only if message\.can\_report\_reactions
@@ -12224,9 +12156,9 @@ class TDLibFunctions:
             "sender_id": sender_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getChatStatistics(self, chat_id: int, is_dark: bool) -> Result:
+    def getChatStatistics(self, chat_id: int, is_dark: bool) -> Result:
         """Returns detailed statistics about a chat\. Currently, this method can be used only for supergroups and channels\. Can be used only if supergroupFullInfo\.can\_get\_statistics \=\= true
 
         Args:
@@ -12247,9 +12179,9 @@ class TDLibFunctions:
             "is_dark": is_dark,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getMessageStatistics(
+    def getMessageStatistics(
         self, chat_id: int, message_id: int, is_dark: bool
     ) -> Result:
         """Returns detailed statistics about a message\. Can be used only if message\.can\_get\_statistics \=\= true
@@ -12276,9 +12208,9 @@ class TDLibFunctions:
             "is_dark": is_dark,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getStatisticalGraph(self, chat_id: int, token: str, x: int) -> Result:
+    def getStatisticalGraph(self, chat_id: int, token: str, x: int) -> Result:
         """Loads an asynchronous or a zoomed in statistical graph
 
         Args:
@@ -12303,9 +12235,9 @@ class TDLibFunctions:
             "x": x,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getStorageStatistics(self, chat_limit: int) -> Result:
+    def getStorageStatistics(self, chat_limit: int) -> Result:
         """Returns storage usage statistics\. Can be called before authorization
 
         Args:
@@ -12322,9 +12254,9 @@ class TDLibFunctions:
             "chat_limit": chat_limit,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getStorageStatisticsFast(self) -> Result:
+    def getStorageStatisticsFast(self) -> Result:
         """Quickly returns approximate storage usage statistics\. Can be called before authorization
 
 
@@ -12336,9 +12268,9 @@ class TDLibFunctions:
             "@type": "getStorageStatisticsFast",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getDatabaseStatistics(self) -> Result:
+    def getDatabaseStatistics(self) -> Result:
         """Returns database statistics
 
 
@@ -12350,9 +12282,9 @@ class TDLibFunctions:
             "@type": "getDatabaseStatistics",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def optimizeStorage(
+    def optimizeStorage(
         self,
         size: int,
         ttl: int,
@@ -12412,9 +12344,9 @@ class TDLibFunctions:
             "chat_limit": chat_limit,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setNetworkType(self, type: dict = None) -> Result:
+    def setNetworkType(self, type: dict = None) -> Result:
         """Sets the current network type\. Can be called before authorization\. Calling this method forces all network connections to reopen, mitigating the delay in switching between different networks, so it must be called whenever the network is changed, even if the network type remains the same\. Network type is used to check whether the library can use the network at all and also for collecting detailed network data usage statistics
 
         Args:
@@ -12431,9 +12363,9 @@ class TDLibFunctions:
             "type": type,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getNetworkStatistics(self, only_current: bool) -> Result:
+    def getNetworkStatistics(self, only_current: bool) -> Result:
         """Returns network data usage statistics\. Can be called before authorization
 
         Args:
@@ -12450,9 +12382,9 @@ class TDLibFunctions:
             "only_current": only_current,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def addNetworkStatistics(self, entry: dict) -> Result:
+    def addNetworkStatistics(self, entry: dict) -> Result:
         """Adds the specified data to data usage statistics\. Can be called before authorization
 
         Args:
@@ -12469,9 +12401,9 @@ class TDLibFunctions:
             "entry": entry,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def resetNetworkStatistics(self) -> Result:
+    def resetNetworkStatistics(self) -> Result:
         """Resets all network data usage statistics to zero\. Can be called before authorization
 
 
@@ -12483,9 +12415,9 @@ class TDLibFunctions:
             "@type": "resetNetworkStatistics",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getAutoDownloadSettingsPresets(self) -> Result:
+    def getAutoDownloadSettingsPresets(self) -> Result:
         """Returns auto\-download settings presets for the current user
 
 
@@ -12497,9 +12429,9 @@ class TDLibFunctions:
             "@type": "getAutoDownloadSettingsPresets",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setAutoDownloadSettings(self, settings: dict, type: dict) -> Result:
+    def setAutoDownloadSettings(self, settings: dict, type: dict) -> Result:
         """Sets auto\-download settings
 
         Args:
@@ -12520,9 +12452,9 @@ class TDLibFunctions:
             "type": type,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getAutosaveSettings(self) -> Result:
+    def getAutosaveSettings(self) -> Result:
         """Returns autosave settings for the current user
 
 
@@ -12534,9 +12466,9 @@ class TDLibFunctions:
             "@type": "getAutosaveSettings",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setAutosaveSettings(self, scope: dict, settings: dict = None) -> Result:
+    def setAutosaveSettings(self, scope: dict, settings: dict = None) -> Result:
         """Sets autosave settings for the given scope\. The method is guaranteed to work only after at least one call to getAutosaveSettings
 
         Args:
@@ -12557,9 +12489,9 @@ class TDLibFunctions:
             "settings": settings,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def clearAutosaveSettingsExceptions(self) -> Result:
+    def clearAutosaveSettingsExceptions(self) -> Result:
         """Clears the list of all autosave settings exceptions\. The method is guaranteed to work only after at least one call to getAutosaveSettings
 
 
@@ -12571,9 +12503,9 @@ class TDLibFunctions:
             "@type": "clearAutosaveSettingsExceptions",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getBankCardInfo(self, bank_card_number: str) -> Result:
+    def getBankCardInfo(self, bank_card_number: str) -> Result:
         """Returns information about a bank card
 
         Args:
@@ -12590,9 +12522,9 @@ class TDLibFunctions:
             "bank_card_number": bank_card_number,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getPassportElement(self, type: dict, password: str) -> Result:
+    def getPassportElement(self, type: dict, password: str) -> Result:
         """Returns one of the available Telegram Passport elements
 
         Args:
@@ -12613,9 +12545,9 @@ class TDLibFunctions:
             "password": password,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getAllPassportElements(self, password: str) -> Result:
+    def getAllPassportElements(self, password: str) -> Result:
         """Returns all available Telegram Passport elements
 
         Args:
@@ -12632,9 +12564,9 @@ class TDLibFunctions:
             "password": password,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setPassportElement(self, element: dict, password: str) -> Result:
+    def setPassportElement(self, element: dict, password: str) -> Result:
         """Adds an element to the user's Telegram Passport\. May return an error with a message "PHONE\_VERIFICATION\_NEEDED" or "EMAIL\_VERIFICATION\_NEEDED" if the chosen phone number or the chosen email address must be verified first
 
         Args:
@@ -12655,9 +12587,9 @@ class TDLibFunctions:
             "password": password,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def deletePassportElement(self, type: dict) -> Result:
+    def deletePassportElement(self, type: dict) -> Result:
         """Deletes a Telegram Passport element
 
         Args:
@@ -12674,9 +12606,9 @@ class TDLibFunctions:
             "type": type,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setPassportElementErrors(self, user_id: int, errors: list) -> Result:
+    def setPassportElementErrors(self, user_id: int, errors: list) -> Result:
         """Informs the user that some of the elements in their Telegram Passport contain errors; for bots only\. The user will not be able to resend the elements, until the errors are fixed
 
         Args:
@@ -12697,9 +12629,9 @@ class TDLibFunctions:
             "errors": errors,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getPreferredCountryLanguage(self, country_code: str) -> Result:
+    def getPreferredCountryLanguage(self, country_code: str) -> Result:
         """Returns an IETF language tag of the language preferred in the country, which must be used to fill native fields in Telegram Passport personal details\. Returns a 404 error if unknown
 
         Args:
@@ -12716,9 +12648,9 @@ class TDLibFunctions:
             "country_code": country_code,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def sendPhoneNumberVerificationCode(
+    def sendPhoneNumberVerificationCode(
         self, phone_number: str, settings: dict = None
     ) -> Result:
         """Sends a code to verify a phone number to be added to a user's Telegram Passport
@@ -12741,9 +12673,9 @@ class TDLibFunctions:
             "settings": settings,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def resendPhoneNumberVerificationCode(self) -> Result:
+    def resendPhoneNumberVerificationCode(self) -> Result:
         """Resends the code to verify a phone number to be added to a user's Telegram Passport
 
 
@@ -12755,9 +12687,9 @@ class TDLibFunctions:
             "@type": "resendPhoneNumberVerificationCode",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def checkPhoneNumberVerificationCode(self, code: str) -> Result:
+    def checkPhoneNumberVerificationCode(self, code: str) -> Result:
         """Checks the phone number verification code for Telegram Passport
 
         Args:
@@ -12774,9 +12706,9 @@ class TDLibFunctions:
             "code": code,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def sendEmailAddressVerificationCode(self, email_address: str) -> Result:
+    def sendEmailAddressVerificationCode(self, email_address: str) -> Result:
         """Sends a code to verify an email address to be added to a user's Telegram Passport
 
         Args:
@@ -12793,9 +12725,9 @@ class TDLibFunctions:
             "email_address": email_address,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def resendEmailAddressVerificationCode(self) -> Result:
+    def resendEmailAddressVerificationCode(self) -> Result:
         """Resends the code to verify an email address to be added to a user's Telegram Passport
 
 
@@ -12807,9 +12739,9 @@ class TDLibFunctions:
             "@type": "resendEmailAddressVerificationCode",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def checkEmailAddressVerificationCode(self, code: str) -> Result:
+    def checkEmailAddressVerificationCode(self, code: str) -> Result:
         """Checks the email address verification code for Telegram Passport
 
         Args:
@@ -12826,9 +12758,9 @@ class TDLibFunctions:
             "code": code,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getPassportAuthorizationForm(
+    def getPassportAuthorizationForm(
         self, bot_user_id: int, scope: str, public_key: str, nonce: str
     ) -> Result:
         """Returns a Telegram Passport authorization form for sharing data with a service
@@ -12859,9 +12791,9 @@ class TDLibFunctions:
             "nonce": nonce,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getPassportAuthorizationFormAvailableElements(
+    def getPassportAuthorizationFormAvailableElements(
         self, authorization_form_id: int, password: str
     ) -> Result:
         """Returns already available Telegram Passport elements suitable for completing a Telegram Passport authorization form\. Result can be received only once for each authorization form
@@ -12884,9 +12816,9 @@ class TDLibFunctions:
             "password": password,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def sendPassportAuthorizationForm(
+    def sendPassportAuthorizationForm(
         self, authorization_form_id: int, types: list
     ) -> Result:
         """Sends a Telegram Passport authorization form, effectively sharing data with the service\. This method must be called after getPassportAuthorizationFormAvailableElements if some previously available elements are going to be reused
@@ -12909,9 +12841,9 @@ class TDLibFunctions:
             "types": types,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def sendPhoneNumberConfirmationCode(
+    def sendPhoneNumberConfirmationCode(
         self, hash: str, phone_number: str, settings: dict = None
     ) -> Result:
         """Sends phone number confirmation code to handle links of the type internalLinkTypePhoneNumberConfirmation
@@ -12938,9 +12870,9 @@ class TDLibFunctions:
             "settings": settings,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def resendPhoneNumberConfirmationCode(self) -> Result:
+    def resendPhoneNumberConfirmationCode(self) -> Result:
         """Resends phone number confirmation code
 
 
@@ -12952,9 +12884,9 @@ class TDLibFunctions:
             "@type": "resendPhoneNumberConfirmationCode",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def checkPhoneNumberConfirmationCode(self, code: str) -> Result:
+    def checkPhoneNumberConfirmationCode(self, code: str) -> Result:
         """Checks phone number confirmation code
 
         Args:
@@ -12971,9 +12903,9 @@ class TDLibFunctions:
             "code": code,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setBotUpdatesStatus(
+    def setBotUpdatesStatus(
         self, pending_update_count: int, error_message: str
     ) -> Result:
         """Informs the server about the number of pending bot updates if they haven't been processed for a long time; for bots only
@@ -12996,9 +12928,9 @@ class TDLibFunctions:
             "error_message": error_message,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def uploadStickerFile(
+    def uploadStickerFile(
         self, user_id: int, sticker_format: dict, sticker: dict
     ) -> Result:
         """Uploads a file with a sticker; returns the uploaded file
@@ -13025,9 +12957,9 @@ class TDLibFunctions:
             "sticker": sticker,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getSuggestedStickerSetName(self, title: str) -> Result:
+    def getSuggestedStickerSetName(self, title: str) -> Result:
         """Returns a suggested name for a new sticker set with a given title
 
         Args:
@@ -13044,9 +12976,9 @@ class TDLibFunctions:
             "title": title,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def checkStickerSetName(self, name: str) -> Result:
+    def checkStickerSetName(self, name: str) -> Result:
         """Checks whether a name can be used for a new sticker set
 
         Args:
@@ -13063,9 +12995,9 @@ class TDLibFunctions:
             "name": name,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def createNewStickerSet(
+    def createNewStickerSet(
         self,
         user_id: int,
         title: str,
@@ -13120,9 +13052,9 @@ class TDLibFunctions:
             "source": source,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def addStickerToSet(self, user_id: int, name: str, sticker: dict) -> Result:
+    def addStickerToSet(self, user_id: int, name: str, sticker: dict) -> Result:
         """Adds a new sticker to a set; for bots only
 
         Args:
@@ -13147,9 +13079,9 @@ class TDLibFunctions:
             "sticker": sticker,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setStickerSetThumbnail(
+    def setStickerSetThumbnail(
         self, user_id: int, name: str, thumbnail: dict = None
     ) -> Result:
         """Sets a sticker set thumbnail; for bots only
@@ -13176,9 +13108,9 @@ class TDLibFunctions:
             "thumbnail": thumbnail,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setCustomEmojiStickerSetThumbnail(
+    def setCustomEmojiStickerSetThumbnail(
         self, name: str, custom_emoji_id: int
     ) -> Result:
         """Sets a custom emoji sticker set thumbnail; for bots only
@@ -13201,9 +13133,9 @@ class TDLibFunctions:
             "custom_emoji_id": custom_emoji_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setStickerSetTitle(self, name: str, title: str) -> Result:
+    def setStickerSetTitle(self, name: str, title: str) -> Result:
         """Sets a sticker set title; for bots only
 
         Args:
@@ -13224,9 +13156,9 @@ class TDLibFunctions:
             "title": title,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def deleteStickerSet(self, name: str) -> Result:
+    def deleteStickerSet(self, name: str) -> Result:
         """Deleted a sticker set; for bots only
 
         Args:
@@ -13243,9 +13175,9 @@ class TDLibFunctions:
             "name": name,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setStickerPositionInSet(self, sticker: dict, position: int) -> Result:
+    def setStickerPositionInSet(self, sticker: dict, position: int) -> Result:
         """Changes the position of a sticker in the set to which it belongs; for bots only\. The sticker set must have been created by the bot
 
         Args:
@@ -13266,9 +13198,9 @@ class TDLibFunctions:
             "position": position,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def removeStickerFromSet(self, sticker: dict) -> Result:
+    def removeStickerFromSet(self, sticker: dict) -> Result:
         """Removes a sticker from the set to which it belongs; for bots only\. The sticker set must have been created by the bot
 
         Args:
@@ -13285,9 +13217,9 @@ class TDLibFunctions:
             "sticker": sticker,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setStickerEmojis(self, sticker: dict, emojis: str) -> Result:
+    def setStickerEmojis(self, sticker: dict, emojis: str) -> Result:
         """Changes the list of emoji corresponding to a sticker; for bots only\. The sticker must belong to a regular or custom emoji sticker set created by the bot
 
         Args:
@@ -13308,9 +13240,9 @@ class TDLibFunctions:
             "emojis": emojis,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setStickerKeywords(self, sticker: dict, keywords: list) -> Result:
+    def setStickerKeywords(self, sticker: dict, keywords: list) -> Result:
         """Changes the list of keywords of a sticker; for bots only\. The sticker must belong to a regular or custom emoji sticker set created by the bot
 
         Args:
@@ -13331,9 +13263,9 @@ class TDLibFunctions:
             "keywords": keywords,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setStickerMaskPosition(
+    def setStickerMaskPosition(
         self, sticker: dict, mask_position: dict = None
     ) -> Result:
         """Changes the mask position of a mask sticker; for bots only\. The sticker must belong to a mask sticker set created by the bot
@@ -13356,9 +13288,9 @@ class TDLibFunctions:
             "mask_position": mask_position,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getMapThumbnailFile(
+    def getMapThumbnailFile(
         self,
         location: dict,
         zoom: int,
@@ -13403,9 +13335,9 @@ class TDLibFunctions:
             "chat_id": chat_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getPremiumLimit(self, limit_type: dict) -> Result:
+    def getPremiumLimit(self, limit_type: dict) -> Result:
         """Returns information about a limit, increased for Premium users\. Returns a 404 error if the limit is unknown
 
         Args:
@@ -13422,9 +13354,9 @@ class TDLibFunctions:
             "limit_type": limit_type,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getPremiumFeatures(self, source: dict = None) -> Result:
+    def getPremiumFeatures(self, source: dict = None) -> Result:
         """Returns information about features, available to Premium users
 
         Args:
@@ -13441,9 +13373,9 @@ class TDLibFunctions:
             "source": source,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getPremiumStickerExamples(self) -> Result:
+    def getPremiumStickerExamples(self) -> Result:
         """Returns examples of premium stickers for demonstration purposes
 
 
@@ -13455,9 +13387,9 @@ class TDLibFunctions:
             "@type": "getPremiumStickerExamples",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def viewPremiumFeature(self, feature: dict) -> Result:
+    def viewPremiumFeature(self, feature: dict) -> Result:
         """Informs TDLib that the user viewed detailed information about a Premium feature on the Premium features screen
 
         Args:
@@ -13474,9 +13406,9 @@ class TDLibFunctions:
             "feature": feature,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def clickPremiumSubscriptionButton(self) -> Result:
+    def clickPremiumSubscriptionButton(self) -> Result:
         """Informs TDLib that the user clicked Premium subscription button on the Premium features screen
 
 
@@ -13488,9 +13420,9 @@ class TDLibFunctions:
             "@type": "clickPremiumSubscriptionButton",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getPremiumState(self) -> Result:
+    def getPremiumState(self) -> Result:
         """Returns state of Telegram Premium subscription and promotion videos for Premium features
 
 
@@ -13502,9 +13434,9 @@ class TDLibFunctions:
             "@type": "getPremiumState",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def canPurchasePremium(self, purpose: dict) -> Result:
+    def canPurchasePremium(self, purpose: dict) -> Result:
         """Checks whether Telegram Premium purchase is possible\. Must be called before in\-store Premium purchase
 
         Args:
@@ -13521,9 +13453,9 @@ class TDLibFunctions:
             "purpose": purpose,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def assignAppStoreTransaction(self, receipt: bytes, purpose: dict) -> Result:
+    def assignAppStoreTransaction(self, receipt: bytes, purpose: dict) -> Result:
         """Informs server about a purchase through App Store\. For official applications only
 
         Args:
@@ -13544,9 +13476,9 @@ class TDLibFunctions:
             "purpose": purpose,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def assignGooglePlayTransaction(
+    def assignGooglePlayTransaction(
         self,
         package_name: str,
         store_product_id: str,
@@ -13581,9 +13513,9 @@ class TDLibFunctions:
             "purpose": purpose,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def acceptTermsOfService(self, terms_of_service_id: str) -> Result:
+    def acceptTermsOfService(self, terms_of_service_id: str) -> Result:
         """Accepts Telegram terms of services
 
         Args:
@@ -13600,9 +13532,9 @@ class TDLibFunctions:
             "terms_of_service_id": terms_of_service_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def sendCustomRequest(self, method: str, parameters: str) -> Result:
+    def sendCustomRequest(self, method: str, parameters: str) -> Result:
         """Sends a custom request; for bots only
 
         Args:
@@ -13623,9 +13555,9 @@ class TDLibFunctions:
             "parameters": parameters,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def answerCustomQuery(self, custom_query_id: int, data: str) -> Result:
+    def answerCustomQuery(self, custom_query_id: int, data: str) -> Result:
         """Answers a custom query; for bots only
 
         Args:
@@ -13646,9 +13578,9 @@ class TDLibFunctions:
             "data": data,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setAlarm(self, seconds: float) -> Result:
+    def setAlarm(self, seconds: float) -> Result:
         """Succeeds after a specified amount of time has passed\. Can be called before initialization
 
         Args:
@@ -13665,9 +13597,9 @@ class TDLibFunctions:
             "seconds": seconds,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getCountries(self) -> Result:
+    def getCountries(self) -> Result:
         """Returns information about existing countries\. Can be called before authorization
 
 
@@ -13679,9 +13611,9 @@ class TDLibFunctions:
             "@type": "getCountries",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getCountryCode(self) -> Result:
+    def getCountryCode(self) -> Result:
         """Uses the current IP address to find the current country\. Returns two\-letter ISO 3166\-1 alpha\-2 country code\. Can be called before authorization
 
 
@@ -13693,9 +13625,9 @@ class TDLibFunctions:
             "@type": "getCountryCode",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getPhoneNumberInfo(self, phone_number_prefix: str) -> Result:
+    def getPhoneNumberInfo(self, phone_number_prefix: str) -> Result:
         """Returns information about a phone number by its prefix\. Can be called before authorization
 
         Args:
@@ -13712,9 +13644,9 @@ class TDLibFunctions:
             "phone_number_prefix": phone_number_prefix,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getPhoneNumberInfoSync(
+    def getPhoneNumberInfoSync(
         self, language_code: str, phone_number_prefix: str
     ) -> Result:
         """Returns information about a phone number by its prefix synchronously\. getCountries must be called at least once after changing localization to the specified language if properly localized country information is expected\. Can be called synchronously
@@ -13737,9 +13669,9 @@ class TDLibFunctions:
             "phone_number_prefix": phone_number_prefix,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getDeepLinkInfo(self, link: str) -> Result:
+    def getDeepLinkInfo(self, link: str) -> Result:
         """Returns information about a tg:// deep link\. Use "tg://need\_update\_for\_some\_feature" or "tg:some\_unsupported\_feature" for testing\. Returns a 404 error for unknown links\. Can be called before authorization
 
         Args:
@@ -13756,9 +13688,9 @@ class TDLibFunctions:
             "link": link,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getApplicationConfig(self) -> Result:
+    def getApplicationConfig(self) -> Result:
         """Returns application config, provided by the server\. Can be called before authorization
 
 
@@ -13770,11 +13702,9 @@ class TDLibFunctions:
             "@type": "getApplicationConfig",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def addApplicationChangelog(
-        self, previous_application_version: str
-    ) -> Result:
+    def addApplicationChangelog(self, previous_application_version: str) -> Result:
         """Adds server\-provided application changelog as messages to the chat 777000 \(Telegram\); for official applications only\. Returns a 404 error if nothing changed
 
         Args:
@@ -13791,11 +13721,9 @@ class TDLibFunctions:
             "previous_application_version": previous_application_version,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def saveApplicationLogEvent(
-        self, type: str, chat_id: int, data: dict
-    ) -> Result:
+    def saveApplicationLogEvent(self, type: str, chat_id: int, data: dict) -> Result:
         """Saves application log event on the server\. Can be called before authorization
 
         Args:
@@ -13820,9 +13748,9 @@ class TDLibFunctions:
             "data": data,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getApplicationDownloadLink(self) -> Result:
+    def getApplicationDownloadLink(self) -> Result:
         """Returns the link for downloading official Telegram application to be used when the current user invites friends to Telegram
 
 
@@ -13834,11 +13762,9 @@ class TDLibFunctions:
             "@type": "getApplicationDownloadLink",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def addProxy(
-        self, server: str, port: int, enable: bool, type: dict
-    ) -> Result:
+    def addProxy(self, server: str, port: int, enable: bool, type: dict) -> Result:
         """Adds a proxy server for network requests\. Can be called before authorization
 
         Args:
@@ -13867,9 +13793,9 @@ class TDLibFunctions:
             "type": type,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def editProxy(
+    def editProxy(
         self, proxy_id: int, server: str, port: int, enable: bool, type: dict
     ) -> Result:
         """Edits an existing proxy server for network requests\. Can be called before authorization
@@ -13904,9 +13830,9 @@ class TDLibFunctions:
             "type": type,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def enableProxy(self, proxy_id: int) -> Result:
+    def enableProxy(self, proxy_id: int) -> Result:
         """Enables a proxy\. Only one proxy can be enabled at a time\. Can be called before authorization
 
         Args:
@@ -13923,9 +13849,9 @@ class TDLibFunctions:
             "proxy_id": proxy_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def disableProxy(self) -> Result:
+    def disableProxy(self) -> Result:
         """Disables the currently enabled proxy\. Can be called before authorization
 
 
@@ -13937,9 +13863,9 @@ class TDLibFunctions:
             "@type": "disableProxy",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def removeProxy(self, proxy_id: int) -> Result:
+    def removeProxy(self, proxy_id: int) -> Result:
         """Removes a proxy server\. Can be called before authorization
 
         Args:
@@ -13956,9 +13882,9 @@ class TDLibFunctions:
             "proxy_id": proxy_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getProxies(self) -> Result:
+    def getProxies(self) -> Result:
         """Returns list of proxies that are currently set up\. Can be called before authorization
 
 
@@ -13970,9 +13896,9 @@ class TDLibFunctions:
             "@type": "getProxies",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getProxyLink(self, proxy_id: int) -> Result:
+    def getProxyLink(self, proxy_id: int) -> Result:
         """Returns an HTTPS link, which can be used to add a proxy\. Available only for SOCKS5 and MTProto proxies\. Can be called before authorization
 
         Args:
@@ -13989,9 +13915,9 @@ class TDLibFunctions:
             "proxy_id": proxy_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def pingProxy(self, proxy_id: int) -> Result:
+    def pingProxy(self, proxy_id: int) -> Result:
         """Computes time needed to receive a response from a Telegram server through a proxy\. Can be called before authorization
 
         Args:
@@ -14008,9 +13934,9 @@ class TDLibFunctions:
             "proxy_id": proxy_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setLogStream(self, log_stream: dict) -> Result:
+    def setLogStream(self, log_stream: dict) -> Result:
         """Sets new log stream for internal logging of TDLib\. Can be called synchronously
 
         Args:
@@ -14027,9 +13953,9 @@ class TDLibFunctions:
             "log_stream": log_stream,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getLogStream(self) -> Result:
+    def getLogStream(self) -> Result:
         """Returns information about currently used log stream for internal logging of TDLib\. Can be called synchronously
 
 
@@ -14041,9 +13967,9 @@ class TDLibFunctions:
             "@type": "getLogStream",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setLogVerbosityLevel(self, new_verbosity_level: int) -> Result:
+    def setLogVerbosityLevel(self, new_verbosity_level: int) -> Result:
         """Sets the verbosity level of the internal logging of TDLib\. Can be called synchronously
 
         Args:
@@ -14060,9 +13986,9 @@ class TDLibFunctions:
             "new_verbosity_level": new_verbosity_level,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getLogVerbosityLevel(self) -> Result:
+    def getLogVerbosityLevel(self) -> Result:
         """Returns current verbosity level of the internal logging of TDLib\. Can be called synchronously
 
 
@@ -14074,9 +14000,9 @@ class TDLibFunctions:
             "@type": "getLogVerbosityLevel",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getLogTags(self) -> Result:
+    def getLogTags(self) -> Result:
         """Returns list of available TDLib internal log tags, for example, \["actor", "binlog", "connections", "notifications", "proxy"\]\. Can be called synchronously
 
 
@@ -14088,11 +14014,9 @@ class TDLibFunctions:
             "@type": "getLogTags",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setLogTagVerbosityLevel(
-        self, tag: str, new_verbosity_level: int
-    ) -> Result:
+    def setLogTagVerbosityLevel(self, tag: str, new_verbosity_level: int) -> Result:
         """Sets the verbosity level for a specified TDLib internal log tag\. Can be called synchronously
 
         Args:
@@ -14113,9 +14037,9 @@ class TDLibFunctions:
             "new_verbosity_level": new_verbosity_level,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getLogTagVerbosityLevel(self, tag: str) -> Result:
+    def getLogTagVerbosityLevel(self, tag: str) -> Result:
         """Returns current verbosity level for a specified TDLib internal log tag\. Can be called synchronously
 
         Args:
@@ -14132,9 +14056,9 @@ class TDLibFunctions:
             "tag": tag,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def addLogMessage(self, verbosity_level: int, text: str) -> Result:
+    def addLogMessage(self, verbosity_level: int, text: str) -> Result:
         """Adds a message to TDLib internal log\. Can be called synchronously
 
         Args:
@@ -14155,9 +14079,9 @@ class TDLibFunctions:
             "text": text,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getUserSupportInfo(self, user_id: int) -> Result:
+    def getUserSupportInfo(self, user_id: int) -> Result:
         """Returns support information for the given user; for Telegram support only
 
         Args:
@@ -14174,9 +14098,9 @@ class TDLibFunctions:
             "user_id": user_id,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def setUserSupportInfo(self, user_id: int, message: dict) -> Result:
+    def setUserSupportInfo(self, user_id: int, message: dict) -> Result:
         """Sets support information for the given user; for Telegram support only
 
         Args:
@@ -14197,9 +14121,9 @@ class TDLibFunctions:
             "message": message,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def getSupportName(self) -> Result:
+    def getSupportName(self) -> Result:
         """Returns localized name of the Telegram support user; for Telegram support only
 
 
@@ -14211,9 +14135,9 @@ class TDLibFunctions:
             "@type": "getSupportName",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def testCallEmpty(self) -> Result:
+    def testCallEmpty(self) -> Result:
         """Does nothing; for testing only\. This is an offline method\. Can be called before authorization
 
 
@@ -14225,9 +14149,9 @@ class TDLibFunctions:
             "@type": "testCallEmpty",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def testCallString(self, x: str) -> Result:
+    def testCallString(self, x: str) -> Result:
         """Returns the received string; for testing only\. This is an offline method\. Can be called before authorization
 
         Args:
@@ -14244,9 +14168,9 @@ class TDLibFunctions:
             "x": x,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def testCallBytes(self, x: bytes) -> Result:
+    def testCallBytes(self, x: bytes) -> Result:
         """Returns the received bytes; for testing only\. This is an offline method\. Can be called before authorization
 
         Args:
@@ -14263,9 +14187,9 @@ class TDLibFunctions:
             "x": x,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def testCallVectorInt(self, x: list) -> Result:
+    def testCallVectorInt(self, x: list) -> Result:
         """Returns the received vector of numbers; for testing only\. This is an offline method\. Can be called before authorization
 
         Args:
@@ -14282,9 +14206,9 @@ class TDLibFunctions:
             "x": x,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def testCallVectorIntObject(self, x: list) -> Result:
+    def testCallVectorIntObject(self, x: list) -> Result:
         """Returns the received vector of objects containing a number; for testing only\. This is an offline method\. Can be called before authorization
 
         Args:
@@ -14301,9 +14225,9 @@ class TDLibFunctions:
             "x": x,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def testCallVectorString(self, x: list) -> Result:
+    def testCallVectorString(self, x: list) -> Result:
         """Returns the received vector of strings; for testing only\. This is an offline method\. Can be called before authorization
 
         Args:
@@ -14320,9 +14244,9 @@ class TDLibFunctions:
             "x": x,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def testCallVectorStringObject(self, x: list) -> Result:
+    def testCallVectorStringObject(self, x: list) -> Result:
         """Returns the received vector of objects containing a string; for testing only\. This is an offline method\. Can be called before authorization
 
         Args:
@@ -14339,9 +14263,9 @@ class TDLibFunctions:
             "x": x,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def testSquareInt(self, x: int) -> Result:
+    def testSquareInt(self, x: int) -> Result:
         """Returns the squared received number; for testing only\. This is an offline method\. Can be called before authorization
 
         Args:
@@ -14358,9 +14282,9 @@ class TDLibFunctions:
             "x": x,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def testNetwork(self) -> Result:
+    def testNetwork(self) -> Result:
         """Sends a simple network request to the Telegram servers; for testing only\. Can be called before authorization
 
 
@@ -14372,9 +14296,9 @@ class TDLibFunctions:
             "@type": "testNetwork",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def testProxy(
+    def testProxy(
         self, server: str, port: int, type: dict, dc_id: int, timeout: float
     ) -> Result:
         """Sends a simple network request to the Telegram servers via proxy; for testing only\. Can be called before authorization
@@ -14409,9 +14333,9 @@ class TDLibFunctions:
             "timeout": timeout,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def testGetDifference(self) -> Result:
+    def testGetDifference(self) -> Result:
         """Forces an updates\.getDifference call to the Telegram servers; for testing only
 
 
@@ -14423,9 +14347,9 @@ class TDLibFunctions:
             "@type": "testGetDifference",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def testUseUpdate(self) -> Result:
+    def testUseUpdate(self) -> Result:
         """Does nothing and ensures that the Update object is used; for testing only\. This is an offline method\. Can be called before authorization
 
 
@@ -14437,9 +14361,9 @@ class TDLibFunctions:
             "@type": "testUseUpdate",
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)
 
-    async def testReturnError(self, error: dict) -> Result:
+    def testReturnError(self, error: dict) -> Result:
         """Returns the specified error and ensures that the Error object is used; for testing only\. Can be called synchronously
 
         Args:
@@ -14456,4 +14380,4 @@ class TDLibFunctions:
             "error": error,
         }
 
-        return await self.invoke(data)
+        return self.invoke(data)

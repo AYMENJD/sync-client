@@ -2,7 +2,7 @@ from re import findall
 from setuptools import setup, find_packages
 
 
-with open("pytdbot/__init__.py", "r") as f:
+with open("pytdbot_sync/__init__.py", "r") as f:
     version = findall(r"__version__ = \"(.+)\"", f.read())[0]
 
 with open("README.md", "r") as f:
@@ -13,7 +13,7 @@ with open("requirements.txt", "r") as f:
 
 
 setup(
-    name="Pytdbot",
+    name="Pytdbot_sync",
     version=version,
     description="Easy-to-use asynchronous TDLib wrapper for Python.",
     long_description=readme,
@@ -30,7 +30,7 @@ setup(
     },
     packages=find_packages(exclude=["examples"]),
     package_data={
-        "pytdbot": ["lib/*.so", "td_api.*"],
+        "pytdbot_sync": ["td_api.*"],
     },
     keywords=[
         "telegram",

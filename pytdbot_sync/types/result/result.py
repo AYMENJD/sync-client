@@ -1,6 +1,6 @@
 from os import urandom
 from binascii import hexlify
-from asyncio import Event
+from threading import Event
 from ujson import dumps
 
 RETRY_AFTER_PREFEX = "Too Many Requests: retry after "
@@ -54,9 +54,9 @@ class Result:
     def __await__(self):
         return self.wait().__await__()
 
-    async def wait(self) -> bool:
+    def wait(self, timeout: int = None) -> bool:
         """Wait for the result"""
-        return await self._event.wait()
+        return self._event.wait(timeout)
 
     def set_result(self, result: dict) -> None:
         """Set the result
